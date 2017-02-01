@@ -1,0 +1,14 @@
+{# Task Sprite #}
+<div class="task-sprite" data-id="{{task.id}}">
+    <div class="task-dt">
+        <div class="task-date">{{ task.when.date }}</div>
+        <div class="task-time">{{ task.when.time }}</div>
+    </div>
+    <div class="task-icon task-icon-status-{{ task.status|lower }}">
+        <input type="hidden" name="task_id" value="{{ task.id }}" class="data" />
+    </div>
+    <div class="task-main">
+        <div class="task-subject">{{ task.subject }}</div>
+        <div class="task-body">{{ task.body }}</div>
+    </div>
+</div>

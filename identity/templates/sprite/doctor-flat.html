@@ -1,0 +1,20 @@
+{# Doctor Sprite #}
+
+{% load identity_extras %}
+<div class="doctor-canvas {% if doctor.paramedic %} doctor-paramedic{% endif %} doctor-canvas-flat" data-id="{{ doctor.id }}" data-organizations="{{ organizations }}">
+    <div class="doctor-pic"></div>
+    <div class="doctor-info-group">
+        <div class="doctor-info doctor-info-intro">
+            <div class="doctor-name">{{ doctor.get_full_name }}</div>
+            <div class="doctor-email">{{ doctor.email }}</div>
+            <div class="doctor-address">{{ doctor.address }}</div>
+            <div class="doctor-gender">{{ doctor.get_sex_display }}</div>
+        </div>
+        <div class="doctor-info doctor-info-professional">
+            <div class="doctor-age">Age: <div class="unit">{{ doctor.age|delta_string }}</div></div>
+            <div class="doctor-stories">Cases: <div class="unit">{{ doctor.stories|length }}</div></div>
+            <div class="doctor-patients">Patients: <div class="unit">{{ doctor.visits|length }}</div></div>
+            <div class="doctor-organizations">Organizations: <div class="unit">{{ doctor.organizations.count }}</div></div>
+        </div>
+    </div>
+</div>

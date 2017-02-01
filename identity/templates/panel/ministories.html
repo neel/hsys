@@ -1,0 +1,77 @@
+{# Mini Stories Panel #}
+{% load identity_extras %}
+
+<!-- begin ministories panel -->
+<div id="ministories_panel" class="ministories" data-last="{{ stories.first.id }}">
+    <div class="ministories-heading">
+        <div class="ministories-heading-static">Stories <div class="unit">{{stories|length}}</div></div>
+        <div class="ministories-heading-filter">
+            <div class="ministories-heading-filter-range">
+                <div class="filter-range">
+                    <div class="filter-range-from ministories-heading-filter-from"><input type="text" name="from" class="ministories-filter-input" /></div>
+                    <div class="filter-range-to ministories-heading-filter-to"><input type="text" name="from" class="ministories-filter-input" /></div>
+                </div>
+                <div class="ministories-heading-filter-search"><input type="submit" value="Filter" class="identity-action identity-action-button ministories-heading-filter-search-button" /></div>
+            </div>
+        </div>
+        {% with user|usertype as user_class %}
+        {% if user_class == 'Doctor' %}
+        <div class="identity-action identity-action-button red ministories-heading-create" id="story_creation_button">Create Story</div>
+        {% endif %}
+        {% endwith %}
+    </div>
+    <ul class="ministories-list">
+    {% for story in stories %}
+        <li class="ministory-list-item">
+            <div class="ministory">
+                {% view 'identity.sprites.MiniStorySprite' story %}
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+
+<!-- begin commet connector -->
+<script type="text/javascript">
+(function($){
+    var update = function(){
+        var panel = $('#ministories_panel');
+        var panel_last = parseInt(panel.attr('data-last'));
+        if(panel_last !== panel_last)
+            panel_last = 0;
+        $.ajax({
+            url: '/pulse/stories/{{user.id}}/'+panel_last
+        }).done(function(content, status, xhr){
+            var content_length = content.length;
+            var latest_id = xhr.getResponseHeader('Last-Id');
+            if(content_length){
+                var ul = $(panel.find('ul.ministories-list')[0]);
+                ul.prepend(content);
+                if(latest_id)
+                    panel.attr("data-last", latest_id);
+            }
+            setTimeout(update, 500);
+        });
+    };
+    setTimeout(update, 500);
+})(jQuery);
+</script>
+<!-- end commet connector -->
+<script type="text/javascript">
+$(document).ready(function(){
+    $('ul.ministories-list').on('click', '.ministory-sprite', function(){
+        $('.story-viewer').remove();
+        var id = $(this).attr('data-id');
+        $.ajax({
+            url: '/_story/'+id
+        }).done(function(content, status, xhr){
+            var content_length = content.length;
+            if(content_length){
+                var story_board = $($.trim(content.replace(/\s+/g, " ")));
+                $('#main').append(story_board);
+            }
+        });
+    });
+});
+</script>
+<!-- end ministories panel -->

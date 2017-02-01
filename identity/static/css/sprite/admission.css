@@ -1,0 +1,37 @@
+.admission-sprite{
+    width: 100%;
+    position: relative;
+    display: block;
+    background: #efefef;
+    padding: 5px;
+    box-sizing: border-box;
+}
+.admission-heading{
+    font-size: 14px;
+    font-weight: bold;
+    float: right;
+}
+.admission-body{
+    display: table;
+}
+.admission-info{
+    display: block;
+    position: relative;
+    width: 100%;
+    display: table-row;
+}
+.admission-info-class{
+    font-size: 13px;
+    font-weight: bold;
+    display: table-cell;
+}
+.admission-info-value{
+    font-size: 13px;
+    font-weight: normal;
+    display: table-cell;
+    padding-left: 15px;
+}
+.admission-info-doctor{}
+.admission-info-time{}
+.admission-info-status{}
+.admission-info-when{}

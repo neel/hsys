@@ -1,0 +1,46 @@
+.form-container{}
+.form-overlay{}
+.form-error{}
+.form{
+    display: table;
+}
+.form-field{
+    display: table-row;
+}
+.form-field-label{
+    display: table-cell;
+    padding-right: 12px;
+    font-size: 18px;
+}
+.form-field-label:after{
+    content: ':'
+}
+.form-field input{
+    display: table-cell;
+    border: 1px solid #e7e7e7;
+    height: 25px;
+    padding-left: 3px;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+    background-color: #F1F1F3;
+}
+.form-field input:-webkit-autofill {
+    background-color: #fff !important;
+}
+.form-field input:-webkit-autofill:focus{
+    background-color: #fff !important;
+}
+.form-field-error{
+    display: table-row;
+}
+.form-action{
+    display: table-cell;
+    position: relative;
+    min-width: 85px;
+    float: left;
+}
+.form-field-error ul{
+    margin: 0px;
+    padding: 0px;
+}

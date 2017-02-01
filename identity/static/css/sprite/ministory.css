@@ -1,0 +1,47 @@
+.ministory-sprite{
+    float: left;
+    width: 100%;
+    position: relative;
+    display: block;
+    font-size: 12px;
+    padding-left: 5px;
+    box-sizing: border-box;
+    background-color: #efefef;
+    padding-top: 3px;
+    cursor: pointer;
+}
+.ministory-sprite-scheduled{
+    border-left: 3px solid #6789FF;
+}
+.ministory-sprite-random{
+    border-left: 3px solid #FCFCB2;
+}
+.ministory-heading{
+    float: left;
+    width: 100%;
+    position: relative;
+    display: block;
+}
+.ministory-doctor{
+    float: left;
+    font-size: 13px;
+    font-weight: bold;
+}
+.ministory-patient{
+    float: left;
+    font-size: 13px;
+    font-weight: lighter;
+    margin-left: 14px;
+}
+.ministory-when{
+    float: right;
+}
+.ministory-body{
+    float: left;
+    width: 100%;
+    position: relative;
+    display: block;
+}
+.ministory-sprite:hover{
+    background-color: #e8e8e8;
+}

@@ -1,0 +1,16 @@
+{% load identity_extras %}
+
+{% for task in tasks reversed %}
+<li class="patient-tasks-list-item">
+    {% view "identity.sprites.TaskSprite" task %}
+    <div class="task-activities">
+        <ul class="task-activities-list">
+            {% for activity in task.activities.all|dictsortreversed:"when" %}
+            <li class="task-activities-list-item task-activity-status-{{ activity.status|lower }} ">
+                {% view "identity.sprites.ActivitySprite" activity %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</li>
+{% endfor %}

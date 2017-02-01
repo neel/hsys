@@ -1,0 +1,57 @@
+{# Admissions Panel #}
+{% load identity_extras %}
+
+<!-- begin admissions panel -->
+<div id="admissions_panel" class="admissions" data-last="{{ admissions.last.id }}">
+    <div class="admissions-heading">
+        <div class="admissions-heading-static">Admissions <div class="unit">{{admissions|length}}</div></div>
+        <div class="admissions-heading-filter">
+            <div class="admissions-heading-filter-range">
+                <div class="filter-range">
+                    <div class="filter-range-from admissions-heading-filter-from"><input type="text" name="from" class="admissions-filter-input" /></div>
+                    <div class="filter-range-to admissions-heading-filter-to"><input type="text" name="from" class="admissions-filter-input" /></div>
+                </div>
+                <div class="admissions-heading-filter-search"><input type="submit" value="Filter" class="identity-action identity-action-button admissions-heading-filter-search-button" /></div>
+            </div>
+        </div>
+    </div>
+    <ul class="admissions-list">
+    {% for admission in admissions %}
+        <li class="admission-list-item">
+            <div class="admission">
+                {% view 'identity.sprites.AdmissionSprite' admission %}
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+
+<!-- begin commet connector -->
+<script type="text/javascript">
+(function($){
+    var update = function(){
+        var panel = $('#admissions_panel');
+        var panel_last = parseInt(panel.attr('data-last'));
+        if(panel_last !== panel_last)
+            panel_last = 0;
+        $.ajax({
+            url: '/pulse/admissions/{{user.id}}/'+panel_last
+        }).done(function(content, status, xhr){
+            var content_length = content.length;
+            var latest_id = xhr.getResponseHeader('Last-Id');
+            if(content_length){
+                var ul = $(panel.find('ul.admissions-list')[0]);
+                ul.prepend(content);
+                if(latest_id)
+                    panel.attr("data-last", latest_id);
+            }
+            setTimeout(update, 500);
+        });
+    };
+    setTimeout(update, 500);
+})(jQuery);
+</script>
+<!-- end commet connector -->
+
+
+<!-- end admissions panel -->

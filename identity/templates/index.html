@@ -1,0 +1,303 @@
+{% load staticfiles %}
+{% load identity_extras %}
+<!doctype html>
+<html>
+    <head>
+        <title>Home</title>
+        <style type='text/css'>
+            @import url('{% static 'css/common.css' %}');
+            @import url('{% static 'css/heading.css' %}');
+            @import url('{% static 'css/sprite/doctor.css' %}');
+            @import url('{% static 'css/sprite/patient.css' %}');
+            @import url('{% static 'css/sprite/organization.css' %}');
+            @import url('{% static 'css/sprite/bed.css' %}');
+            body{
+                background: #E4E4E6;
+                font-family: 'Lato', Calibri, Arial, sans-serif;
+                position: relative;
+                display: block;
+                float: left;
+                width: 100%;
+            }
+            .component-sprite{
+                margin-right: 3px;
+                margin-bottom: 3px;
+            }            
+            .doctor-sprite{
+                float: left;
+            }
+            .patient-sprite{
+                float: left;
+            }
+            .organization-sprite{
+                width: 501px;
+                float: left;
+            }
+            .filter{
+                margin: 0px;
+                padding: 0px;
+                color: white;
+                float: left;
+                position: relative;
+            }
+            .filter:hover{
+                margin: 0px;
+                padding: 0px;
+            }
+            .filter-button{
+                list-style-type: none;
+                float: left;
+                margin-left: 7px;
+                padding-top: 8px;
+            }
+            .filter-button:hover{
+                background: #E4E4E6;
+                margin: 0px;
+                color: #252734;
+                height: 100%;
+                padding-left: 7px;
+                padding-right: 7px;
+                padding-bottom: 7px;
+                cursor: pointer;
+            }
+        </style>
+        <script type="text/javascript" src="{% static 'js/jquery.1.9.0.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.sticky-kit.min.js' %}"></script>
+        <script type="text/javascript" src="http://isotope.metafizzy.co/isotope.pkgd.min.js"></script>
+        <script type="text/javascript">
+            (function($){ 
+                $.fn.shuffle = function() {             
+                    var allElems = this.get(),
+                        getRandom = function(max) {
+                            return Math.floor(Math.random() * max);
+                        },
+                        shuffled = $.map(allElems, function(){
+                            var random = getRandom(allElems.length),
+                                randEl = $(allElems[random]).clone(true)[0];
+                            allElems.splice(random, 1);
+                            return randEl;
+                       });             
+                    this.each(function(i){
+                        $(this).replaceWith($(shuffled[i]));
+                    });             
+                    return $(shuffled);             
+                };
+             
+            })(jQuery);
+            
+            $(document).ready(function(){
+                $("#heading").stick_in_parent();
+                $('.component-sprite').shuffle();
+                $('#main').isotope({
+                    itemSelector: '.component-sprite',
+                    layoutMode: 'fitRows',
+                    getSortData: {
+                        weight: function(item){
+                            return $(item).attr('data-index');
+                        }  
+                    },
+                    isOriginLeft: true,
+                    filter: function(){
+                        var groups = eval($(this).attr('data-groups'));
+                        return 'bed'.indexOf(groups);
+                    }
+                })
+                $('.search-input').keyup(function(){
+                    var value = $('.search-input')[0].value;
+                    $('#main').isotope({
+                        itemSelector: '.component-sprite',
+                        layoutMode: 'fitRows',
+                        getSortData: {
+                            weight: function(item){
+                                return $(item).attr('data-index');
+                            }  
+                        },
+                        isOriginLeft: true,
+                        masonry: {
+                            columnWidth: 501
+                        },
+                        filter: function(){
+                            var name = $(this).attr('data-name');
+                            return name.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+                        }
+                    })
+                })
+                $('.filter-button-doctors').click(function(){
+                    var value = $('.search-input')[0].value;
+                    $('#main').isotope({
+                        itemSelector: '.component-sprite',
+                        layoutMode: 'fitRows',
+                        getSortData: {
+                            weight: function(item){
+                                return $(item).attr('data-index');
+                            }  
+                        },
+                        isOriginLeft: true,
+                        masonry: {
+                            columnWidth: 501
+                        },
+                        filter: function(){
+                            var groups = eval($(this).attr('data-groups'));
+                            return groups.indexOf("doctor") >= 0;
+                        }
+                    })
+                })
+                $('.filter-button-organizations').click(function(){
+                    var value = $('.search-input')[0].value;
+                    $('#main').isotope({
+                        itemSelector: '.component-sprite',
+                        layoutMode: 'fitRows',
+                        getSortData: {
+                            weight: function(item){
+                                return $(item).attr('data-index');
+                            }  
+                        },
+                        isOriginLeft: true,
+                        masonry: {
+                            columnWidth: 501
+                        },
+                        filter: function(){
+                            var groups = eval($(this).attr('data-groups'));
+                            return groups.indexOf("organization") >= 0;
+                        }
+                    })
+                })
+                $('.filter-button-all').click(function(){
+                    var value = $('.search-input')[0].value;
+                    $('#main').isotope({
+                        itemSelector: '.component-sprite',
+                        layoutMode: 'fitRows',
+                        getSortData: {
+                            weight: function(item){
+                                return $(item).attr('data-index');
+                            }  
+                        },
+                        isOriginLeft: true,
+                        masonry: {
+                            columnWidth: 501
+                        },
+                        filter: function(){
+                            var groups = eval($(this).attr('data-groups'));
+                            return 'bed'.indexOf(groups);
+                        }
+                    })  
+                })
+                $('.organization-status-item-doctors > .unit').click(function(){
+                    var doctors = (eval($(this).parents('.organization-canvas').attr('data-doctors')));
+                    var self = $(this).parents('.component-sprite');
+                    var self_id = self.find('.organization-canvas').attr('data-id');
+                    $('#main').isotope({
+                        itemSelector: '.component-sprite',
+                        layoutMode: 'fitRows',
+                        getSortData: {
+                            weight: function(item){
+                                return $(item).attr('data-index');
+                            }  
+                        },
+                        isOriginLeft: true,
+                        masonry: {
+                            columnWidth: 501
+                        },
+                        filter: function(){
+                            if (self[0] == this) {
+                                return true;
+                            }
+                            var groups = eval($(this).attr('data-groups'));
+                            var id = parseInt($(this).find('.doctor-canvas').attr('data-id'));
+							console.log(groups, doctors);
+                            return ((groups.indexOf("doctor") >= 0) && (doctors.indexOf(id) >= 0));
+                        }
+                    })
+                })
+                
+                $('.doctor-organizations > .unit').click(function(){
+                    var doctors = (eval($(this).parents('.doctor-canvas').attr('data-organizations')));
+                    var self = $(this).parents('.component-sprite');
+                    var self_id = self.find('.doctor-canvas').attr('data-id');
+                    $('#main').isotope({
+                        itemSelector: '.component-sprite',
+                        layoutMode: 'fitRows',
+                        getSortData: {
+                            weight: function(item){
+                                return $(item).attr('data-index');
+                            }  
+                        },
+                        isOriginLeft: true,
+                        masonry: {
+                            columnWidth: 501
+                        },
+                        filter: function(){
+                            if (self[0] == this) {
+                                return true;
+                            }
+                            var groups = eval($(this).attr('data-groups'));
+                            var id = parseInt($(this).find('.organization-canvas').attr('data-id'));
+                            return ((groups.indexOf("organization") >= 0) && (doctors.indexOf(id) >= 0));
+                        }
+                    })
+                })
+                $('.organization-status-item-beds > .unit').click(function(){
+                    var self = $(this).parents('.component-sprite');
+                    var organization_id = (parseInt($(this).parents('.organization-canvas').attr('data-id')));
+                    $('#main').isotope({
+                        itemSelector: '.component-sprite',
+                        layoutMode: 'masonry',
+                        getSortData: {
+                            weight: function(item){
+                                return $(item).attr('data-index');
+                            }  
+                        },
+                        isOriginLeft: true,
+                        masonry: {
+                            columnHeight: 280
+                        },
+                        filter: function(){
+                            if (self[0] == this) {
+                                return true;
+                            }
+                            var groups = eval($(this).attr('data-groups'));
+                            var bed_organization = parseInt($(this).find('.bed-canvas').attr('data-organization'));
+                            return ((groups.indexOf("bed") >= 0) && (organization_id == bed_organization));
+                        }
+                    })
+                })
+            })
+        </script>
+    </head>
+    <body>
+        <div class="heading" id="heading">
+            <div class="search">
+                <input type="text" value="" class="search-input" />
+            </div>
+            <div class="logo">//smcc:identity//</div>
+            <ul class="filter">
+                <li class="filter-button filter-button-doctors">Doctors</li>
+                <li class="filter-button filter-button-organizations">Organizations</li>
+                <li class="filter-button filter-button-all">All</li>
+            </ul>
+            <div class="map"></div>
+        </div>
+        <div class="main" id="main">
+            {% for doctor in doctors %}
+                <div class="component-sprite doctor-sprite" data-groups="['doctor']" data-name="{{ doctor.name }}">
+                {% view "identity.views.DoctorSprite" doctor %}
+                </div>
+            {% endfor %}
+            {% for patient in patients %}
+                <div class="component-sprite patient-sprite" data-groups="['patient']" data-name="{{ patient.name }}">
+                {% view "identity.views.PatientSprite" patient %}
+                </div>
+            {% endfor %}
+            {% for organization in organizations %}
+                <div class="component-sprite organization-sprite" data-groups="['organization']" data-name="{{ organization.name }}">
+                {% view "identity.views.OrganizationSprite" organization %}
+                </div>
+            {% endfor %}
+            {% for bed in beds %}
+                <div class="component-sprite bed-sprite" data-groups="['bed']" data-name="{{ bed.organization.name }}">
+                {% view "identity.views.BedSprite" bed %}
+                </div>
+            {% endfor %}
+        </div>
+    </body>
+</html>

@@ -1,0 +1,9 @@
+{% load identity_extras %}
+
+{% for story in stories %}
+    <li class="ministory-list-item">
+        <div class="ministory">
+            {% view 'identity.sprites.MiniStorySprite' story %}
+        </div>
+    </li>
+{% endfor %}

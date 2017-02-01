@@ -1,0 +1,99 @@
+.patient-canvas{
+    background-color: #f5f5f5;
+    background-image: -webkit-linear-gradient(top,#f8f8f8,#dfdfdf);
+    background-image: -moz-linear-gradient(top,#f8f8f8,#dfdfdf);
+    background-image: -ms-linear-gradient(top,#f8f8f8,#dfdfdf);
+    background-image: -o-linear-gradient(top,#f8f8f8,#dfdfdf);
+    background-image: linear-gradient(top,#f8f8f8,#dfdfdf);
+    color: #444;    
+    border: 1px solid #dcdcdc;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;    
+    cursor: default;
+    font-size: 11px;
+    text-decoration: none;    
+    position: relative;    
+    width: 167px;
+    height: 280px;
+}
+
+.patient-canvas:hover {
+    background-color: #F8F8F8;
+    background-image: -webkit-linear-gradient(top,#f8f8f8,#d0d0d0);
+    background-image: -moz-linear-gradient(top,#f8f8f8,#d0d0d0);
+    background-image: -ms-linear-gradient(top,#f8f8f8,#d0d0d0);
+    background-image: -o-linear-gradient(top,#f8f8f8,#d0d0d0);
+    background-image: linear-gradient(top,#f8f8f8,#d0d0d0);
+    border: 1px solid #C6C6C6;
+    color: #333;    
+    -webkit-box-shadow: 0px 1px 1px rgba(0,0,0,.1);
+    -moz-box-shadow: 0px 1px 1px rgba(0,0,0,.1);
+    box-shadow: 0px 1px 1px rgba(0,0,0,.1);
+}
+.patient-paramedic{
+    
+}
+.patient-info{
+    padding-left: 3px;
+    width: 100%;
+    position: relative;
+    display: block;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+    margin-top: 9px;
+}
+.patient-info:hover{
+    
+}
+.patient-pic{
+    width: 150px;
+    height: 150px;
+    border: 3px solid #FFA9A7;
+    background: url(http://www.iduofl.us/photos/noimage.jpg) no-repeat -7px 0px;
+    -webkit-border-radius: 80px;
+    -moz-border-radius: 80px;
+    border-radius: 22px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 9px;
+    margin-top: 12px;
+}
+.patient-name{
+    font-weight: bold;
+}
+.patient-name a{
+    text-decoration: none;
+    color: inherit;
+}
+.patient-info-intro{
+    background: #dddddd;
+    background-image: -webkit-linear-gradient(top,#f8f8f8,#f1f1f1);
+    background-image: -moz-linear-gradient(top,#f8f8f8,#f1f1f1);
+    background-image: -ms-linear-gradient(top,#f8f8f8,#f1f1f1);
+    background-image: -o-linear-gradient(top,#f8f8f8,#f1f1f1);
+    background-image: linear-gradient(top,#f8f8f8,#f1f1f1);
+}
+.patient-paramedic .patient-info-intro{
+    
+}
+.patient-info-health{
+    background: #dddddd;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    background-image: -webkit-linear-gradient(top,#f8f8f8,#f1f1f1);
+    background-image: -moz-linear-gradient(top,#f8f8f8,#f1f1f1);
+    background-image: -ms-linear-gradient(top,#f8f8f8,#f1f1f1);
+    background-image: -o-linear-gradient(top,#f8f8f8,#f1f1f1);
+    background-image: linear-gradient(top,#f8f8f8,#f1f1f1);
+    border-top: 1px dashed #d8d8d8;
+}
+.patient-paramedic .patient-info-health{
+    
+}
+.patient-info-health .unit{
+    display: inline;
+    font-size: 10px;
+}

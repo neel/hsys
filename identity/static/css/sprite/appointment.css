@@ -1,0 +1,79 @@
+.appointment-sprite{
+    width: 100%;
+    position: relative;
+    display: block;
+    background: #efefef;
+    padding: 5px;
+    box-sizing: border-box;
+}
+.appointment-sprite-w{
+    border-left: 3px solid #FCFCB2;
+}
+.appointment-sprite-f{
+    border-left: 3px solid #6789FF;
+}
+.appointment-sprite-c{
+    border-left: 3px solid #FF6F67;
+}
+.appointment-sprite-none{
+    border-left: 0px none;
+}
+.appointment-heading{
+    font-size: 14px;
+    font-weight: bold;
+    float: right;
+}
+.appointment-body{
+    display: table;
+}
+.appointment-info{
+    display: block;
+    position: relative;
+    width: 100%;
+    display: table-row;
+}
+.appointment-info-class{
+    font-size: 13px;
+    font-weight: bold;
+    display: table-cell;
+}
+.appointment-info-value{
+    font-size: 13px;
+    font-weight: normal;
+    display: table-cell;
+    padding-left: 15px;
+}
+.appointment-info-doctor{}
+.appointment-info-time{}
+.appointment-info-status{}
+.appointment-info-when{}
+.appointment-note{
+    border-top: 1px solid #dedede;
+    font-size: 12px;
+    margin-top: 3px;
+    padding-top: 3px;
+}
+.appointment-status-icon{
+    height: 12px;
+    position: absolute;
+    border-radius: 4px;
+    right: 12px;
+    top: 66px;
+    cursor: pointer;
+    font-size: 13px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 1px;
+    padding-bottom: 3px;
+    color: #ffffff;
+    background-color: #ed5f30;
+}
+.appointment-sprite-w .appointment-status-icon{
+    background-color: #FCFCB2;
+}
+.appointment-sprite-f .appointment-status-icon{
+    background-color: #6789FF;
+}
+.appointment-sprite-c .appointment-status-icon{
+    background-color: #FF6F67;
+}

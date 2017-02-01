@@ -1,0 +1,205 @@
+.task-activity-heading{
+    display: block;
+    float: left;
+    position: relative;
+    width: 100%;
+}
+.task-activity-status{
+    display: block;
+    float: right;
+    position: relative;
+    font-size: 10px;
+    padding-right: 6px;
+}
+.task-activity-operator{
+    display: block;
+    float: left;
+    position: relative;
+    font-weight: bold;
+    font-size: 14px;
+}
+.task-activity-time{
+    display: block;
+    float: left;
+    position: relative;
+    margin-left: 12px;
+    font-size: 13px;
+}
+.task-activity-when{
+    display: none;
+    float: left;
+    position: relative;
+}
+.task-activity-delay{
+    display: block;
+    float: left;
+    position: relative;
+}
+.task-activity-time:hover > .task-activity-when{
+    display: block;
+}
+.task-activity-time:hover > .task-activity-delay{
+    display: none;
+}
+.task-activity-note{
+    display: block;
+    float: left;
+    position: relative;
+    width: 100%;
+    padding-left: 22px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.modal-overlay{
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+}
+.task-post-activity{
+    height: auto;
+    width: 400px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 2;
+    background: #000;
+    display: block;
+    padding-top: 4px;
+    background-color: #e8e8e8;
+    border: 1px solid #cccccc;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.task-post-activity-form{}
+.task-post-activity-field{
+    float: left;
+    display: block;
+    position: relative;
+    width: 100%;
+    margin-bottom: 3px;
+}
+.task-post-activity-label{
+    padding-left: 6px;
+    margin-left: 4px;
+}
+.task-post-activity-label-status{}
+.task-post-activity-action{}
+.task-post-activity-field-note{
+    background-color: #ffffff;
+}
+.task-post-activity-field textarea{
+    width: 95%;
+    margin-left: 2%;
+    height: 56px;
+    border: 1px solid #f9f9f9;
+}
+.task-post-activity-field select[id='id_status']:focus, .task-post-activity-field textarea:focus{
+    outline: 0px none transparent;
+}
+.task-post-activity-field .task-post-activity-action{
+    float: right;
+    margin-right: 10px;
+    
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+
+    border-style: solid;
+    border-width: 0px;
+    cursor: pointer;
+    font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+    font-weight: normal;
+    line-height: normal;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    -webkit-appearance: none;
+    display: inline-block;
+    background-color: #3498db;
+    border-color: #217bb8;
+    color: white;
+    transition: background-color 300ms ease-out;    
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    border-color: #258cd1 !important;
+    border-width: 2px;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #3498db), color-stop(5%, #3498db), color-stop(100%, #258cd1));
+    background-image: -webkit-linear-gradient(#3498db, #3498db 5%, #258cd1);
+    background-image: -moz-linear-gradient(#3498db, #3498db 5%, #258cd1);
+    background-image: -o-linear-gradient(#3498db, #3498db 5%, #258cd1);
+    background-image: linear-gradient(#3498db, #3498db 5%, #258cd1);
+    -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0) inset;
+    -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0) inset;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0) inset;
+}
+
+.task-post-activity-field select[id='id_status']{
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border: 0px none;
+    background-color: #f9f9f9;
+    margin-left: 9px;
+    
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+    height: 100%;
+}
+.task-post-activity-field-error{
+    margin: 0px;
+    padding: 0px;
+    float: left;
+    position: relative;
+    display: block;
+    padding-left: 5px;
+    font-size: 12px;
+    color: #E64534;
+}
+.task-post-activity-field-status .task-post-activity-field-error{
+    width: auto;
+    display: inline-block;
+    float: none;
+}
+
+.task-post-activity-field-error ul{
+    margin: 0px;
+    padding: 0px;
+}
+
+.task-post-activity-field-error ul li{
+    list-style-type: none;
+    padding-left: 3px;
+}
+
+.task-post-activity-overlay{
+    display: none;
+}
+.task-post-activity-overlay-loading{
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    z-index: 2;
+    background: #f2f2f2 url(/static/pix/loader.gif) no-repeat 10px 36px;
+    opacity: 0.8;
+}
+.task-post-activity-overlay-success{
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    z-index: 2;
+    background: #f2f2f2 no-repeat 10px 36px;
+    opacity: 0.8;
+}

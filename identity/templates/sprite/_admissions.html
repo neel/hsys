@@ -1,0 +1,8 @@
+{% load identity_extras %}
+{% for admission in admissions %}
+    <li class="admission-list-item">
+        <div class="admission">
+            {% view 'identity.sprites.AdmissionSprite' admission %}
+        </div>
+    </li>
+{% endfor %}

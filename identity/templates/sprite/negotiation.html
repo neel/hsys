@@ -1,0 +1,18 @@
+{# Negotiation Sprite #}
+{% load identity_extras %}
+<div class="negotiation-sprite negotiation-sprite-{{negotiation.status|lower}}">
+    <div class="negotiation-heading">
+        <div class="negotiation-status">{{ negotiation.get_status_display }}</div>
+        <div class="negotiation-proposal">
+            Proposed: {{negotiation.when}}
+        </div>
+        <div class="negotiation-operator">{{ who }}</div>
+        <div class="negotiation-time">
+            <div class="negotiation-created">at {{ negotiation.created }}</div>
+            <div class="negotiation-created-delay">{{ negotiation.creation_delay|delta_string }} from Appointment</div>
+        </div>
+    </div>
+    <div class="negotiation-note">
+        {{ negotiation.note }}
+    </div>
+</div>

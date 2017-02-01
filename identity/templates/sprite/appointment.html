@@ -1,0 +1,30 @@
+{# Appointment Sprite #}
+
+{% load identity_extras %}
+<div class="appointment-sprite appointment-sprite-{{appointment.status_key|lower}}" data-id="{{appointment.id}}">
+    <div class="appointment-heading">Appointment {{appointment.organization}}</div>
+    <div class="appointment-body">
+        <div class="appointment-info">
+            <div class="appointment-info-class">Doctor</div>
+            <div class="appointment-info-value appointment-info-doctor">{{appointment.doctor}}</div>
+        </div>
+        <div class="appointment-info">
+            <div class="appointment-info-class">Patient</div>
+            <div class="appointment-info-value appointment-info-patient">{{appointment.patient}}</div>
+        </div>
+        <div class="appointment-info">
+            <div class="appointment-info-class">Created On</div>
+            <div class="appointment-info-value appointment-info-time">{{appointment.created}}</div>
+        </div>
+        <div class="appointment-info">
+            <div class="appointment-info-class">Status</div>
+            <div class="appointment-info-value appointment-info-status">{{appointment.get_status_display}}</div>
+        </div>
+        <div class="appointment-info">
+            <div class="appointment-info-class">Scheduled/Proposed</div>
+            <div class="appointment-info-value appointment-info-when">{{appointment.when}}</div>
+        </div>
+    </div>
+    <div class="appointment-note">{{appointment.note}}</div>
+    <div class="appointment-status-icon">{{appointment.negotiations.count}}</div>
+</div>

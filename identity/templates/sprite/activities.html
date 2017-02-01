@@ -1,0 +1,8 @@
+{% load identity_extras %}
+<ul class="task-activities-list">
+    {% for activity in task.activities.all|dictsortreversed:"when" %}
+    <li class="task-activities-list-item task-activity-status-{{ activity.status|lower }} ">
+        {% view "identity.sprites.ActivitySprite" activity %}
+    </li>
+    {% endfor %}
+</ul> 

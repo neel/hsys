@@ -1,0 +1,74 @@
+{% load staticfiles %}
+{% load identity_extras %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Patient {{patient.get_full_name}}</title>
+        <style type='text/css'>
+            @import url('{% static 'css/daterangepicker.css' %}');
+            @import url('{% static 'css/login.css' %}');
+            @import url('{% static 'css/common.css' %}');
+            @import url('{% static 'css/form.css' %}');
+            @import url('{% static 'css/heading.css' %}');
+            @import url('{% static 'css/sprite/notice.css' %}');
+        </style>
+        <script type="text/javascript" src="{% static 'js/jquery.1.9.0.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.sticky-kit.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/d3.v3.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.daterangepicker.js' %}"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("#heading").stick_in_parent();
+                // $(".left-panel").stick_in_parent();
+            })
+        </script>
+    </head>
+    <body>
+        <div class="heading" id="heading">
+            <div class="logo">//smcc:identity//</div>
+            <div class="search">
+                <input type="text" value="" class="search-input" />
+            </div>
+            <div class="navigation">
+                <ul class="links">
+                    <li class="link"><a href="#"></a></li>
+                </ul>
+            </div>
+            <div class="map"></div>
+        </div>
+        <div class="main" id="main">
+            <div class="left-panel">
+                
+            </div>
+            <div class="content">
+                <div class="banner">
+                    <div class="slogan">Health Management System</div>
+                    <div class="fastgan">Patient + Doctor + Organization + Paramedic + Operator</div>
+                </div>
+                <div class="form-container login">
+                    <div class="form-overlay login-overlay">{{status}}</div>
+                    <div class="form-error login-form-error">
+                        {{ form.non_field_errors }}
+                    </div>
+                    <form class="form login-form" method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <div class="form-field login-field login-field-status">
+                            {{ form.username.errors }}
+                            <label for="id_username" class="form-field-label login-label login-label-username">Username</label>
+                            {{ form.username }}
+                            <div class="form-field-error login-field-error"><ul></ul></div>
+                        </div>
+                        <div class="form-field login-field login-field-note">
+                            <label for="id_password" class="form-field-label login-label login-label-password">Password</label>
+                            {{ form.password }}
+                            <div class="form-field-error login-field-error"><ul></ul></div>
+                        </div>
+                        <input type="submit" value="Log In" class="identity-action-button red form-action login-action" />
+                    </from>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+

@@ -1,0 +1,52 @@
+#doctor-bio{
+    width: 30%;
+    position: relative;
+    float: left;
+    height: 100%;
+    min-height: 200px;
+    font-size: 14px;
+    border-right: 3px solid #e9e9e9;
+}
+.doctor-pix{
+    width: 220px;
+    background-image: url(https://static.makegameswith.us/static/img/unknown_profile.49eee1353c41.png);
+    height: 220px;
+    background-repeat: no-repeat;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+}
+.doctor-infos{
+    margin: 0px;
+    padding: 0px;
+    margin-left: 20px;
+    margin-top: 12px;
+}
+.doctor-infos > .doctor-info{
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
+    display: block;
+    float: left;
+    width: 100%;
+}
+.doctor-info-class{
+    float: left;
+    width: 40%;
+    font-weight: bold;
+}
+.doctor-info-class:after{
+    content: ':'
+}
+.doctor-info-value{
+    float: left;
+    width: 60%;
+}
+.content{
+    width: 69%;
+    float: left;
+    display: block;
+    position: relative;
+    padding-left: 5px;
+    padding-top: 3px;
+}

@@ -1,0 +1,15 @@
+{# Activity Sprite #}
+{% load identity_extras %}
+<div class="activity-sprite" data-id={{activity.id}}>
+    <div class="task-activity-heading">
+        <div class="task-activity-status">{{ activity.get_status_display }}</div>
+        <div class="task-activity-operator">@{{ who }}</div>
+        <div class="task-activity-time">
+            <div class="task-activity-when">at {{ activity.when }}</div>
+            <div class="task-activity-delay">{{ activity.delay|delta_string }} from task</div>
+        </div>
+    </div>
+    <div class="task-activity-note">
+        {{ activity.note }}
+    </div>
+</div>

@@ -1,0 +1,74 @@
+{% load staticfiles %}
+{% load identity_extras %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Patient {{patient.get_full_name}}</title>
+        <style type='text/css'>
+            @import url('{% static 'css/daterangepicker.css' %}');
+            @import url('{% static 'css/common.css' %}');
+            @import url('{% static 'css/heading.css' %}');
+            @import url('{% static 'css/patient.css' %}');
+            @import url('{% static 'css/sprite/notice.css' %}');
+            @import url('{% static 'css/sprite/ministory.css' %}');
+            @import url('{% static 'css/panel/patient.css' %}');
+            @import url('{% static 'css/sprite/doctor.css' %}');
+            @import url('{% static 'css/sprite/doctor-flat.css' %}');
+            @import url('{% static 'css/panel/ministories.css' %}');
+            @import url('{% static 'css/app/patient/visits.css' %}');
+        </style>
+        <script type="text/javascript" src="{% static 'js/jquery.1.9.0.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.sticky-kit.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/d3.v3.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.daterangepicker.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/panel/ministories.js' %}"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("#heading").stick_in_parent();
+                $(".left-panel").stick_in_parent();
+            })
+        </script>
+    </head>
+    <body>
+        <div class="heading" id="heading">
+            <div class="logo">//smcc:identity//</div>
+            <div class="user">
+                <a id="user_button" href="{% url 'patient' patient.id %}">{{request.user.get_short_name}}</a>
+                <div class="user-menu" id="user_menu">
+                    <ul class="user-menu-options">
+                        <li class="user-menu-option"><a href="/user/land">Profile</a></li>
+                        <li class="user-menu-option">Account</li>
+                        <li class="user-menu-option user-menu-option-break">&nbsp;</li>
+                        <li class="user-menu-option user-menu-option-last"><a href="/user/logout">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="search">
+                <input type="text" value="" class="search-input" />
+            </div>
+            <div class="navigation">
+                <ul class="links">
+                    <li class="link"><a href="{% url 'patient' patient.id %}">Profile</a></li>
+                    <li class="link"><a href="{% url 'patient_appointments' patient.id %}">Appointments</a></li>
+                    <li class="link"><a href="{% url 'patient_admissions' patient.id %}">Admissions</a></li>
+                    <li class="link"><a href="{% url 'patient_stories' patient.id %}">Stories</a></li>
+                    <li class="link"><a href="{% url 'patient_doctors' patient.id %}">Visits</a></li>
+                </ul>
+            </div>
+            <div class="map"></div>
+        </div>
+        <div class="main" id="main">
+            <div class="left-panel">
+            {% view 'identity.panels.PatientPanel' patient %}
+            {% view 'identity.sprites.DoctorFlatSprite' doctor %}
+            </div>
+            <div class="content">
+                {% for notice in notices %}
+                    {% view 'identity.sprites.NoticeSprite' notice %}
+                {% endfor %}
+                {% view 'identity.panels.MiniStoriesPanel' visits %}
+            </div>
+        </div>
+    </body>
+</html>

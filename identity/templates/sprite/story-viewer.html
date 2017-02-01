@@ -1,0 +1,67 @@
+{% load identity_extras %}
+
+<div class="story-viewer">
+    <div class="story-viewer-close">●</div>
+    <div class="story-viewer-meta">
+        <div class="story-viewer-info">
+            <div class="story-viewer-time">{{story.when}}</div>
+            <div class="story-viewer-controls">
+                <div class="story-viewer-control story-viewer-control-prev">previous</div>
+                <div class="story-viewer-control story-viewer-control-prev">next</div>
+            </div>
+        </div>
+        <div class="story-viewer-actors">
+            <div class="story-viewer-actor story-viewer-actor-doctor">
+                {% view "identity.views.DoctorSprite" story.doctor %}
+            </div>
+            <div class="story-viewer-actor story-viewer-actor-patient">
+                {% view "identity.views.PatientSprite" story.patient %}
+            </div>
+        </div>
+        {% if story.refers_to.count > 0 %}
+        <div class="story-viewer-following">
+            <ul class="ministories-list">
+                {% for story in story.refers_to.all %}
+                    <li class="ministory-list-item">
+                        <div class="ministory">
+                            {% view 'identity.sprites.MiniStorySprite' story %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        {% if story.refered_by.count > 0 %}
+        <div class="story-viewer-followers">
+            <ul class="ministories-list">
+                {% for story in story.refered_by.all %}
+                    <li class="ministory-list-item">
+                        <div class="ministory">
+                            {% view 'identity.sprites.MiniStorySprite' story %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        <div class="story-viewer-admissions">
+            {% for admission in story.admissions.all %}
+                <div class="story-viewer-admission">
+                    {% view "identity.sprites.AdmissionSprite" admission %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="story-viewer-content">
+        <div class="story-viewer-actions">
+            <div class="story-viewer-action story-viewer-action-share">&nbsp;</div>
+            <div class="story-viewer-action story-viewer-action-reply">&nbsp;</div>
+        </div>
+        <div class="story-viewer-subject">
+            {{story.subject}}
+        </div>
+        <div class="story-viewer-body">
+            {{story.body}}
+        </div>
+    </div>
+</div>

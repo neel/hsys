@@ -1,0 +1,10 @@
+.map{}
+.organizations{
+    margin: 0px;
+    padding: 0px;
+    width: 500px;
+    font-family: 'Lato', Calibri, Arial, sans-serif
+}
+.organization{
+    list-style-type: none;
+}

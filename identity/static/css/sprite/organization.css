@@ -1,0 +1,107 @@
+.organization-canvas{
+    position: relative;
+    display: block;
+    float: left;
+    width: 100%;
+    height: 280px;
+    background-color: #f5f5f5;
+    background-image: -webkit-linear-gradient(bottom,#f8f8f8,#cbcbcb);
+    background-image: -moz-linear-gradient(bottom,#f8f8f8,#cbcbcb);
+    background-image: -ms-linear-gradient(bottom,#f8f8f8,#cbcbcb);
+    background-image: -o-linear-gradient(bottom,#f8f8f8,#cbcbcb);
+    background-image: linear-gradient(bottom,#f8f8f8,#cbcbcb);
+    border: 1px solid #dcdcdc;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;   
+}
+.organization-canvas:hover{
+    background-image: -webkit-linear-gradient(bottom,#f9f9f9,#bcbcbc);
+    background-image: -moz-linear-gradient(bottom,#f9f9f9,#bcbcbc);
+    background-image: -ms-linear-gradient(bottom,#f9f9f9,#bcbcbc);
+    background-image: -o-linear-gradient(bottom,#f9f9f9,#bcbcbc);
+    background-image: linear-gradient(bottom,#f9f9f9,#bcbcbc);
+    border: 1px solid #C6C6C6;
+}
+.organization-name{
+    position: absolute;
+    display: block;
+    top: 0px;
+    left: 0px;
+    font-size: 26px;
+    padding-left: 12px;
+    padding-top: 7px;
+    z-index: 1;
+}
+.organization-cover{
+    position: relative;
+    display: block;
+    float: left;
+    width: 100%;
+    height: 180px;
+    background: url(http://mw2.google.com/mw-panoramio/photos/medium/90960478.jpg)
+}
+.organization-logo{
+    position: relative;
+    display: block;
+    float: left;
+    width: 80px;
+    height: 80px;
+    margin-top: -45px;
+    margin-left: 20px;
+    background: url(/static/pix/ruby_logo.png)
+}
+.organization-info{
+    position: relative;
+    display: block;
+    float: left;
+    font-size: 13px;
+    padding-left: 12px;
+    padding-top: 10px;
+}
+.organization-map{
+    position: relative;
+    display: block;
+    float: right;
+    width: 130px;
+    height: 100px;
+    background: url(http://maps.googleapis.com/maps/api/staticmap?center=Ruby+General+Hospital,Kolkata&zoom=14&size=98x130)
+}
+.organization-status{
+    position: relative;
+    display: block;
+    width: 370px;
+    height: 22px;
+    float: left;
+    margin-top: 15px;
+    border-top: 1px solid #E5E9F2;
+    padding-top: 5px;
+}
+.organization-name a{
+    text-decoration: none;
+    color: inherit;
+}
+.organization-address{}
+.organization-phone{
+    position: relative;
+    display: block;
+}
+.organization-web{}
+.organization-status-items{
+    margin: 0px;
+    padding: 0px;
+}
+.organization-status-item{
+    list-style-type: none;
+    float: left;
+    font-size: 14px;
+    margin-left: 7px;
+}
+.organization-status-item .unit{
+    display: inline;
+    margin-left: 3px;
+    font-size: 13px;
+}
+.unit{
+    cursor: pointer;
+}

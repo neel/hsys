@@ -1,0 +1,140 @@
+{% load staticfiles %}
+{% load identity_extras %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Patient {{patient.get_full_name}}</title>
+        <style type='text/css'>
+            @import url('{% static 'css/daterangepicker.css' %}');
+            @import url('{% static 'css/typeahead.css' %}');
+            @import url('{% static 'css/jquery.datetimepicker.css' %}');
+            @import url('{% static 'css/common.css' %}');
+            @import url('{% static 'css/form.css' %}');
+            @import url('{% static 'css/heading.css' %}');
+            @import url('{% static 'css/patient.css' %}');
+            @import url('{% static 'css/panel/patient.css' %}');
+            @import url('{% static 'css/sprite/notice.css' %}');
+            @import url('{% static 'css/sprite/negotiation.css' %}');
+            @import url('{% static 'css/sprite/appointment.css' %}');
+            @import url('{% static 'css/panel/appointments.css' %}');
+            @import url('{% static 'css/panel/appointment-creation.css' %}');
+        </style>
+        <script type="text/javascript" src="{% static 'js/jquery.1.9.0.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.sticky-kit.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.cookie.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/d3.v3.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.datetimepicker.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.daterangepicker.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/sprite/appointment.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/panel/appointments.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/typeahead.bundle.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/handlebars-v1.3.0.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/panel/appointment-creation.js' %}"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("#heading").stick_in_parent();
+                $("#patient-bio").stick_in_parent();                
+                $('#appointment_creation_button').click(function(){
+                    var panel = $('#appointment_creation_panel');
+                    if(panel.is(':visible')){
+                        panel.hide();
+                        $('#appointment_creation_button').show();
+                    }else{
+                        panel.show();
+                        $('#appointment_creation_button').hide();
+                    }
+                })
+                $('#appointment_creation_reset').click(function(){
+                    $('#appointment_creation_button').trigger('click');
+                })
+                $('#appointment_creation_form').submit(function(e){
+                    e.preventDefault();
+                    var overlay = $('#appointment_creation_panel .appointment-creation-form-overlay');
+                    $('.form-field-error ul').html('');
+                    overlay.addClass('appointment-creation-form-overlay-loading');
+                    $.ajax({
+                        url:  $(this).attr('action'),
+                        data: $(this).serializeArray(),
+                        type: 'POST',
+                        success: function(data){
+                            overlay.removeClass('appointment-creation-form-overlay-loading');
+                            overlay.html('');
+                            if(data.success){
+                                overlay.addClass('appointment-creation-form-overlay-success');
+                                overlay.html('Successfully Created Appointment');
+                                overlay.show();
+                                setTimeout(function(){
+                                    overlay.removeClass('appointment-creation-form-overlay-success');
+                                    overlay.html('');
+                                    overlay.hide();
+                                    $('#appointment_creation_button').trigger('click');
+                                }, 1500)
+                            }else{
+                                $.each(data.errors, function(key, errors){
+                                    var elem = $('#id_'+key);
+                                    var error_div = $(elem.siblings('.form-field-error')[0]);
+                                    var error_ul = error_div.find('ul');
+                                    error_ul.html('')
+                                    $.each(errors, function(i, error){
+                                        var li = $("<li>"+error+"</li>");
+                                        error_ul.append(li);
+                                    })
+                                })
+                            }
+                            console.log(data);
+                        },
+                        error: function(xhr){
+                            overlay.removeClass('appointment-creation-form-overlay-loading');
+                            overlay.html('');
+                            if(xhr.status == 403){
+                                var error_panel =  $('#appointment_creation_panel .form-error');
+                                error_panel.html('You are Not Authorized to Create an Appointment');
+                            }
+                        }
+                    });
+                    return false;
+                })
+            })
+        </script>
+    </head>
+    <body>
+        <div class="heading" id="heading">
+            <div class="logo">//smcc:identity//</div>
+            <div class="user">
+                <a id="user_button" href="{% url 'patient' patient.id %}">{{request.user.get_short_name}}</a>
+                <div class="user-menu" id="user_menu">
+                    <ul class="user-menu-options">
+                        <li class="user-menu-option"><a href="/user/land">Profile</a></li>
+                        <li class="user-menu-option">Account</li>
+                        <li class="user-menu-option user-menu-option-break">&nbsp;</li>
+                        <li class="user-menu-option user-menu-option-last"><a href="/user/logout">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="search">
+                <input type="text" value="" class="search-input" />
+            </div>
+            <div class="navigation">
+                <ul class="links">
+                    <li class="link"><a href="{% url 'patient' patient.id %}">Profile</a></li>
+                    <li class="link"><a href="{% url 'patient_appointments' patient.id %}">Appointments</a></li>
+                    <li class="link"><a href="{% url 'patient_admissions' patient.id %}">Admissions</a></li>
+                    <li class="link"><a href="{% url 'patient_stories' patient.id %}">Stories</a></li>
+                    <li class="link"><a href="{% url 'patient_doctors' patient.id %}">Visits</a></li>
+                </ul>
+            </div>
+            <div class="map"></div>
+        </div>
+        <div class="main" id="main">
+            {% view 'identity.panels.PatientPanel' patient %}
+            <div class="content">
+                {% for notice in notices %}
+                    {% view 'identity.sprites.NoticeSprite' notice %}
+                {% endfor %}
+                {% view 'identity.panels.AppointmentsPanel' patient.appointments.all %}
+            </div>
+            {% view 'identity.panels.AppointmentCreationPanel' appointment_form %}
+        </div>
+    </body>
+</html>

@@ -1,0 +1,7 @@
+{% load identity_extras %}
+
+{% for activity in activities|dictsortreversed:"when" %}
+<li class="task-activities-list-item task-activity-status-{{ activity.status|lower }} ">
+    {% view "identity.sprites.ActivitySprite" activity %}
+</li>
+{% endfor %}

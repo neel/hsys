@@ -1,0 +1,76 @@
+.negotiation-sprite{
+    float: left;
+    display: block;
+    position: relative;
+    width: 100%;
+    padding-left: 7px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #e7e7e7;
+}
+.negotiation-sprite-w{
+    border-left: 3px solid #FCFCB2;
+}
+.negotiation-sprite-f{
+    border-left: 3px solid #6789FF;
+}
+.negotiation-sprite-c{
+    border-left: 3px solid #FF6F67;
+}
+.negotiation-heading{
+    display: block;
+    float: left;
+    position: relative;
+    width: 100%;
+}
+.negotiation-status{
+    display: block;
+    float: right;
+    position: relative;
+    font-size: 10px;
+    padding-right: 6px;
+}
+.negotiation-operator{
+    display: block;
+    float: left;
+    position: relative;
+    font-weight: bold;
+    font-size: 14px;
+}
+.negotiation-time{
+    display: block;
+    float: left;
+    position: relative;
+    margin-left: 12px;
+    font-size: 13px;
+}
+.negotiation-created{
+    display: block;
+    float: left;
+    position: relative;
+}
+.negotiation-created-delay{
+    display: none;
+    float: left;
+    position: relative;
+}
+.negotiation-time:hover > .negotiation-created{
+    display: none;
+}
+.negotiation-time:hover > .negotiation-created-delay{
+    display: block;
+}
+.negotiation-note{
+    display: block;
+    float: left;
+    position: relative;
+    width: 100%;
+    padding-left: 22px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+.negotiation-proposal{
+    float: right;
+    position: relative;
+    font-size: 12px;
+    margin-right: 9px;
+}

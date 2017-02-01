@@ -1,0 +1,10 @@
+.doctors{
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Lato', Calibri, Arial, sans-serif
+}
+.doctor{
+    list-style-type: none;
+    float: left;
+    margin-right: 7px;
+}

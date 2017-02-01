@@ -1,0 +1,20 @@
+<div class="task-post-activity">
+    <div class="task-post-activity-overlay"></div>
+    <div class="task-post-activity-form-error">
+        {{ form.non_field_errors }}
+    </div>
+    <form class="task-post-activity-form" method="post" action="{{ form_action }}/">
+        {% csrf_token %}
+        <div class="task-post-activity-field task-post-activity-field-status">
+            {{ form.status.errors }}
+            <label for="id_status" class="task-post-activity-label task-post-activity-label-status">Status</label>
+            {{ form.status }}
+            <div class="task-post-activity-field-error"><ul></ul></div>
+            <input type="submit" value="respond" class="task-post-activity-action" />
+        </div>
+        <div class="task-post-activity-field task-post-activity-field-note">
+            {{ form.note }}
+            <div class="task-post-activity-field-error"><ul></ul></div>
+        </div>  
+    </from>
+</div>

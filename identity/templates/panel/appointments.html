@@ -1,0 +1,112 @@
+{# Appointments Panel #}
+{% load identity_extras %}
+
+<!-- begin appointments panel -->
+<div id="appointments_panel" class="appointments" data-last="{{ appointments.last.id }}">
+    <div class="appointments-heading">
+        <div class="appointments-heading-static">Appointments <div class="unit">{{appointments|length}}</div></div>
+        <div class="appointments-heading-filter">
+            <div class="appointments-heading-filter-range">
+                <div class="filter-range">
+                    <div class="filter-range-from appointments-heading-filter-from"><input type="text" name="from" class="appointments-filter-input" /></div>
+                    <div class="filter-range-to appointments-heading-filter-to"><input type="text" name="from" class="appointments-filter-input" /></div>
+                </div>
+                <div class="appointments-heading-filter-search"><input type="submit" value="Filter" class="identity-action identity-action-button appointments-heading-filter-search-button" /></div>
+            </div>
+        </div>
+        {% with user|classname as user_class %}
+        {% if user_class == 'Patient' %}
+        <div class="identity-action identity-action-button red appointments-heading-create" id="appointment_creation_button">Create Appointment</div>
+        {% endif %}
+        {% endwith %}
+    </div>
+    <ul class="appointments-list">
+    {% for appointment in appointments %}
+        <li class="appointment-list-item">
+            <div class="appointment-composite">
+                <div class="appointment">
+                    {% view 'identity.sprites.AppointmentSprite' appointment %}
+                </div>
+                <div class="negotiations" data-last="{{ appointment.negotiations.all.last.id }}">
+                    <ul class="negotiations-list">
+                        {% for negotiation in appointment.negotiations.all %}
+                            <li class="negotiation-list-item">
+                                <div class="negotiation">
+                                    {% view 'identity.sprites.NegotiationSprite' negotiation %}
+                                </div>
+                            </li>
+                        {% endfor %}
+                        <li class="negotiation-list-item">
+                            <div class="negotiation negotiation-create">
+                                <div class="negotiation-sprite negotiation-sprite-create">
+                                   <input type="hidden" name="appointment" value="{{appointment.id}}" />
+                                   <div class="negotiation-heading">
+                                       <div class="negotiation-status">
+                                            <div class="identity-action identity-action-button orange negotiation-sprite-reply-btn negotiation-sprite-reply-btn-respond">Respond</div>
+                                            <ul class="identity-action identity-action-menu negotiation-sprite-reply-menu">
+                                                {% with user|classname as user_class %}
+                                                {% if user_class == 'Doctor' %}
+                                                <li value="F"><a href="#" class="identity-action identity-action-button red negotiation-sprite-reply-btn negotiation-sprite-reply-btn-action negotiation-sprite-reply-btn-fix">Fix</a></li>
+                                                {% endif %}
+                                                <li value="W"><a href="#" class="identity-action identity-action-button pink negotiation-sprite-reply-btn negotiation-sprite-reply-btn-action negotiation-sprite-reply-btn-negotiate">Negotiate</a></li>
+                                                {% if user_class == 'Patient' %}
+                                                <li value="C"><a href="#" class="identity-action identity-action-button green negotiation-sprite-reply-btn negotiation-sprite-reply-btn-action negotiation-sprite-reply-btn-cancel">Cancel Appointment</a></li>
+                                                {% endif %}
+                                                {% endwith %}
+                                            </ul>
+                                       </div>
+                                       <div class="negotiation-proposal">
+                                           <div class="form-field-error form-field-error-when"><ul></ul></div>
+                                           Proposed: <input type="text" name="when" class="negotiation-sprite-when" />
+                                       </div>
+                                       <div class="negotiation-operator">{{ user }}</div>
+                                       <!--
+                                       <div class="negotiation-time">
+                                           <div class="negotiation-created">at {{datetime.datetime.now}}</div>
+                                           <div class="negotiation-created-delay">now</div>
+                                       </div>
+                                       -->
+                                   </div>
+                                   <div class="negotiation-note">
+                                       <textarea class="negotiation-note-editor" name="note"></textarea>
+                                       <div class="form-field-error form-field-error-note"><ul></ul></div>
+                                   </div>
+                               </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+
+<!-- begin commet connector -->
+<script type="text/javascript">
+(function($){
+    var update = function(){
+        var panel = $('#appointments_panel');
+        var panel_last = parseInt(panel.attr('data-last'));
+        if(panel_last !== panel_last)
+            panel_last = 0;
+        $.ajax({
+            url: '/pulse/appointments/{{user.id}}/'+panel_last
+        }).done(function(content, status, xhr){
+            var content_length = content.length;
+            var latest_id = xhr.getResponseHeader('Last-Id');
+            if(content_length){
+                var ul = $(panel.find('ul.appointments-list')[0]);
+                ul.prepend(content);
+                if(latest_id)
+                    panel.attr("data-last", latest_id);
+            }
+            setTimeout(update, 500);
+        });
+    };
+    setTimeout(update, 500);
+})(jQuery);
+</script>
+<!-- end commet connector -->
+
+<!-- end appointments panel -->

@@ -1,0 +1,18 @@
+{# Patient Sprite #}
+
+{% load identity_extras %}
+<div class="patient-canvas{% if patient.paramedic %} patient-paramedic{% endif %}" data-id="{{ patient.id }}" data-organizations="{{ organizations }}">
+    <div class="patient-pic"></div>
+    <div class="patient-info patient-info-intro">
+        <div class="patient-name"><a href="/patient/{{ patient.id }}">{{ patient.get_full_name }}</a></div>
+        <div class="patient-email">{{ patient.email }}</div>
+        <div class="patient-address">{{ patient.address }}</div>
+        <div class="patient-gender">{{ patient.get_sex_display }}</div>
+    </div>
+    <div class="patient-info patient-info-health">
+        <div class="patient-age">Age: <div class="unit">{{ patient.age|delta_string }}</div></div>
+        <div class="patient-stories">Cases: <div class="unit">{{ patient.stories.all|length }}</div></div>
+        <div class="patient-patients">Doctors: <div class="unit">{{ patient.visits|length }}</div></div>
+        <div class="patient-organizations">Admissions: <div class="unit">{{ patient.admissions.count }}</div></div>
+    </div>
+</div>

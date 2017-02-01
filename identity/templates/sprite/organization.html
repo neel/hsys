@@ -1,0 +1,34 @@
+{# Organization Sprite #}
+<div class="organization-canvas" data-id="{{ organization.id }}" data-doctors="{{ doctors }}">
+    <div class="organization-name">
+        <a href="/organization/{{ organization.id }}">{{ organization.name }}</a>
+    </div>
+    <div class="organization-cover">
+        
+    </div>
+    <div class="organization-logo">
+        
+    </div>
+    <div class="organization-info">
+        <div class="organization-address">
+            {{ organization.address }}
+        </div>
+        <div class="organization-phone">
+            {{ organization.phone }}
+            (033)-2345 0125
+        </div>
+        <div class="organization-web">
+            {{ organization.website }}
+        </div>
+    </div>
+    <div class="organization-map">
+        
+    </div>
+    <div class="organization-status">
+        <ul class="organization-status-items">
+            <li class="organization-status-item organization-status-item-doctors">Doctors Associated <div class="unit"> {{ organization.doctors.count }} </div></li>
+            <li class="organization-status-item organization-status-item-beds">Total Beds <div class="unit"> {{ organization.beds.count }} </div></li>
+            <li class="organization-status-item">Available Beds <div class="unit"> {{ organization.beds.count }} </div></li>
+        </ul>
+    </div>
+</div>

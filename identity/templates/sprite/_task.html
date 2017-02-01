@@ -1,0 +1,9 @@
+{% load identity_extras %}
+<li class="patient-tasks-list-item">
+    {% view "identity.sprites.TaskSprite" task %}
+    <div class="task-activities">
+        <ul class="task-activities-list">
+            {% view "identity.sprites._ActivitiesSprite" task %}
+        </ul> 
+    </div>
+</li>

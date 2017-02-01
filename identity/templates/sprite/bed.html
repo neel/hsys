@@ -1,0 +1,4 @@
+{% load identity_extras %}
+<div class="bed-canvas" data-id="{{ bed.id }}" data-organization="{{ bed.organization.id }}">
+    {{bed.local_id}}@{{bed.organization.get_full_name}}
+</div>

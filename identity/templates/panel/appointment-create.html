@@ -1,0 +1,38 @@
+{% load widget_tweaks %}
+
+<!-- begin appointments-creation panel -->
+<div class="appointment-create-panel" id="appointment_creation_panel">
+    <div class="appointment-create-panel-canvas">
+        <div class="form-container appointment-creation-form">
+            <div class="form-overlay appointment-creation-form-overlay"></div>
+            <div class="form-error appointment-creation-form-error">
+                {{ form.non_field_errors }}
+            </div>
+            <form class="form" method="post" action="{% url 'appointment_create'  %}" id="appointment_creation_form">
+                {% csrf_token %}
+                <div class="form-field appointment-creation-form-field">
+                    {{ form.doctor.errors }}
+                    <input type="hidden" name="doctor" id="id_doctor" />
+                    <input type="text" name="doctor_selector" id="id_doctor_selector" class="appointment-creation-form-field-input appointment-creation-form-field-input-doctor" placeholder="Type Doctor Name" />
+                    <div class="form-field-error appointment-creation-form-field-error"><ul></ul></div>
+                </div>
+                <div class="form-field appointment-creation-form-field">
+                    {{ form.schedule.errors }}
+                    {{ form.schedule|add_class:"appointment-creation-form-field-input appointment-creation-form-field-input-schedule" }}
+                    <div class="form-field-error appointment-creation-form-field-error"><ul></ul></div>
+                </div>
+                <div class="form-field appointment-creation-form-field-error">
+                    {{ form.note.errors }}
+                    <label for="id_note" class="form-field-label appointment-creation-form-field-label">Note</label>
+                    {{ form.note|add_class:"appointment-creation-form-field-input appointment-creation-form-field-input-note" }}
+                    <div class="form-field-error appointment-creation-form-field-error"><ul></ul></div>
+                </div>
+                <div class="form-field appointment-creation-form-field">
+                    <input id="appointment_creation_submit" type="submit" name="submit" value="Book Appointment" class="form-action identity-action-button red appointment-creation-form-field-action" />
+                    <input id="appointment_creation_reset" type="reset" name="reset" value="Cancel" class="form-action identity-action-button green appointment-creation-form-field-action" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- end appointments-creation panel -->

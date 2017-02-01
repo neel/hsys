@@ -1,0 +1,30 @@
+#patient-bio{
+    height: auto;
+}
+.left-panel{
+    float: left;
+    display: block;
+    position: relative;
+    width: 30%;
+}
+.left-panel #patient-bio{
+    width: 100%;
+}
+.left-panel .doctor-canvas-flat{
+    background: inherit;
+}
+.left-panel .doctor-canvas-flat:hover{
+    background: inherit;
+    border-right: 0px none;
+}
+.left-panel .doctor-pic{
+    background-color: inherit;
+    border: 0px none;
+    border-radius: 0px;
+}
+.left-panel .doctor-info{
+    background: inherit;
+}
+.left-panel .doctor-info-group{
+    padding-right: 9px;
+}

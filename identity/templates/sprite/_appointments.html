@@ -1,0 +1,60 @@
+{% load identity_extras %}
+
+{% for appointment in appointments %}
+    <li class="appointment-list-item">
+        <div class="appointment-composite">
+            <div class="appointment">
+                {% view 'identity.sprites.AppointmentSprite' appointment %}
+            </div>
+            <div class="negotiations" data-last="{{ appointment.negotiations.all.last.id }}">
+                <ul class="negotiations-list">
+                    {% for negotiation in appointment.negotiations.all %}
+                        <li class="negotiation-list-item">
+                            <div class="negotiation">
+                                {% view 'identity.sprites.NegotiationSprite' negotiation %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                    <li class="negotiation-list-item">
+                        <div class="negotiation negotiation-create">
+                            <div class="negotiation-sprite negotiation-sprite-create">
+                               <input type="hidden" name="appointment" value="{{appointment.id}}" />
+                               <div class="negotiation-heading">
+                                   <div class="negotiation-status">
+                                        <div class="identity-action identity-action-button orange negotiation-sprite-reply-btn negotiation-sprite-reply-btn-respond">Respond</div>
+                                        <ul class="identity-action identity-action-menu negotiation-sprite-reply-menu">
+                                            {% with user|classname as user_class %}
+                                            {% if user_class == 'Doctor' %}
+                                            <li value="F"><a href="#" class="identity-action identity-action-button red negotiation-sprite-reply-btn negotiation-sprite-reply-btn-action negotiation-sprite-reply-btn-fix">Fix</a></li>
+                                            {% endif %}
+                                            <li value="W"><a href="#" class="identity-action identity-action-button pink negotiation-sprite-reply-btn negotiation-sprite-reply-btn-action negotiation-sprite-reply-btn-negotiate">Negotiate</a></li>
+                                            {% if user_class == 'Patient' %}
+                                            <li value="C"><a href="#" class="identity-action identity-action-button green negotiation-sprite-reply-btn negotiation-sprite-reply-btn-action negotiation-sprite-reply-btn-cancel">Cancel Appointment</a></li>
+                                            {% endif %}
+                                            {% endwith %}
+                                        </ul>
+                                   </div>
+                                   <div class="negotiation-proposal">
+                                       <div class="form-field-error form-field-error-when"><ul></ul></div>
+                                       Proposed: <input type="text" name="when" class="negotiation-sprite-when" />
+                                   </div>
+                                   <div class="negotiation-operator">{{ user }}</div>
+                                   <!--
+                                   <div class="negotiation-time">
+                                       <div class="negotiation-created">at {{datetime.datetime.now}}</div>
+                                       <div class="negotiation-created-delay">now</div>
+                                   </div>
+                                   -->
+                               </div>
+                               <div class="negotiation-note">
+                                   <textarea class="negotiation-note-editor" name="note"></textarea>
+                                   <div class="form-field-error form-field-error-note"><ul></ul></div>
+                               </div>
+                           </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </li>
+{% endfor %}

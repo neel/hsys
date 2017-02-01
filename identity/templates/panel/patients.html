@@ -1,0 +1,23 @@
+{% load identity_extras %}
+
+<div class="patients">
+    <div class="patients-heading">
+        <div class="patients-heading-static">Patients <div class="unit">{{patients|length}}</div></div>
+        <div class="patients-heading-filter">
+            <div class="patients-heading-filter-range">
+                <div class="filter-range">
+                    <div class="filter-range-from patients-heading-filter-from"><input type="text" name="from" class="patients-filter-input" /></div>
+                    <div class="filter-range-to patients-heading-filter-to"><input type="text" name="from" class="patients-filter-input" /></div>
+                </div>
+                <div class="patients-heading-filter-search"><input type="submit" value="Filter" class="identity-action identity-action-button patients-heading-filter-search-button" /></div>
+            </div>
+        </div>
+    </div>
+    <div class="patients-list">
+        {% for patient in patients %}
+            <div class="component-sprite patient-sprite" data-groups="['patient']" data-name="{{ patient.name }}">
+            {% view "identity.views.PatientSprite" patient %}
+            </div>
+        {% endfor %}
+    </div>
+</div>

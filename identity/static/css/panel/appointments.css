@@ -1,0 +1,180 @@
+.appointments{
+    width: 100%;
+    float: left;
+    display: block;
+    margin-top: 12px;
+    padding: 4px;
+    box-sizing: border-box;
+}
+.appointments-heading{
+    width: 100%;
+    float: left;
+    display: block;
+    padding-bottom: 3px;
+    background-color: #d9d9d9;
+    padding-left: 7px;
+    font-size: 15px;
+    position: relative;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+}
+.appointments-heading * {
+    float: left;
+    display: block;
+    position: relative;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+.appointments-heading-static{
+    /*min-width: 125px;*/
+    margin-top: 10px;
+}
+.appointments-heading-filter{
+    margin-left: 16px;
+}
+.appointments-heading-filter-range{
+
+}
+.appointments-heading-filter-from{
+
+}
+.appointments-heading-filter-to{
+
+}
+.appointments-heading-filter-search{
+    margin-top: 4px;
+}
+.unit{
+    float: none;
+    display: inline-block;
+}
+.appointments-heading .unit{
+    background-color: #e6e6e6;
+    font-size: 12px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 1px;
+}
+.appointments-heading-create{
+    float: right;
+    margin-top: 3px;
+    margin-right: 3px;
+}
+
+.appointments-filter-input{
+    border: 1px solid #cdcdcd;
+    background: #f6f6f6;
+    height: 23px;
+    margin-top: 5px;
+    margin-right: 9px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.appointments-list{
+    margin: 0px;
+    padding: 0px;
+    margin: 0px;
+    padding: 0px;
+    float: left;
+    display: block;
+    width: 100%;
+    position: relative;
+}
+.appointment-list-item{
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
+}
+.appointment-composite{
+    display: block;
+    float: left;
+    width: 100%;
+}
+.appointment{
+    position: relative;
+}
+.negotiations{
+    width: 100%;
+    float: left;
+    display: block;
+    background-color: #f2f2f2;
+    /*hide by default*/
+    display: none;
+}
+.negotiations-list{
+    margin: 0px;
+    padding: 0px;
+}
+.negotiation-list-item{
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
+}
+.negotiation{
+    width: 100%;
+    float: left;
+    display: block;
+}
+.negotiation-note-editor{
+    height: 30px;
+    width: 100%;
+    border: 0px none;
+    border-top: 1px solid #d9d9d9;
+    background: #fafafa;
+    margin-bottom: 3px;
+    margin-right: 5px;
+}
+.negotiation-create{}
+.negotiation-create .negotiation-note{
+    padding-right: 7px;
+}
+.appointments-heading-filter-search-button{
+    height: 22px;
+    margin-top: 1px;
+    line-height: 12px;
+}
+.negotiation-sprite-reply-btn{
+    height: 16px;
+    line-height: 17px;
+    margin-top: -2px;
+    min-width: 24px;
+}
+.negotiation-sprite-reply-menu{
+    display: inline-block;
+    margin: 0px;
+    padding: 0px;
+    display: none;
+}
+.negotiation-sprite-reply-menu li{
+    list-style-type: none;
+    float: left;
+    margin-left: 4px;
+}
+.negotiation-sprite-reply-menu li a{
+    text-decoration: none;
+    color: inherit;
+}
+.negotiation-sprite-when{
+    width: 73px;
+    padding-left: 2px;
+    font-size: 9px;
+    border: 0px none;
+}
+.form-field-error-when{
+    float: left;
+    margin-right: 7px;
+    color: #D34836;
+}
+.form-field-error-when ul{}
+.form-field-error-when ul li{
+    list-style-type: none;
+    float: left;
+}
+.form-field-error-note{}
+.form-field-error-note ul{}
+.form-field-error-note ul li{
+    list-style-type: none;
+    display: block;
+}

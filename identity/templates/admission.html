@@ -1,0 +1,339 @@
+{% load staticfiles %}
+{% load identity_extras %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ admission.bed.local_name }} @ {{ admission.patient.name }} on {{ admission.admission }}</title>
+        <style type='text/css'>
+            @import url('{% static 'css/jquery.datetimepicker.css' %}');
+            @import url('{% static 'css/common.css' %}');
+            @import url('{% static 'css/heading.css' %}');
+            @import url('{% static 'css/admission.css' %}');
+            @import url('{% static 'css/panel/patient.css' %}');
+            @import url('{% static 'css/panel/task-creation.css' %}');
+            @import url('{% static 'css/sprite/task.css' %}');
+            @import url('{% static 'css/sprite/activity.css' %}');
+            @import url('{% static 'css/sprite/ministory.css' %}');
+            @import url('{% static 'css/sprite/story-viewer.css' %}');
+            @import url('{% static 'css/sprite/doctor.css' %}');
+            @import url('{% static 'css/sprite/patient.css' %}');
+            @import url('{% static 'css/sprite/admission.css' %}');
+            @import url('{% static 'css/panel/ministories.css' %}');
+            #task_creation_panel{
+                display: none;
+            }
+            .admission-story{
+                width: 100%;
+                position: relative;
+                display: block;
+                font-size: 14px;
+                border-right: 3px solid #e9e9e9;
+                border-top: 3px dashed #dacbcb;
+                float: left;
+                margin-top: 10px;
+            }
+            .admission-story .ministory-subject {
+                border-bottom: 2px dashed #e9e9e9;
+            }
+        </style>
+        <script type="text/javascript" src="{% static 'js/jquery.1.9.0.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.datetimepicker.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.sticky-kit.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.daterangepicker.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/handlebars-v1.3.0.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/panel/task-creation.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/nunjucks.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/sprite/story-viewer.js' %}"></script>
+        <script type="text/javascript">
+            var identity = {
+                task: {
+                    task: function(task_id){
+                        var task = null;
+                        var sprites = $('.task-sprite');
+                        sprites.each(function(i, sprite){
+                            if(parseInt(task_id) == parseInt($(sprite).attr('data-id'))){
+                                task = sprite;
+                            }
+                        });
+                        return task;
+                    },
+                    added: function(task_id, task_ul, completed, aborted){
+                        jQuery.get("/_task/"+task_id+"/?full", function(content){
+                            var first = task_ul.find('li').first();
+                            $($.trim(content.replace(/\s+/g, " "))).insertAfter(first);
+                            completed();
+                        }).fail(aborted);
+                        identity.task.clean(task_ul);
+                    },
+                    updated: function(task_id, task_div, completed, aborted){
+                        jQuery.get("/_task/"+task_id, function(content){
+                            var task = content;
+                            jQuery.get("/_activities/"+task_id, function(content){
+                                var activities = content;                                
+                                var activities_ul = task_div.next().find('ul.task-activities-list');
+                                activities_ul.html(activities);
+                                var task_str = $($.trim(task.replace(/\s+/g, " "))).html();
+                                task_div.html(task_str);
+                                completed();
+                            }).fail(aborted);
+                        }).fail(aborted);
+                    },
+                    clean: function(task_ul){
+                        var tasks_seen = [];
+                        var tasks = $(task_ul).find('li');
+                        tasks.each(function(i, task){
+                            var task_sprite = $(task).find(".task-sprite");
+                            var task_id = task_sprite.attr('data-id');
+                            if(tasks_seen.includes(task_id)){
+                                $(task).remove();
+                            }else{
+                                tasks_seen.push(task_id);
+                            }
+                        });
+                    }
+                } 
+            };
+        </script>
+        <script type="text/javascript">
+            //nunjucks.configure('{{ BASE_URL }}', { autoescape: true });
+            nunjucks.configure('/');
+            $(document).ready(function(){
+                $("#patient-bio").stick_in_parent();
+                $("#heading").stick_in_parent();
+                if($('.admission-story').length != 0)
+                    $("#patient-bio").append($('.admission-story'));
+                $(window).resize(function(){
+                    $('.task-post-activity').each(function(){
+                        var attachment =  $(this).data('attachment');
+                        $(this).css('top',  attachment.offset().top  + attachment.outerHeight())
+                               .css('left', attachment.offset().left + attachment.outerWidth())
+                               .css('width', attachment.parents('.patient-tasks-list-item').innerWidth()-30);
+                    });
+                });
+                $('#task_create').click(function(){
+                    $('#task_creation_panel').show();
+                });
+                $('#task_creation_reset').click(function(){
+                    $('#task_creation_panel').hide();
+                });
+                $(document).on('click', 'div.task-icon', function(){
+                    var self = this;
+                    $('.task-post-activity').remove();
+                    var task_id = $(this).find('.data[name="task_id"]')[0].value;
+                    jQuery.get("/activity/create/"+task_id, function(content){
+                        var post_box = $(content);
+                        console.log(self, $(self).offset());
+                        $(document.body).append($(post_box));
+                        $(post_box).css('top',  $(self).offset().top  + $(self).outerHeight())
+                            .css('left', $(self).offset().left + $(self).outerWidth())
+                            .css('width', $(self).parents('.patient-tasks-list-item').innerWidth()-30);
+                        post_box.data('attachment', $(self));
+                        
+                    });                    
+                });
+                $(document).on('submit', 'form.task-post-activity-form', function(event){
+                    event.stopImmediatePropagation();
+                    event.preventDefault();
+                    var form = $(this);
+                    $('.task-post-activity-overlay').addClass('task-post-activity-overlay-loading');
+                    $.ajax({
+                        url:  $(this).attr('action'),
+                        data: $(this).serializeArray(),
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function(response){
+                            $('.task-post-activity-overlay').removeClass('task-post-activity-overlay-loading');
+                            if(response.success) {
+                                // $('.task-post-activity').remove();
+                                $('.task-post-activity-overlay').addClass('task-post-activity-overlay-success');
+                                var task = form.parent().data('attachment').parent();
+                                identity.task.updated(response.task, task, function(){
+                                    setTimeout(function(){
+                                        form.parent().remove();
+                                    }, 400);
+                                }, function(){});
+                            }else{
+                                $('.task-post-activity-field-error ul').each(function(){
+                                    $(this).html(' ');
+                                });
+                                $.each(response.errors, function(key, errors){
+                                    var error_ul = null;
+                                    if(key == "_"){
+                                        form_errors = $(form.parent().find('.task-post-activity-form-error')[0]);
+                                        form_errors.html('');
+                                        $(document.createElement('ul')).appendTo(form_errors);
+                                        error_ul = form_errors.find('ul');
+                                    }else{
+                                        var elem = $('#id_'+key);
+                                        var error_div = $(elem.siblings('.task-post-activity-field-error')[0]);
+                                        error_ul = error_div.find('ul');
+                                    }
+                                    $.each(errors, function(i, error){
+                                        var li = $("<li>"+error+"</li>");
+                                        error_ul.append(li);
+                                    });
+                                });
+                            }
+                        }
+                    });
+                    return false;
+                });
+                $(document).click(function(e){
+                    if ($(e.target).hasClass('task-icon')) {
+                        
+                    }else if ($(e.target).hasClass('task-post-activity') || $(e.target).parents('.task-post-activity').length){
+
+                    }else{
+                        $('.task-post-activity').remove();
+                    }
+                });
+                
+            });
+        </script>
+        <!-- begin commet connector -->
+        <script type="text/javascript">
+            $(document).ready(function(){
+                (function($){
+                    var update = function(){
+                        var panel = $('#patient-tasks');
+                        $.ajax({
+                            url: '/pulse/tasks/{{admission.id}}/'+panel.attr('data-last')
+                        }).done(function(content, status, xhr){
+                            var content_length = content.length;
+                            var latest_id = xhr.getResponseHeader('Last-Id');
+                            if(content_length){
+                                var ul = $(panel.find('ul.patient-tasks-list')[0]);
+                                var first = ul.find('li').first();
+                                $($.trim(content.replace(/\s+/g, " "))).insertAfter(first);
+                                if(latest_id)
+                                    panel.attr("data-last", latest_id);
+                                identity.task.clean(ul);
+                            }
+                            setTimeout(update, 500);
+                        });
+                    };
+                    setTimeout(update, 500);
+                })(jQuery);
+                var last_activity = 0;
+                (function($){
+                    var update = function(){
+                        $.ajax({
+                            url: '/pulse/watch/{{admission.id}}/'+last_activity
+                        }).done(function(content, status, xhr){
+                            var latest_id = xhr.getResponseHeader('Last-Id');
+                            latest_id = parseInt(latest_id);
+                            console.log(latest_id);
+                            if(latest_id === latest_id){ // NaN check
+                                last_activity = latest_id;
+                                console.log(content);
+                                for(var task_id in content.update){
+                                    if(content.update.hasOwnProperty(task_id)){
+                                        console.log(task_id);
+                                        var task_div = identity.task.task(task_id);
+                                        identity.task.updated(task_id, $(task_div), function(){}, function(){});
+                                    }
+                                }
+                            }
+                            setTimeout(update, 500);
+                        });
+                    };
+                    setTimeout(update, 500);
+                })(jQuery);
+            });
+        </script>
+        <!-- end commet connector -->
+        <script type="text/javascript">
+        $(document).ready(function(){
+            $('.ministory-card').click(function(){
+                $('.story-viewer').remove();
+                var id = $(this).attr('data-id');
+                $.ajax({
+                    url: '/_story/'+id
+                }).done(function(content, status, xhr){
+                    var content_length = content.length;
+                    if(content_length){
+                        var story_board = $($.trim(content.replace(/\s+/g, " ")));
+                        $('#main').append(story_board);
+                    }
+                });
+            });
+        });
+        </script>
+    </head>    
+    <body>
+        <div class="heading" id="heading">
+            <div class="logo"><a href="/identity">//smcc:identity//</a></div>
+            <div class="name">{{admisssion.bedorganization.get_full_name}}</div>
+            <div class="user">
+                <a id="user_button" href="{% url 'land' %}">{{request.user.get_short_name}}</a>
+                <div class="user-menu" id="user_menu">
+                    <ul class="user-menu-options">
+                        <li class="user-menu-option"><a href="/user/land">Profile</a></li>
+                        <li class="user-menu-option">Account</li>
+                        <li class="user-menu-option user-menu-option-break">&nbsp;</li>
+                        <li class="user-menu-option user-menu-option-last"><a href="/user/logout">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="search">
+                <input type="text" value="" class="search-input" />
+            </div>
+            <div class="navigation">
+                <ul class="links">
+                    <li class="link"><a href="{% url 'patient' admission.patient.id %}">Profile</a></li>
+                    <li class="link"><a href="{% url 'patient_appointments' admission.patient.id %}">Appointments</a></li>
+                    <li class="link"><a href="{% url 'patient_admissions' admission.patient.id %}">Admissions</a></li>
+                    <li class="link"><a href="{% url 'patient_stories' admission.patient.id %}">Stories</a></li>
+                    <li class="link"><a href="{% url 'patient_doctors' admission.patient.id %}">Visits</a></li>
+                    <li class="link"><a href="{% url 'patient_sensors' admission.patient.id %}">Sensors</a></li>
+                </ul>
+            </div>
+            <div class="map"></div>
+        </div>
+        <div id="main" class="main">
+            {% view "identity.panels.TaskCreationPanel" form admission %}
+            {% view "identity.panels.PatientPanel" admission.patient %}
+            <div class="admission-story">
+                {% if admission.is_regular %}
+                    {% view "identity.sprites.StoryCardSprite" admission.real.story %}
+                {% endif %}
+            </div>
+            <div id="patient-tasks" data-last="{{ admission.tasks.all.last.id }}">
+                <ul class="patient-tasks-list">
+                    <li class="patient-tasks-list-item">
+                        <div class="task-sprite">
+                            <div class="task-dt">
+                                <div class="task-date"></div>
+                                <div class="task-time"></div>
+                            </div>
+                            <div class="task-icon-create" id="task_create">
+                                <div class="identity-action-button red">Create Task</div>
+                                <input type="hidden" name="task_id" value="" class="data" />
+                            </div>
+                            <div class="task-main">
+                                <div class="task-subject"></div>
+                                <div class="task-body"></div>
+                            </div>
+                        </div>
+                    </li>
+                    {% for task in admission.tasks.all reversed %}
+                    <li class="patient-tasks-list-item">
+                        {% view "identity.sprites.TaskSprite" task %}
+                        <div class="task-activities">
+                            <ul class="task-activities-list">
+                                {% for activity in task.activities.all|dictsortreversed:"when" %}
+                                <li class="task-activities-list-item task-activity-status-{{ activity.status|lower }} ">
+                                    {% view "identity.sprites.ActivitySprite" activity %}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </li>
+                    {% endfor %}
+                    <li class="patient-tasks-list-item"></li>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,28 @@
+{# Admission Sprite #}
+
+{% load identity_extras %}
+<div class="admission-sprite" data-id="{{admission.id}}" data-href="{% url 'admission' admission.id %}">
+    <div class="admission-heading">@ {{admission.org}}</div>
+    <div class="admission-body">
+        <div class="admission-info">
+            <div class="admission-info-class">Doctor</div>
+            <div class="admission-info-value admission-info-doctor">{{admission.doctor}}</div>
+        </div>
+        <div class="admission-info">
+            <div class="admission-info-class">Patient</div>
+            <div class="admission-info-value admission-info-patient">{{admission.patient}}</div>
+        </div>
+        <div class="admission-info">
+            <div class="admission-info-class">Admitted On</div>
+            <div class="admission-info-value admission-info-time">{{admission.admitted}}</div>
+        </div>
+        <div class="admission-info">
+            <div class="admission-info-class">Released</div>
+            <div class="admission-info-value admission-info-when">{{admission.released}}</div>
+        </div>
+        <div class="admission-info">
+            <div class="admission-info-class">Tasks</div>
+            <div class="admission-info-value admission-info-bed">{{admission.bed.local_id}}<a class="follow" href="{% url 'admission' admission.id %}"></a></div>
+        </div>
+    </div>
+</div>

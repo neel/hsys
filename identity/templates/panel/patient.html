@@ -1,0 +1,46 @@
+{# Patient Panel #}
+{% load identity_extras %}
+
+<div id="patient-bio">
+    <div class="patient-pix"></div>
+    <ul class="patient-infos">
+        <li class="patient-info">
+            <div class="patient-info-class">Name</div>
+            <div class="patient-info-value">{{ patient.get_full_name }}</div>
+        </li>
+        <li class="patient-info">
+            <div class="patient-info-class">Age</div>
+            <div class="patient-info-value">{{ patient.age|delta_string }}</div>
+        </li>
+        <li class="patient-info">
+            <div class="patient-info-class">Sex</div>
+            <div class="patient-info-value">{{ patient.get_sex_display }}</div>
+        </li>
+        <li class="patient-info">
+            <div class="patient-info-class">Address</div>
+            <div class="patient-info-value">{{ patient.address }}</div>
+        </li>
+        {% if patient.admission %}
+        <li class="patient-info">
+            <div class="patient-info-class">Admitted To</div>
+            <div class="patient-info-value">{{ patient.admission.bed.organization.get_full_name }}</div>
+        </li>
+        <li class="patient-info">
+            <div class="patient-info-class">Bed</div>
+            <div class="patient-info-value">{{ patient.admission.bed.local_id }}</div>
+        </li>
+        <li class="patient-info">
+            <div class="patient-info-class">Admitted On</div>
+            <div class="patient-info-value">{{ patient.admission.admitted }}</div>
+        </li>
+        <li class="patient-info">
+            <div class="patient-info-class">Released On</div>
+            <div class="patient-info-value">{{ patient.admission.released }}</div>
+        </li>
+        <li class="patient-info">
+            <div class="patient-info-class">Referrer Doctor</div>
+            <div class="patient-info-value">{{ patient.admission.doctor.get_full_name }}</div>
+        </li>
+        {% endif %}
+    </ul>
+</div>

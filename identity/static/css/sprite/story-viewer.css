@@ -1,0 +1,125 @@
+.story-viewer{
+    position: fixed;
+    display: block;
+    left: 0px;
+    top: 0px;
+    width: 338px;
+    height: 100%;
+    background-color: white;
+    padding-top: 36px;
+    background-color: #efefef;
+    background-image: url("/static/pix/az-subtle.png");
+    border-right: 1px solid #dadada;
+}
+.story-viewer-close{
+    position: absolute;
+    top: 26px;
+    right: -29px;
+    font-size: 39px;
+    color: #4c4c4c;
+    cursor: pointer;
+}
+.story-viewer-close:hover{
+    font-size: 45px;
+}
+.story-viewer-meta{
+    position: relative;
+    display: block;
+    float: left;
+    width: 100%;
+}
+.story-viewer-info{
+    position: relative;
+    display: block;
+    float: left;
+    width: 100%;
+}
+.story-viewer-controls{
+    float: left;
+    font-size: 12px;
+    padding-left: 4px;
+}
+.story-viewer-control{
+    float: left;
+    position: relative;
+    display: block;
+    padding-right: 6px;
+    cursor: pointer;
+}
+.story-viewer-time{
+    float: right;
+    font-size: 12px;
+}
+.story-viewer-actors{
+    position: relative;
+    display: block;
+    float: left;
+    width: 100%;
+}
+.story-viewer-actor{
+    position: relative;
+    display: block;
+    float: left;
+}
+.story-viewer-following{
+    display: block;
+    border-top: 1px dashed #ffa9a7;
+    float: left;
+    width: 100%;
+}
+.story-viewer-followers{
+    display: block;
+    border-top: 1px dashed #ffa9a7;
+    float: left;
+    width: 100%;
+}
+.story-viewer-admissions{
+    position: relative;
+    display: block;
+    float: left;
+    width: 100%;
+}
+.story-viewer-content{
+    position: relative;
+    display: block;
+    float: left;
+    width: 100%;
+}
+.story-viewer-actions{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.story-viewer-action{
+    width: 16px;
+    height: 16px;
+    position: relative;
+    float: left;
+    display: block;
+    margin-left: 4px;
+    cursor: pointer;
+    display: none;
+}
+
+.story-viewer:hover .story-viewer-action{
+    display: block;
+}
+.story-viewer-action-share{
+    background: url(http://med.stanford.edu/content/dam/sm/web/images/icons/icon-share.png) no-repeat;
+    background-position: 0px 1px;
+}
+.story-viewer-action-reply{
+    background: url(/static/pix/reply_icon.png) no-repeat;
+    background-position: -4px 3px;
+}
+.story-viewer-subject{
+    font-size: 14px;
+    font-weight: bold;
+    padding: 4px 0px 0px 4px;
+    border-bottom: 2px dashed #cfcfcf;
+}
+.story-viewer-body{
+    padding: 4px 0px 0px 4px;
+    font-size: 14px;
+}

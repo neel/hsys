@@ -1,0 +1,36 @@
+{% load widget_tweaks %}
+<div class="task-create-panel" id="task_creation_panel">
+    <div class="task-create-panel-canvas">
+        <div class="form-container task-creation-form">
+            <div class="form-overlay task-creation-form-overlay"></div>
+            <div class="form-error task-creation-form-error">
+                {{ form.non_field_errors }}
+            </div>
+            <form class="form" method="post" action="{% url 'task_create' admission_id=admission %}" id="task_creation_form">
+                {% csrf_token %}
+                <input type="hidden" name="admission" id="id_admission" value="{{form.admission.value}}" />
+                <div class="form-field task-creation-form-field">
+                    {{ form.when.errors }}
+                    {{ form.when|add_class:"task-creation-form-field-input task-creation-form-field-input-when" }}
+                    <div class="form-field-error task-creation-form-field-error"><ul></ul></div>
+                </div>
+                <div class="form-field task-creation-form-field">
+                    {{ form.subject.errors }}
+                    <label for="id_subject" class="form-field-label task-creation-form-field-label">Heading</label>
+                    {{ form.subject|add_class:"task-creation-form-field-input task-creation-form-field-input-subject" }}
+                    <div class="form-field-error task-creation-form-field-error"><ul></ul></div>
+                </div>
+                <div class="form-field task-creation-form-field">
+                    {{ form.body.errors }}
+                    <label for="id_note" class="form-field-label task-creation-form-field-label">Note</label>
+                    {{ form.body|add_class:"task-creation-form-field-input task-creation-form-field-input-note" }}
+                    <div class="form-field-error task-creation-form-field-error"><ul></ul></div>
+                </div>
+                <div class="form-field task-creation-form-field">
+                    <input id="task_creation_submit" type="submit" name="submit" value="Create Task" class="form-action identity-action-button red task-creation-form-field-action" />
+                    <input id="task_creation_reset" type="reset" name="reset" value="Cancel" class="form-action identity-action-button green task-creation-form-field-action" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

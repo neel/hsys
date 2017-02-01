@@ -1,0 +1,76 @@
+.doctor-canvas{
+    width: 167px;
+    height: 280px;
+    background: #FFDFDF;
+    font-size: 13px;
+    position: relative;
+}
+
+.button:hover {
+background-color: #F8F8F8;
+background-image: -webkit-linear-gradient(top,#f8f8f8,#f1f1f1);
+background-image: -moz-linear-gradient(top,#f8f8f8,#f1f1f1);
+background-image: -ms-linear-gradient(top,#f8f8f8,#f1f1f1);
+background-image: -o-linear-gradient(top,#f8f8f8,#f1f1f1);
+background-image: linear-gradient(top,#f8f8f8,#f1f1f1);
+
+border: 1px solid #C6C6C6;
+color: #333;
+
+-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,.1);
+-moz-box-shadow: 0px 1px 1px rgba(0,0,0,.1);
+box-shadow: 0px 1px 1px rgba(0,0,0,.1);
+}
+.doctor-paramedic{
+    background: #FCD5FB;
+}
+.doctor-info{
+    padding-left: 3px;
+    width: 100%;
+    position: relative;
+    display: block;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+    margin-top: 12px;
+}
+.doctor-pic{
+    width: 130px;
+    height: 130px;
+    border: 3px solid #D3C1C6;
+    background: url(http://www.iduofl.us/photos/noimage.jpg) no-repeat -17px 0px;
+    -webkit-border-radius: 80px;
+    -moz-border-radius: 80px;
+    border-radius: 80px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 9px;
+}
+.doctor-name{
+    font-weight: bold;
+}
+.doctor-info-intro{
+    background: #F65757;
+    -webkit-box-shadow: 0px -7px 17px -1px rgba(50, 50, 53, 0.75);
+    -moz-box-shadow:    0px -7px 17px -1px rgba(50, 50, 53, 0.75);
+    box-shadow:         0px -7px 17px -1px rgba(50, 50, 53, 0.75);
+}
+.doctor-paramedic .doctor-info-intro{
+    background: #F65794;
+}
+.doctor-info-professional{
+    background: #FF8585;
+    -webkit-box-shadow: 0px -7px 17px -1px rgba(50, 50, 53, 0.75);
+    -moz-box-shadow:    0px -7px 17px -1px rgba(50, 50, 53, 0.75);
+    box-shadow:         0px -7px 17px -1px rgba(50, 50, 53, 0.75);
+    position: absolute;
+    bottom: 0px;
+    left: 0px
+}
+.doctor-paramedic .doctor-info-professional{
+    background: #FF85A6;
+}
+.doctor-info-professional .unit{
+    display: inline;
+    font-size: 10px;
+}

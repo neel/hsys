@@ -1,0 +1,69 @@
+#patient-tasks{
+    width: 68%;
+    position: relative;
+    float: right;
+    height: 100%;
+    margin-top: 8px;
+}
+.patient-tasks-list{
+    margin-left: 128px;
+    border-left: 10px solid #D2D2D3;
+    padding: 0px;
+    font-family: 'Lato', Calibri, Arial, sans-serif;
+    margin-top: 8px;
+}
+.patient-tasks-list-item{
+    list-style-type: none;
+    margin-bottom: 7px;
+    padding-bottom: 32px;
+}
+.task-activities{
+    display: block;
+    float: left;
+    position: relative;
+    width: 100%;
+    border-top: 2px dashed #D2D2D3;
+    margin-top: 6px;
+}
+.task-activities-list{
+    margin: 0px;
+    padding: 0px;
+    display: block;
+    float: left;
+    position: relative;
+    width: 100%;
+}
+.task-activities-list-item{
+    list-style-type: none;
+    display: block;
+    float: left;
+    position: relative;
+    padding-left: 50px;
+    width: 100%;
+    box-sizing: border-box;
+    border-left: 2px solid #5D5D6D;
+    margin-bottom: 2px;
+}
+.task-activities-list-item:after{
+  content: "";
+  display: table;
+  clear: both;
+}
+.task-activities-list-item:hover{
+    background-color: #ececec;
+}
+.task-activity-status-h{
+    border-color: orange;
+}
+.task-activity-status-o{
+    border-color: red;
+}
+.task-activity-status-r{
+    border-color: red;
+}
+.task-activity-status-d{
+    border-color: green;
+}
+.task-activity-status-c{
+    border-color: pink;
+}

@@ -1,0 +1,104 @@
+.admissions{
+    width: 100%;
+    float: left;
+    display: block;
+    margin-top: 12px;
+    padding: 4px;
+    box-sizing: border-box;
+}
+.admissions-heading{
+    width: 100%;
+    float: left;
+    display: block;
+    padding-bottom: 3px;
+    background-color: #d9d9d9;
+    padding-left: 7px;
+    font-size: 15px;
+    position: relative;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+}
+.admissions-heading * {
+    float: left;
+    display: block;
+    position: relative;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+.admissions-heading-static{
+    /*min-width: 125px;*/
+    margin-top: 10px;
+}
+.admissions-heading-filter{
+    margin-left: 16px;
+}
+.admissions-heading-filter-range{
+
+}
+.admissions-heading-filter-from{
+
+}
+.admissions-heading-filter-to{
+
+}
+.admissions-heading-filter-search{
+    margin-top: 4px;
+}
+.unit{
+    float: none;
+    display: inline-block;
+}
+.admissions-heading .unit{
+    background-color: #e6e6e6;
+    font-size: 12px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 1px;
+}
+.admissions-heading-create{
+    float: right;
+    margin-top: 3px;
+    margin-right: 3px;
+}
+
+.admissions-filter-input{
+    border: 1px solid #cdcdcd;
+    background: #f6f6f6;
+    height: 23px;
+    margin-top: 5px;
+    margin-right: 9px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.admissions-list{
+    margin: 0px;
+    padding: 0px;
+    margin: 0px;
+    padding: 0px;
+    float: left;
+    display: block;
+    width: 100%;
+    position: relative;
+}
+.admission-list-item{
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
+    float: left;
+    width: 100%;
+    position: relative;
+    display: block;
+}
+.admissions-heading-filter-search-button{
+    height: 22px;
+    margin-top: 1px;
+    line-height: 12px;
+}
+.admission{
+    float: left;
+    width: 100%;
+    position: relative;
+    display: block;
+}

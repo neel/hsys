@@ -1,0 +1,60 @@
+#charts{
+    position: relative;
+    display: block;
+    clear: both;
+}
+.chart-widget{
+    position: relative;
+    display: block;
+    margin-bottom: 10px;
+    width: 100%;
+    float: left;
+}
+.chart{
+    position: relative;
+    display: block;
+    float: left;
+}
+.chart-values{
+    /*margin-top: 36px;*/
+    width: 10%;
+    position: relative;
+    display: block;
+    float: left;
+    background-color:#002820;
+    
+}
+.param{
+    margin-top: 5px;
+    color: #02e907;
+}
+.max::before{
+    content: "max:"
+}
+.max{
+    
+}
+.min::before{
+    content: "min:"
+}
+.min{
+    
+}
+.avg::before{
+    content: "avg:"
+}
+.avg{
+    
+}
+.current{
+    background-color: #002820;
+    height: 115px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    font-size: 48px;
+    text-align: center;
+    padding-top: 36px;
+    margin-top:74px;
+    color:#02e907;
+}

@@ -1,0 +1,38 @@
+{% load staticfiles %}
+{% load identity_extras %}
+<html>
+    <head>
+        <title>Doctors</title>
+        <style type='text/css'>
+            @import url('{% static 'css/common.css' %}');
+            @import url('{% static 'css/heading.css' %}');
+            @import url('{% static 'css/organizations.css' %}');
+            @import url('{% static 'css/sprite/organization.css' %}');
+        </style>
+        <script type="text/javascript" src="{% static 'js/jquery.1.9.0.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.sticky-kit.min.js' %}"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("#heading").stick_in_parent();
+            })
+        </script>
+    </head>
+    <body>
+        <div class="heading" id="heading">
+            <div class="logo">//smcc:identity//</div>
+            <div class="search">
+                <input type="text" value="" class="search-input" />
+            </div>
+            <div class="map"></div>
+        </div>
+        <div class="main" id="main">
+            <ul class="organizations">
+            {% for organization in organizations %}
+                <li class="organization">
+                    {% view "identity.sprites.OrganizationSprite" organization %}
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </body>
+</html>

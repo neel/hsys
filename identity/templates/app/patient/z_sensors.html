@@ -1,0 +1,183 @@
+{% load staticfiles %}
+{% load identity_extras %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Patient {{patient.get_full_name}}</title>
+        <style type='text/css'>
+            @import url('{% static 'css/daterangepicker.css' %}');
+            @import url('{% static 'css/common.css' %}');
+            @import url('{% static 'css/heading.css' %}');
+            @import url('{% static 'css/patient.css' %}');
+            @import url('{% static 'css/chart.css' %}');
+            @import url('{% static 'css/sprite/notice.css' %}');
+            @import url('{% static 'css/sprite/ministory.css' %}');
+            @import url('{% static 'css/panel/patient.css' %}');
+            @import url('{% static 'css/sprite/doctor.css' %}');
+            @import url('{% static 'css/sprite/doctor-flat.css' %}');
+            @import url('{% static 'css/panel/ministories.css' %}');
+            @import url('{% static 'css/app/patient/visits.css' %}');
+        </style>
+        <script type="text/javascript" src="{% static 'js/jquery.1.9.0.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.sticky-kit.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/d3.v3.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/canvasjs.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("#heading").stick_in_parent();
+                $(".left-panel").stick_in_parent();
+                var PARAMS = 2;// SHOULD NOT BE HARD CODED
+                var dataLength = 25;
+                var sensed_data = {};
+                var components  = {};
+                
+                var make_key = function(resource, i){
+                    return resource+i;
+                };
+                var make_div_name = function(resource, i){
+                    return 'chart_'+make_key(resource, i);
+                };
+                var create_widget = function(resource, i){
+                    var div = $('<div class="chart-widget"><div class="chart" id="'+make_div_name(resource, i)+'" style="height: 300px; width:90%;"></div><div class="chart-values"><div class="max param"></div><div class="avg param"></div><div class="min param"></div><div class="current param"></div></div></div>');
+                    div.appendTo('#charts');
+                    return div;
+                };
+                var create_chart = function(resource, i, data_points){
+                    var chart = new CanvasJS.Chart(make_div_name(resource, i), {
+                        backgroundColor: 'transparent',
+                        title: {
+                            text: "resource "+resource+" "+i
+                        },
+                        data: [{
+                            type: "line",
+                            toolTipContent: "t: {x}<hr />v: {y}",
+                            dataPoints: data_points
+                        }]
+                    });
+                    return chart;
+                };
+                var create_delegate = function(chart, widget, data_points){
+                    var current = $(widget).find('.current');
+                    var max = $(widget).find('.max');
+                    var min = $(widget).find('.min');
+                    var avg = $(widget).find('.avg');
+                                      
+                    var xVal = 0;
+                    return function(time, value){
+                        data_points.push({
+                            x: new Date(time),
+                            y: value
+                        });
+                        xVal++;
+                        yvals = [];
+                        data_points.forEach(function(point){
+                            yvals.push(point.y);
+                        });
+
+                        if(data_points.length > dataLength){
+                            data_points.shift();
+                        }
+                        chart.render();
+                        current.html(value);
+                        // var background = current.css('background-color');
+                        current.css('background-color', 'yellow');
+                        setTimeout(function(){
+                            current.css('background-color', '#efefef');
+                        }, 500);
+                        max.html(Math.max.apply(null, yvals));
+                        min.html(Math.min.apply(null, yvals));
+                        avg.html((yvals.reduce((a, b) => a + b, 0) / yvals.length).toFixed(2));
+                    };
+                };
+                
+                var socket = new WebSocket('ws://192.168.250.72:9898/stream');
+                socket.onopen = function(event){
+                    console.log('{"type": "meta", "payload": {"patient": {{patient_id}}}}');
+                    socket.send('{"type": "meta", "payload": {"patient": {{patient_id}}}}');
+                    socket.onmessage = function(event){
+                        var message = JSON.parse(event.data);
+                        console.log(message);
+                        if(message.meta){
+                            var resources = message.resources;
+                            console.log(resources);
+                            
+                            resources.forEach(function(resource){
+                                for(var i=0; i<PARAMS; ++i){
+                                    sensed_data[resource] = {};
+                                    var key = make_key(resource,i);                   // create an unique hash for resource if and parameter id
+                                    sensed_data[resource][key] = [];
+                                    var data_points = sensed_data[resource][key];     // create data points for the chart
+                                    var widget = create_widget(resource, i);             // html widget
+                                    var chart  = create_chart(resource, i, data_points); // chart object
+                                    var update = create_delegate(chart, widget, data_points); // updater function
+                                    components[key] = {
+                                        view:       widget,
+                                        controller: chart,
+                                        delegate:   update
+                                    };
+                                }
+                            });
+                            console.log(components);
+                            socket.send('{"type": "consume", "payload": {"resources": '+JSON.stringify(resources)+'}}');
+                        }else if(message.head){
+                            console.log(message.payload.time, message.payload.value);
+                            for(var i=0; i<PARAMS; ++i){
+                                var resource = message.head;
+                                var key = make_key(resource,i);
+                                var delegate = components[key].delegate;
+                                delegate(message.payload.time, message.payload.value[i]);
+                            }
+                            $('.canvasjs-chart-container').css('left', "0px");
+                        }
+                    };
+                    socket.onclose = function(event) {
+                        console.log('Client notified socket has closed',event);
+                    };
+                };
+            });
+        </script>
+    </head>
+    <body>
+        <div class="heading" id="heading">
+            <div class="logo">//smcc:identity//</div>
+            <div class="user">
+                <a id="user_button" href="{% url 'patient' patient.id %}">{{request.user.get_short_name}}</a>
+                <div class="user-menu" id="user_menu">
+                    <ul class="user-menu-options">
+                        <li class="user-menu-option">Profile</li>
+                        <li class="user-menu-option">Account</li>
+                        <li class="user-menu-option user-menu-option-break">&nbsp;</li>
+                        <li class="user-menu-option user-menu-option-last"><a href="/user/logout">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="search">
+                <input type="text" value="" class="search-input" />
+            </div>
+            <div class="navigation">
+                <ul class="links">
+                    <li class="link"><a href="{% url 'patient' patient.id %}">Profile</a></li>
+                    <li class="link"><a href="{% url 'patient_appointments' patient.id %}">Appointments</a></li>
+                    <li class="link"><a href="{% url 'patient_admissions' patient.id %}">Admissions</a></li>
+                    <li class="link"><a href="{% url 'patient_stories' patient.id %}">Stories</a></li>
+                    <li class="link"><a href="{% url 'patient_doctors' patient.id %}">Visits</a></li>
+                </ul>
+            </div>
+            <div class="map"></div>
+        </div>
+        <div class="main" id="main">
+            <div class="left-panel">
+            {% view 'identity.panels.PatientPanel' patient %}
+            </div>
+            <div class="content">
+                {% for notice in notices %}
+                    {% view 'identity.sprites.NoticeSprite' notice %}
+                {% endfor %}
+                <div id="charts">
+                    
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,31 @@
+.notice-sprite{
+    border: 1px solid #efefef;
+    background-color: #efefef;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    float: left;
+    position: relative;
+    display: block;
+    width: 100%;
+}
+.notice-icon{
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAADRUlEQVRoQ+2ZW4hNURjHZ+SS6wMilBIikUkpSpGQBxGFJESYkjwIb5Jb7tfEg1xf5JY3JGrkwQMvklwiyu3BJTPIzJiL3/909nRm22vvffbeZ/Zedb761Tlrr8v3X7fv2+dUVlhulZb7X1EWkPYKOiswDkf2wiTom7ZTAeN/4fl92AjvJWA0PIaeGXfc7d43Cqok4B5Mt8x5x91rEtAMnSwVUCsBrZY6L7dbJKARulgqolECpsAVGGSZiHr83eBco/35cglmWCLiOX4ugBeFkbgrBYdgfcZF3MK/ZaBr1DOVmEP5BchaQNNZ3QLHCy8eUy40lEqXQZE5C/YWJxaBAm4780vmulFzvw5KygrabRkvAcco3AxaIi9bReEJ6N7BQloYbw9sAwVbt8mfA04ge8SXxaCl8rLxFF6FkR0k4ivj6KDeNownP+TPqMJI/IOC1XDd0KgX5VotrUgpTbnZCvhoGERn4TT0gXqvVELK1oIEedlMCs/D4IRV/Ka/dXDRZwJP8kwr41iDKRd6Ro0l8NTQmZw/B7MSEqHxlsITQ39jKNetONb13ChA9ZpgN+wAHSgvW0jhKegXUUgD7XRIFUA1nts0wboF94FuRbflcqGgbPQudZbDZ4OTA/Mi5hcpoob6a+C1oZ0C6VmY59NvKAFq/wG09zSol2kiVoKuvQEBQmp5vguOgtesq/lEUG42PKCv0ALUj1ZKp38T/DR03INyhXvhjht/KFNgPAi/fNof4ZluwzAvWX/DbCH3WC/zs/3QZ3ZG5IXqjCgI6WY7DG982uiHBd1AVQGzXvg4kgB1IKd08HQAlZfHsc75FVNfyoiLscgCnEHe8aEa7hQzakHdaXzWttSKRbGmKFvIayBtEQUhpQBhrDeVdBZ0C8X5dTAxAXL6EyhmnAHT7aKDqYC1HYaFURpQJ1EBzliv+LAVlFM5WaQcnws7wR1N4+goiQDHISVjN0HOz4YhcTw1tG1O6gyUwLdQXVovIPfDVlAuFGoqUqpUFpDSxLcN22r7FioLSHsL5fIQm//gqJOAGpia+lRGc+CGBEyAB6C3KZvsO85Odv/NqpXI+r+Vdfio94+2v1ltmvX/fI3zMpEJ4WUBaS/DPxTZrCd2UILmAAAAAElFTkSuQmCC);
+    width: 48px;
+    height: 48px;
+    float: left;
+    position: relative;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+.notice-body{
+    margin-left: 3px;
+    padding-top: 3px;
+}
+.notice-heading{
+    font-weight: bold;
+    font-size: 14px;
+}
+.notice-message{
+    font-size: 12px;
+}
