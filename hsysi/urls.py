@@ -19,6 +19,8 @@ from tastypie.api import Api
 from identity.api import *
 from identity import views
 from django.contrib.auth import views as auth_views
+from registration.backends.simple.views import RegistrationView
+from identity.forms import PatientRegistrationForm, DoctorRegistrationForm, OperatorRegistrationForm
 
 v1_api = Api(api_name='v1')
 v1_api.register(UserResource())
@@ -40,6 +42,10 @@ v1_api.register(ActivityResource())
 v1_api.register(AppointmentResource())
 
 urlpatterns = [
+    url(r'^accounts/register/patient/$', RegistrationView.as_view(form_class=PatientRegistrationForm), name='register_patient'),
+    url(r'^accounts/register/doctor/$', RegistrationView.as_view(form_class=DoctorRegistrationForm), name='register_doctor'),
+    url(r'^accounts/register/operator/$', RegistrationView.as_view(form_class=OperatorRegistrationForm), name='register_operator'),
+    url(r'^accounts/', include('registration.backends.simple.urls')),
     url(r'^$', views.index, name='index'),
     url(r'^user/land/$', views.user_land, name='land'),
     url(r'^user/login/$', views.user_login, name='login'),

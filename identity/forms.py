@@ -1,4 +1,5 @@
 from django import forms
+from registration.forms import RegistrationForm
 from identity.models import *
 
 class LoginForm(forms.ModelForm):
@@ -22,6 +23,22 @@ class ActivityForm(forms.ModelForm):
     class Meta:
         model = Activity
         fields = ['note', 'status']
+
+class PatientRegistrationForm(RegistrationForm):
+    class Meta:
+        model = Patient
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'dob', 'sex', 'address', )
+        exclude = ('password', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'groups', 'user_permissions', 'date_joined',)
+        
+class DoctorRegistrationForm(RegistrationForm):
+    class Meta:
+        model = Doctor
+        exclude = ('password', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'groups', 'user_permissions', 'date_joined',)
+        
+class OperatorRegistrationForm(RegistrationForm):
+    class Meta:
+        model = Operator
+        exclude = ('password', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'groups', 'user_permissions', 'date_joined',)
 
 class UserRegistrationForm(forms.ModelForm):
     class Meta:
