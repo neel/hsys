@@ -6,7 +6,7 @@
         <title>Patient {{patient.get_full_name}}</title>
         <style type='text/css'>
             @import url('{% static 'css/daterangepicker.css' %}');
-            @import url('{% static 'css/login.css' %}');
+            @import url('{% static 'css/registration.css' %}');
             @import url('{% static 'css/common.css' %}');
             @import url('{% static 'css/form.css' %}');
             @import url('{% static 'css/heading.css' %}');
@@ -42,9 +42,7 @@
             <div class="map"></div>
         </div>
         <div class="main" id="main">
-            <div class="left-panel">
-                
-            </div>
+            
             <div class="content">
                 <div class="banner">
                     <div class="slogan">Health Management System</div>
@@ -69,13 +67,14 @@
                         {% endfor %}
                         {% for field in form %}
                         <div class="fieldWrapper">
-                            {{ field.errors }}
+                            
                             <label for="{{ field.id_for_label }}">{{ field.label  }}</label>
                             {{ field }}
                             {{ field.message }}
+                            {{ field.errors }}
                         </div>
                         {% endfor %}
-                        <input type="submit" value="Submit" />
+                        <input type="submit" value="Submit" class="reg-submit" />
                     </form>
                 </div>
             </div>
