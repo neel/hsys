@@ -46,9 +46,14 @@
             <div class="content">
                 <div class="banner">
                     <div class="slogan">Health Management System</div>
-                    <div class="fastgan">Patient + Doctor + Organization + Paramedic + Operator</div>
-                </div>
-                <div class="form-container login">
+                    <div class="fastgan">Patient + Doctor + Organization + Paramedic + Operator</div> 
+                    <br/>
+                    
+                    <div class="fastgan" style="font-size: 25px;">Patient Registration</div>
+                    <br/>
+                    <hr style="width: 50%;"> 
+                    <br/>
+                		<div class="form-container login">
                     <div class="form-overlay login-overlay">{{status}}</div>
                     <div class="form-error login-form-error">
                         {{ form.non_field_errors }}
@@ -76,6 +81,7 @@
                         {% endfor %}
                         <input type="submit" value="Submit" class="reg-submit" />
                     </form>
+                	</div>
                 </div>
             </div>
         </div>
