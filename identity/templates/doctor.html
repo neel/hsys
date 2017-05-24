@@ -163,8 +163,67 @@
                     return false;
                 });
                 $("#periodic_medication").click(function(){
-                  bootbox.alert("This is the default alert!");
-                })
+                  var form = $('<form> \
+                    <div class="input-group"> \
+                      <span class="input-group-addon" id="basic-addon1">Medicine Name</span> \
+                      <input name="medname" type="text" class="form-control" placeholder="Medicine Name" aria-describedby="basic-addon1"> \
+                      <span class="input-group-addon" id="basic-addon1">Dose</span> \
+                      <input name="meddose" type="text" class="form-control" placeholder="in mg" aria-describedby="basic-addon1"> \
+                    </div> \
+                    <div class="input-group"> \
+                      <div class="input-group-btn"> \
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Interval <span class="caret"></span></button> \
+                        <ul class="dropdown-menu"> \
+                            <li><a href="#" data-interval="">Once Daily</a></li> \
+                            <li><a href="#" data-interval="">Twice Daily</a></li> \
+                            <li><a href="#" data-interval="">Thrice Daily</a></li> \
+                            <li><a href="#" data-interval="">4 times Daily</a></li> \
+                            <li role="separator" class="divider"></li> \
+                            <li><a href="#" data-interval="">Alternate Days</a></li> \
+                            <li role="separator" class="divider"></li> \
+                            <li><a href="#" data-interval="">Once in a Week</a></li> \
+                        </ul> \
+                      </div> \
+                      <input type="text" name="medinterval" class="form-control" placeholder="in hours (12 for twice daily)" aria-describedby="basic-addon1"> \
+                      <div class="input-group-btn"> \
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Termination <span class="caret"></span></button> \
+                        <ul class="dropdown-menu"> \
+                            <li><a href="#" data-interval="">After 1 Week</a></li> \
+                            <li><a href="#" data-interval="">After 2 Weeks</a></li> \
+                            <li><a href="#" data-interval="">After 3 Weeks</a></li> \
+                            <li><a href="#" data-interval="">After 4 Weeks</a></li> \
+                            <li role="separator" class="divider"></li> \
+                            <li><a href="#" data-interval="">After 1 month</a></li> \
+                            <li><a href="#" data-interval="">After 2 months</a></li> \
+                            <li><a href="#" data-interval="">After 3 month</a></li> \
+                            <li><a href="#" data-interval="">After 4 months</a></li> \
+                            <li role="separator" class="divider"></li> \
+                            <li><a href="#" data-interval="">Until adviced</a></li> \
+                        </ul> \
+                      </div> \
+                      <input type="text" name="medterm" class="form-control" placeholder="in days" aria-describedby="basic-addon1"> \
+                      <div class="input-group-btn"> \
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">When<span class="caret"></span></button> \
+                        <ul class="dropdown-menu"> \
+                            <li><a href="#">Anytime</a></li> \
+                            <li><a href="#">Before Meal</a></li> \
+                            <li><a href="#">After Meal</a></li> \
+                        </ul> \
+                      </div> \
+                    </div> \
+                  </form>');
+                  bootbox.alert(form, function(){
+                      var name = form.find('input[name=medname]').val();
+                      var dose = form.find('input[name=meddose]').val();
+                      var interval = form.find('input[name=medinterval]').val();
+                      var termination = form.find('input[name=medterm]').val();
+                      var data = {id: (+new Date)+Math.random(), "name": name, "dose": dose, "interval": interval, "termination": termination};
+                      console.log(data);
+                  });
+                });
+                $("#ontime_medication").click(function(){
+                    
+                });
             });
         </script>
     </head>
