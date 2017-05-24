@@ -6,7 +6,7 @@
         <title>Patient {{patient.get_full_name}}</title>
         <style type='text/css'>
             @import url('{% static 'css/daterangepicker.css' %}');
-            @import url('{% static 'css/login.css' %}');
+            @import url('{% static 'css/registration.css' %}');
             @import url('{% static 'css/common.css' %}');
             @import url('{% static 'css/form.css' %}');
             @import url('{% static 'css/heading.css' %}');
@@ -42,15 +42,18 @@
             <div class="map"></div>
         </div>
         <div class="main" id="main">
-            <div class="left-panel">
-                
-            </div>
+            
             <div class="content">
                 <div class="banner">
                     <div class="slogan">Health Management System</div>
-                    <div class="fastgan">Patient + Doctor + Organization + Paramedic + Operator</div>
-                </div>
-                <div class="form-container login">
+                    <div class="fastgan">Patient + Doctor + Organization + Paramedic + Operator</div> 
+                    <br/>
+                    
+                    <div class="fastgan" style="font-size: 25px;">Patient Registration</div>
+                    <br/>
+                    <hr style="width: 50%;"> 
+                    <br/>
+                		<div class="form-container login">
                     <div class="form-overlay login-overlay">{{status}}</div>
                     <div class="form-error login-form-error">
                         {{ form.non_field_errors }}
@@ -69,14 +72,16 @@
                         {% endfor %}
                         {% for field in form %}
                         <div class="fieldWrapper">
-                            {{ field.errors }}
+                            
                             <label for="{{ field.id_for_label }}">{{ field.label  }}</label>
                             {{ field }}
                             {{ field.message }}
+                            {{ field.errors }}
                         </div>
                         {% endfor %}
-                        <input type="submit" value="Submit" />
+                        <input type="submit" value="Submit" class="reg-submit" />
                     </form>
+                	</div>
                 </div>
             </div>
         </div>
