@@ -76,7 +76,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'identity',
     'tastypie',
-    'widget_tweaks'
+    'widget_tweaks',
+    'django_extensions'
 ]
 
 MIDDLEWARE_CLASSES = [
