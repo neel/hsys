@@ -16,13 +16,6 @@
                     <input type="text" name="patient_selector" id="id_patient_selector" class="story-creation-form-field-input story-creation-form-field-input-patient" placeholder="Type Patient Name" />
                     <div class="form-field-error story-creation-form-field-error"><ul></ul></div>
                 </div>
-<!--
-                <div class="form-field story-creation-form-field">
-                    {{ form.when.errors }}
-                    {{ form.when|add_class:"story-creation-form-field-input story-creation-form-field-input-when" }}
-                    <div class="form-field-error story-creation-form-field-error"><ul></ul></div>
-                </div>
--->
                 <div class="form-field story-creation-form-field">
                     {{ form.refers_to.errors }}
                     <label for="id_refers_to" class="form-field-label story-creation-form-field-label">Refers</label>
@@ -43,6 +36,19 @@
                 <div class="form-field story-creation-form-field">
                     {{ form.body.errors }}
                     <label for="id_body" class="form-field-label story-creation-form-field-label">Consultation</label>
+
+                    <div id="prescription" class="prescription-editor-toolbar" data-prescription="{}">
+                      <div class="dropdown prescription-editor-toolbar-button">
+                        <button class="btn btn-default dropdown-toggle" id="addmed" data-toggle="dropdown" aria-haspopup="true" type="button">Add Medicine<span class="caret"></span></button>
+                        <ul class="dropdown-menu" aria-labelledby="addmed">
+                              <li><a href="#" id="periodic_medication">Periodic</a></li>
+                              <li><a href="#" id="ontime_medication">Once</a></li>
+                        </ul>
+                      </div>
+                      <div class="btn btn-default prescription-editor-toolbar-button">Add Advice</div>
+                      <div class="btn btn-default prescription-editor-toolbar-button">Add Test</div>
+                      <div class="btn btn-default prescription-editor-toolbar-button">Add Remarks</div>
+                    </div>
                     {{ form.body|add_class:"story-creation-form-field-input story-creation-form-field-input-body" }}
                     <div class="form-field-error story-creation-form-field-error"><ul></ul></div>
                 </div>

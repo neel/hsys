@@ -1,20 +1,19 @@
 .story-create-panel{
-    position: fixed;
-    bottom: 0px;
-    right: 0px;
-    
-    display: none;
+  position: fixed;
+  left: 338px;
+  top: 36px;
+  display: none;
 }
 .story-create-panel-canvas{
-    width: 312px;
-    
-    background-color: #eee;
-    border: 4px solid #f2f2f2;
-    position: relative;
-    float: left;
+  /*  width: 312px; */
+  background-color: #eee;
+  border: 4px solid #f2f2f2;
+  position: relative;
+  float: left;
+  padding-top: 25px;
 }
 .story-creation-form{
-    
+
 }
 .story-creation-form-overlay{
     position: absolute;
@@ -34,10 +33,10 @@
     padding-left: 25px;
 }
 .story-creation-form-overlay-loading{
-    
+
 }
 .story-creation-form-error{
-    
+
 }
 .story-creation-form-field{
     position: relative;
@@ -144,6 +143,29 @@
     margin-top: 0px;
 }
 
+.prescription-editor-toolbar{
+  display: block;
+  float: left;
+  position: absolute;
+  top: 26px;
+  right: 2px;
+  height: 40px;
+  width: 430px;
+  padding-top: 2px;
+}
+
+.prescription-editor-toolbar-button{
+  display: block;
+  float: left;
+  position: relative;
+  margin-left: 6px;
+  display: none;
+}
+
+.prescription-editor-toolbar:hover .prescription-editor-toolbar-button{
+  display: block;
+}
+
 .mp_list{
     margin: 0px;
     padding: 0px;
@@ -178,15 +200,15 @@ ol.mp_list li.mp_item {
 .patient-item-desc{}
 
 .refered-ministories-list{
-    
+
 }
 
 .refered-ministories-list .ministory-list-item{
-    
+
 }
 
 .refered-ministories-list .ministory{
-    
+
 }
 
 .refered-ministories-list .ministory-sprite{
@@ -252,7 +274,7 @@ ol.mp_list li.mp_item {
     border-bottom: 1px solid #efefef;
 }
 .refered-ministories-list .ministory{
-    
+
 }
 .refered-ministories-list .ministory-sprite{
     background-color: transparent !important;

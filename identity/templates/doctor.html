@@ -4,13 +4,15 @@
 <html>
     <head>
         <title>Doctors</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
         <style type='text/css'>
             @import url('{% static 'css/daterangepicker.css' %}');
             @import url('{% static 'css/jquery.datetimepicker.css' %}');
             @import url('{% static 'css/common.css' %}');
             @import url('{% static 'css/heading.css' %}');
             @import url('{% static 'css/doctor.css' %}');
-            
+
             @import url('{% static 'css/sprite/notice.css' %}');
             @import url('{% static 'css/sprite/doctor.css' %}');
             @import url('{% static 'css/sprite/notice.css' %}');
@@ -19,7 +21,7 @@
             @import url('{% static 'css/sprite/ministory.css' %}');
             @import url('{% static 'css/sprite/patient.css' %}');
             @import url('{% static 'css/sprite/admission.css' %}');
-            
+
             @import url('{% static 'css/panel/doctor.css' %}');
             @import url('{% static 'css/panel/admissions.css' %}');
             @import url('{% static 'css/panel/patients.css' %}');
@@ -30,11 +32,11 @@
             @import url('{% static 'css/sprite/doctor.css' %}');
             @import url('{% static 'css/sprite/patient.css' %}');
             @import url('{% static 'css/sprite/admission.css' %}');
-            
+
             .component-sprite{
                 margin-right: 3px;
                 margin-bottom: 3px;
-            }            
+            }
             .doctor-sprite{
                 float: left;
             }
@@ -76,7 +78,7 @@
 
             }
         </style>
-        <script type="text/javascript" src="{% static 'js/jquery.1.9.0.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.3.2.1.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/jquery.sticky-kit.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/jquery.cookie.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/d3.v3.min.js' %}"></script>
@@ -91,6 +93,8 @@
         <script type="text/javascript" src="{% static 'js/panel/appointment-creation.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/panel/story-creation.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/sprite/story-viewer.js' %}"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
         <!--
         <script type="text/javascript" src="{% static 'js/panel/admissions.js' %}"></script>
         -->
@@ -158,6 +162,9 @@
                     });
                     return false;
                 });
+                $("#periodic_medication").click(function(){
+                  bootbox.alert("This is the default alert!");
+                })
             });
         </script>
     </head>
