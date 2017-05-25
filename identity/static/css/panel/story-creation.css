@@ -146,6 +146,7 @@
   height: 200px;
   margin-top: 25px;
   background-color: #f8f8f8;
+  padding-top: 20px;
 }
 .prescription-editor-toolbar{
   display: block;
@@ -168,6 +169,30 @@
 
 .prescription-editor-toolbar:hover .prescription-editor-toolbar-button{
   display: block;
+}
+
+.prescription-entry-remove{
+  float: left;
+  cursor: pointer;
+}
+
+.prescription-entry{
+  float: left;
+  width: 100%;
+  margin-top: -20px;
+}
+
+.medicine-name{
+  float: left;
+  margin-left: 5px;
+}
+.medicine-dose{
+  float: left;
+  margin-left: 5px;
+}
+.medicine-interval{
+  float: left;
+  margin-left: 5px;
 }
 
 .mp_list{

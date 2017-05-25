@@ -162,14 +162,54 @@
                     });
                     return false;
                 });
+                Array.prototype.removeValue = function(name, value){
+                   var array = $.map(this, function(v,i){
+                      return v[name] === value ? null : v;
+                   });
+                   this.length = 0; //clear original array
+                   this.push.apply(this, array); //push all elements except the one we want to delete
+                }
                 var render_prescription = function(){
                   var prescription = $("#prescription");
                   var json = prescription.data("prescription");
                   var body = $("#prescription_body");
-                  $(json.medicienes).each(function(){
-                    body.append($("<div></div>"));
+                  body.html('');
+                  $(json.medicines).each(function(){
+                    var interval_text = '';
+                    if(this.interval <= 24 && 24 % this.interval == 0){
+                      interval_text = 24/this.interval + " times daily";
+                    }else if(this.interval % 24 == 0){
+                      var di = this.interval/24;
+                      var dit = '';
+                      if(di%10 == 1) dit = "st";
+                      else if(di%10 == 2) dit = "nd";
+                      else if(di%10 == 3) dit = "rd";
+                      else dit = "th";
+                      interval_text = "Every "+di+dit+" day";
+                    }else{
+                      interval_text = "Every "+this.interval + " hours";
+                    }
+                    body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
+                                      <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                                  \
+                                      <div class="medicine-name">'+this.name+'</div>                                                            \
+                                      <div class="medicine-dose">'+this.dose+'mg</div>                                                          \
+                                      <div class="medicine-interval">'+interval_text+'</div>                                                  \
+                                    </div>'));
                   })
+                  $("#id_body").val(JSON.stringify(json));
                 }
+                $("#prescription_body").on('click', 'div.prescription-entry div.prescription-entry-remove', function(){
+                  var parent = $(this).parent();
+                  var id = parent.data('id');
+                  var key = parent.data('key');
+                  var prescription = $("#prescription");
+                  var json = prescription.data("prescription");
+                  json[key].removeValue('id', id);
+                  prescription.data("prescription", json);
+                  $("#id_body").val(JSON.stringify(json));
+                  render_prescription();
+                  console.log(json);
+                });
                 $("#periodic_medication").click(function(){
                   var form = $('<form> \
                     <div class="input-group"> \
@@ -228,7 +268,7 @@
                       var data = {"id": (+new Date)+Math.random(), "type": "periodic", "name": name, "dose": dose, "interval": interval, "termination": termination};
                       var prescription = $("#prescription");
                       var pdata = prescription.data("prescription");
-                      pdata["medicienes"].push(data);
+                      pdata["medicines"].push(data);
                       prescription.data("prescription", pdata);
                       render_prescription();
                   });
