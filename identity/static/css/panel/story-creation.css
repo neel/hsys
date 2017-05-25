@@ -194,6 +194,14 @@
   float: left;
   margin-left: 5px;
 }
+.medicine-termination{
+  float: left;
+  margin-left: 5px;
+}
+.medicine-situation{
+  float: left;
+  margin-left: 5px;
+}
 
 .mp_list{
     margin: 0px;

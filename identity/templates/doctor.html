@@ -175,27 +175,39 @@
                   var body = $("#prescription_body");
                   body.html('');
                   $(json.medicines).each(function(){
-                    var interval_text = '';
-                    if(this.interval <= 24 && 24 % this.interval == 0){
-                      interval_text = 24/this.interval + " times daily";
-                    }else if(this.interval % 24 == 0){
-                      var di = this.interval/24;
-                      var dit = '';
-                      if(di%10 == 1) dit = "st";
-                      else if(di%10 == 2) dit = "nd";
-                      else if(di%10 == 3) dit = "rd";
-                      else dit = "th";
-                      interval_text = "Every "+di+dit+" day";
-                    }else{
-                      interval_text = "Every "+this.interval + " hours";
+                    if(this.type == 'periodic'){
+                        var interval_text = '';
+                        if(this.interval <= 24 && 24 % this.interval == 0){
+                            interval_text = 24/this.interval + " times daily";
+                        }else if(this.interval % 24 == 0){
+                            var di = this.interval/24;
+                            var dit = '';
+                            if(di%10 == 1) dit = "st";
+                            else if(di%10 == 2) dit = "nd";
+                            else if(di%10 == 3) dit = "rd";
+                            else dit = "th";
+                            interval_text = "Every "+di+dit+" day";
+                        }else{
+                            interval_text = "Every "+this.interval + " hours";
+                        }
+                        var termination_text = (this.termination == -1) ? "untill prescribed to stop" : "For "+ this.termination+ " days";
+
+                        body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
+                                        <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                                    \
+                                        <div class="medicine-name">'+this.name+'</div>                                                              \
+                                        <div class="medicine-dose">'+this.dose+'mg</div>                                                            \
+                                        <div class="medicine-interval">'+interval_text+'</div>                                                      \
+                                        <div class="medicine-termination">'+termination_text+'</div>                                                \
+                                        </div>'));
+                    }else if(this.type == 'onetime'){
+                        body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
+                                        <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                                    \
+                                        <div class="medicine-name">'+this.name+'</div>                                                              \
+                                        <div class="medicine-dose">'+this.dose+'mg</div>                                                            \
+                                        <div class="medicine-situation">'+this.situation+'</div>                                                    \                                   \
+                                        </div>'));
                     }
-                    body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
-                                      <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                                  \
-                                      <div class="medicine-name">'+this.name+'</div>                                                            \
-                                      <div class="medicine-dose">'+this.dose+'mg</div>                                                          \
-                                      <div class="medicine-interval">'+interval_text+'</div>                                                  \
-                                    </div>'));
-                  })
+                  });
                   $("#id_body").val(JSON.stringify(json));
                 }
                 $("#prescription_body").on('click', 'div.prescription-entry div.prescription-entry-remove', function(){
@@ -260,7 +272,8 @@
                       </div> \
                     </div> \
                   </form>');
-                  bootbox.alert(form, function(){
+                  bootbox.confirm(form, function(result){
+                      if(!result) return false;
                       var name = form.find('input[name=medname]').val();
                       var dose = form.find('input[name=meddose]').val();
                       var interval = form.find('input[name=medinterval]').val();
@@ -274,7 +287,30 @@
                   });
                 });
                 $("#ontime_medication").click(function(){
-
+                var form = $('<form> \
+                    <div class="input-group"> \
+                      <span class="input-group-addon" id="basic-addon1">Medicine Name</span> \
+                      <input name="medname" type="text" class="form-control" placeholder="Medicine Name" aria-describedby="basic-addon1"> \
+                      <span class="input-group-addon" id="basic-addon1">Dose</span> \
+                      <input name="meddose" type="text" class="form-control" placeholder="in mg" aria-describedby="basic-addon1"> \
+                    </div> \
+                    <div class="input-group"> \
+                      <span class="input-group-addon" id="basic-addon1">Situation</span> \
+                      <input name="medcase" type="text" class="form-control" placeholder="situation" aria-describedby="basic-addon1"> \
+                    </div> \
+                  </form>');
+                  bootbox.confirm(form, function(result){
+                      if(!result) return false;
+                      var name = form.find('input[name=medname]').val();
+                      var dose = form.find('input[name=meddose]').val();
+                      var situation = form.find('input[name=medcase]').val();
+                      var data = {"id": (+new Date)+Math.random(), "type": "onetime", "name": name, "dose": dose, "situation": situation};
+                      var prescription = $("#prescription");
+                      var pdata = prescription.data("prescription");
+                      pdata["medicines"].push(data);
+                      prescription.data("prescription", pdata);
+                      render_prescription();
+                  });
                 });
             });
         </script>
