@@ -162,6 +162,14 @@
                     });
                     return false;
                 });
+                var render_prescription = function(){
+                  var prescription = $("#prescription");
+                  var json = prescription.data("prescription");
+                  var body = $("#prescription_body");
+                  $(json.medicienes).each(function(){
+                    body.append($("<div></div>"));
+                  })
+                }
                 $("#periodic_medication").click(function(){
                   var form = $('<form> \
                     <div class="input-group"> \
@@ -217,12 +225,16 @@
                       var dose = form.find('input[name=meddose]').val();
                       var interval = form.find('input[name=medinterval]').val();
                       var termination = form.find('input[name=medterm]').val();
-                      var data = {id: (+new Date)+Math.random(), "name": name, "dose": dose, "interval": interval, "termination": termination};
-                      console.log(data);
+                      var data = {"id": (+new Date)+Math.random(), "type": "periodic", "name": name, "dose": dose, "interval": interval, "termination": termination};
+                      var prescription = $("#prescription");
+                      var pdata = prescription.data("prescription");
+                      pdata["medicienes"].push(data);
+                      prescription.data("prescription", pdata);
+                      render_prescription();
                   });
                 });
                 $("#ontime_medication").click(function(){
-                    
+
                 });
             });
         </script>

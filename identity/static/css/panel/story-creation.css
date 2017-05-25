@@ -142,7 +142,11 @@
     font-size: 14px;
     margin-top: 0px;
 }
-
+.story-creation-form-field-input-body{
+  height: 200px;
+  margin-top: 25px;
+  background-color: #f8f8f8;
+}
 .prescription-editor-toolbar{
   display: block;
   float: left;
