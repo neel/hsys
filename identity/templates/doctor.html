@@ -6,6 +6,7 @@
         <title>Doctors</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
         <style type='text/css'>
             @import url('{% static 'css/daterangepicker.css' %}');
             @import url('{% static 'css/jquery.datetimepicker.css' %}');
@@ -95,6 +96,7 @@
         <script type="text/javascript" src="{% static 'js/sprite/story-viewer.js' %}"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
         <!--
         <script type="text/javascript" src="{% static 'js/panel/admissions.js' %}"></script>
         -->
@@ -191,6 +193,7 @@
                             interval_text = "Every "+this.interval + " hours";
                         }
                         var termination_text = (this.termination == -1) ? "untill prescribed to stop" : "For "+ this.termination+ " days";
+                        var when_text = this.when;
 
                         body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
                                         <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                                    \
@@ -198,6 +201,7 @@
                                         <div class="medicine-dose">'+this.dose+'mg</div>                                                            \
                                         <div class="medicine-interval">'+interval_text+'</div>                                                      \
                                         <div class="medicine-termination">'+termination_text+'</div>                                                \
+                                        <div class="medicine-when">'+when_text+'</div>                                                              \
                                         </div>'));
                     }else if(this.type == 'onetime'){
                         body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
@@ -230,7 +234,7 @@
                       <span class="input-group-addon" id="basic-addon1">Dose</span> \
                       <input name="meddose" type="text" class="form-control" placeholder="in mg" aria-describedby="basic-addon1"> \
                     </div> \
-                    <div class="input-group"> \
+                    <div class="input-group form-group"> \
                       <div class="input-group-btn"> \
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Interval <span class="caret"></span></button> \
                         <ul class="dropdown-menu"> \
@@ -262,14 +266,11 @@
                         </ul> \
                       </div> \
                       <input type="text" name="medterm" class="form-control" placeholder="in days" aria-describedby="basic-addon1"> \
-                      <div class="input-group-btn"> \
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">When<span class="caret"></span></button> \
-                        <ul class="dropdown-menu"> \
-                            <li><a href="#">Anytime</a></li> \
-                            <li><a href="#">Before Meal</a></li> \
-                            <li><a href="#">After Meal</a></li> \
-                        </ul> \
-                      </div> \
+                        <select class="selectpicker"> \
+                          <option value="anytime">Anytime</option> \
+                          <option value="before meal">Before Meal</option> \
+                          <option value="after meal">After Meal</option> \
+                        </select> \
                     </div> \
                   </form>');
                   bootbox.confirm(form, function(result){
@@ -278,27 +279,32 @@
                       var dose = form.find('input[name=meddose]').val();
                       var interval = form.find('input[name=medinterval]').val();
                       var termination = form.find('input[name=medterm]').val();
-                      var data = {"id": (+new Date)+Math.random(), "type": "periodic", "name": name, "dose": dose, "interval": interval, "termination": termination};
+                      var when = form.find(".selectpicker").find("option:selected").val();
+                      var data = {"id": (+new Date)+Math.random(), "type": "periodic", "name": name, "dose": dose, "interval": interval, "termination": termination, "when": when};
                       var prescription = $("#prescription");
                       var pdata = prescription.data("prescription");
                       pdata["medicines"].push(data);
                       prescription.data("prescription", pdata);
                       render_prescription();
                   });
+                  $('.selectpicker').selectpicker({
+                    size: 4
+                  });
+
                 });
                 $("#ontime_medication").click(function(){
-                var form = $('<form> \
-                    <div class="input-group"> \
-                      <span class="input-group-addon" id="basic-addon1">Medicine Name</span> \
-                      <input name="medname" type="text" class="form-control" placeholder="Medicine Name" aria-describedby="basic-addon1"> \
-                      <span class="input-group-addon" id="basic-addon1">Dose</span> \
-                      <input name="meddose" type="text" class="form-control" placeholder="in mg" aria-describedby="basic-addon1"> \
-                    </div> \
-                    <div class="input-group"> \
-                      <span class="input-group-addon" id="basic-addon1">Situation</span> \
-                      <input name="medcase" type="text" class="form-control" placeholder="situation" aria-describedby="basic-addon1"> \
-                    </div> \
-                  </form>');
+                  var form = $('<form> \
+                      <div class="input-group"> \
+                        <span class="input-group-addon" id="basic-addon1">Medicine Name</span> \
+                        <input name="medname" type="text" class="form-control" placeholder="Medicine Name" aria-describedby="basic-addon1"> \
+                        <span class="input-group-addon" id="basic-addon1">Dose</span> \
+                        <input name="meddose" type="text" class="form-control" placeholder="in mg" aria-describedby="basic-addon1"> \
+                      </div> \
+                      <div class="input-group"> \
+                        <span class="input-group-addon" id="basic-addon1">Situation</span> \
+                        <input name="medcase" type="text" class="form-control" placeholder="situation" aria-describedby="basic-addon1"> \
+                      </div> \
+                    </form>');
                   bootbox.confirm(form, function(result){
                       if(!result) return false;
                       var name = form.find('input[name=medname]').val();
@@ -311,6 +317,39 @@
                       prescription.data("prescription", pdata);
                       render_prescription();
                   });
+                });
+                $("#advice_medication").click(function(){
+                  alert(1);
+                });
+                $("#test_medication").click(function(){
+                  var form = $('<form> \
+                      <div class="input-group"> \
+                        <select class="selectpicker"> \
+                          <option value="xray">X-Ray</option> \
+                          <option value="test1">Test #1</option> \
+                          <option value="test2">Test#2</option> \
+                        </select> \
+                        <input name="testnote" type="text" class="form-control" placeholder="note" aria-describedby="basic-addon1"> \
+                      </div> \
+                    </form>');
+                  $('.selectpicker').selectpicker({
+                    size: 4
+                  });
+                  bootbox.confirm(form, function(result){
+                      if(!result) return false;
+                      var name = form.find('input[name=medname]').val();
+                      var dose = form.find('input[name=meddose]').val();
+                      var situation = form.find('input[name=medcase]').val();
+                      var data = {"id": (+new Date)+Math.random(), "type": "onetime", "name": name, "dose": dose, "situation": situation};
+                      var prescription = $("#prescription");
+                      var pdata = prescription.data("prescription");
+                      pdata["medicines"].push(data);
+                      prescription.data("prescription", pdata);
+                      render_prescription();
+                  });
+                });
+                $("#remark_medication").click(function(){
+                  alert(3);
                 });
             });
         </script>
