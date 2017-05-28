@@ -194,6 +194,7 @@
                         }
                         var termination_text = (this.termination == -1) ? "untill prescribed to stop" : "For "+ this.termination+ " days";
                         var when_text = this.when;
+                        var note_text = this.note.length ? ("("+this.note+")") : "";
 
                         body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
                                         <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                                    \
@@ -202,8 +203,9 @@
                                         <div class="medicine-interval">'+interval_text+'</div>                                                      \
                                         <div class="medicine-termination">'+termination_text+'</div>                                                \
                                         <div class="medicine-when">'+when_text+'</div>                                                              \
+                                        <div class="medicine-note">'+note_text+'</div>                                                              \
                                         </div>'));
-                    }else if(this.type == 'onetime'){
+                    }else if(this.type == 'asrequired'){
                         body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
                                         <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                                    \
                                         <div class="medicine-name">'+this.name+'</div>                                                              \
@@ -272,6 +274,10 @@
                           <option value="after meal">After Meal</option> \
                         </select> \
                     </div> \
+                    <div class="input-group"> \
+                      <span class="input-group-addon" id="basic-addon1">Note</span> \
+                      <input name="mednote" type="text" class="form-control" placeholder="Note" aria-describedby="basic-addon1"> \
+                    </div> \
                   </form>');
                   bootbox.confirm(form, function(result){
                       if(!result) return false;
@@ -279,8 +285,9 @@
                       var dose = form.find('input[name=meddose]').val();
                       var interval = form.find('input[name=medinterval]').val();
                       var termination = form.find('input[name=medterm]').val();
+                      var note = form.find('input[name=mednote]').val();
                       var when = form.find(".selectpicker").find("option:selected").val();
-                      var data = {"id": (+new Date)+Math.random(), "type": "periodic", "name": name, "dose": dose, "interval": interval, "termination": termination, "when": when};
+                      var data = {"id": (+new Date)+Math.random(), "type": "periodic", "name": name, "dose": dose, "interval": interval, "termination": termination, "when": when, "note": note};
                       var prescription = $("#prescription");
                       var pdata = prescription.data("prescription");
                       pdata["medicines"].push(data);
@@ -292,7 +299,7 @@
                   });
 
                 });
-                $("#ontime_medication").click(function(){
+                $("#asrequired_medication").click(function(){
                   var form = $('<form> \
                       <div class="input-group"> \
                         <span class="input-group-addon" id="basic-addon1">Medicine Name</span> \
@@ -310,7 +317,7 @@
                       var name = form.find('input[name=medname]').val();
                       var dose = form.find('input[name=meddose]').val();
                       var situation = form.find('input[name=medcase]').val();
-                      var data = {"id": (+new Date)+Math.random(), "type": "onetime", "name": name, "dose": dose, "situation": situation};
+                      var data = {"id": (+new Date)+Math.random(), "type": "asrequired", "name": name, "dose": dose, "situation": situation};
                       var prescription = $("#prescription");
                       var pdata = prescription.data("prescription");
                       pdata["medicines"].push(data);
@@ -340,7 +347,7 @@
                       var name = form.find('input[name=medname]').val();
                       var dose = form.find('input[name=meddose]').val();
                       var situation = form.find('input[name=medcase]').val();
-                      var data = {"id": (+new Date)+Math.random(), "type": "onetime", "name": name, "dose": dose, "situation": situation};
+                      var data = {"id": (+new Date)+Math.random(), "type": "asrequired", "name": name, "dose": dose, "situation": situation};
                       var prescription = $("#prescription");
                       var pdata = prescription.data("prescription");
                       pdata["medicines"].push(data);
@@ -352,6 +359,17 @@
                   alert(3);
                 });
             });
+        </script>
+        <script type="text/javascript">
+            function create_prescription(story_id, patient_id, patient_name){
+                console.log(story_id, patient_id, patient_name);
+                var panel = $('#story_creation_panel');
+                panel.show();
+                $("#id_patient").val(patient_id);
+                $("#id_patient_selector").val(patient_name);
+                $('#id_story_referer').val(story_id);
+                $('.story-refer').trigger("click");
+            }
         </script>
     </head>
     <body>

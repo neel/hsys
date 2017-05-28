@@ -206,6 +206,14 @@
   float: left;
   margin-left: 5px;
 }
+.medicine-note{
+  float: left;
+  margin-left: 5px;
+}
+
+.bootbox-body{
+  margin-top: 11px !important;
+}
 
 .mp_list{
     margin: 0px;

@@ -1,6 +1,6 @@
 {% load identity_extras %}
 
-<div class="story-viewer">
+<div class="story-viewer" data-patient="{{story.patient.id}}" data-story="{{story.id}}">
     <div class="story-viewer-close">●</div>
     <div class="story-viewer-meta">
         <div class="story-viewer-info">
@@ -55,7 +55,7 @@
     <div class="story-viewer-content">
         <div class="story-viewer-actions">
             <div class="story-viewer-action story-viewer-action-share">&nbsp;</div>
-            <div class="story-viewer-action story-viewer-action-reply">&nbsp;</div>
+            <div class="story-viewer-action story-viewer-action-reply" onclick="create_prescription({{story.id}}, {{story.patient.id}}, '{{story.patient.get_full_name}}')">&nbsp;</div>
         </div>
         <div class="story-viewer-subject">
             {{story.subject}}
