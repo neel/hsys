@@ -212,6 +212,12 @@
                                         <div class="medicine-dose">'+this.dose+'mg</div>                                                            \
                                         <div class="medicine-situation">'+this.situation+'</div>                                                    \                                   \
                                         </div>'));
+                    }else if(this.type == 'investigation'){
+                        body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
+                                        <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                                    \
+                                        <div class="medicine-name">'+this.name+'</div>                                                              \
+                                        <div class="medicine-note">'+this.note+'</div>                                                            \                                   \
+                                        </div>'));
                     }
                   });
                   $("#id_body").val(JSON.stringify(json));
@@ -297,7 +303,6 @@
                   $('.selectpicker').selectpicker({
                     size: 4
                   });
-
                 });
                 $("#asrequired_medication").click(function(){
                   var form = $('<form> \
@@ -331,28 +336,27 @@
                 $("#test_medication").click(function(){
                   var form = $('<form> \
                       <div class="input-group"> \
-                        <select class="selectpicker"> \
+                        <select name="medtest" class="selectpicker"> \
                           <option value="xray">X-Ray</option> \
                           <option value="test1">Test #1</option> \
                           <option value="test2">Test#2</option> \
                         </select> \
-                        <input name="testnote" type="text" class="form-control" placeholder="note" aria-describedby="basic-addon1"> \
+                        <input name="mednote" type="text" class="form-control" placeholder="note" aria-describedby="basic-addon1"> \
                       </div> \
                     </form>');
-                  $('.selectpicker').selectpicker({
-                    size: 4
-                  });
                   bootbox.confirm(form, function(result){
                       if(!result) return false;
-                      var name = form.find('input[name=medname]').val();
-                      var dose = form.find('input[name=meddose]').val();
-                      var situation = form.find('input[name=medcase]').val();
-                      var data = {"id": (+new Date)+Math.random(), "type": "asrequired", "name": name, "dose": dose, "situation": situation};
+                      var name = form.find(".selectpicker").find("option:selected").val();
+                      var note = form.find('input[name=mednote]').val();
+                      var data = {"id": (+new Date)+Math.random(), "type": "investigation", "name": name, "note": note};
                       var prescription = $("#prescription");
                       var pdata = prescription.data("prescription");
                       pdata["medicines"].push(data);
                       prescription.data("prescription", pdata);
                       render_prescription();
+                  });
+                  $('.selectpicker').selectpicker({
+                    size: 4
                   });
                 });
                 $("#remark_medication").click(function(){
