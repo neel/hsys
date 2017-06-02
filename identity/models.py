@@ -441,6 +441,36 @@ class Activity(models.Model):
     class Meta:
         ordering = ['-when']
         
-    
-    
+class Campaign(models.Model):
+    name 	= models.CharField(_('Name'), max_length=30, blank=True)
+    description = models.TextField()
+    when 	= models.DateTimeField('when')
+    duration 	= models.IntegerField()
+    owner 	= models.ForeignKey(Doctor, related_name="owner")
+    place 	= models.CharField(_('Place'), max_length=160, blank=True)
+
+    class Meta:
+        ordering = ['-when']
+    def __unicode__(self):
+        return "Campaign on %s from %s for %s days under supervision of %s" %(self.place, self.when, self.duration, self.owner)
+
+class Survey(models.Model):
+    campaign 		 = models.ForeignKey(Campaign, related_name="campaign")
+    patient 		 = models.ForeignKey(Patient, related_name="patient")
+    operator 		 = models.ForeignKey(Operator, related_name="operator")
+    when 		 = models.DateTimeField('when')
+    sys 		 = models.IntegerField()
+    dia 		 = models.IntegerField()
+    smoker 		 = models.BooleanField()
+    diabetic 		 = models.BooleanField()
+    dyslipidemic 	 = models.BooleanField()
+    daibeticheridity 	 = models.BooleanField()
+    dyslipidemicheridity = models.BooleanField()
+    lifestyle 		 = models.BooleanField()
+
+    class Meta:
+        ordering = ['-when']
+    def __unicode__(self):
+        return "Survey on Patient %s for campaign %s" %(self.patient, self.campaign)
+
 

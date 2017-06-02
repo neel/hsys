@@ -1,5 +1,5 @@
 from tastypie.resources import ModelResource, Resource, ALL, ALL_WITH_RELATIONS
-from identity.models import HmsUser, Patient, Story, Doctor, Organization, Admission, Activity, Bed, Task, RandomVisit, Appointment, RegularAdmission, EmergencyAdmission
+from identity.models import HmsUser, Patient, Story, Doctor, Operator, Organization, Admission, Activity, Bed, Task, RandomVisit, Appointment, RegularAdmission, EmergencyAdmission, Campaign, Survey
 from tastypie import fields
 from django.db.models import Q
 from tastypie.paginator import Paginator
@@ -188,7 +188,16 @@ class PatientResource(ModelResource):
             'id': ALL_WITH_RELATIONS
         }
         
-        
+class OperatorResource(ModelResource):
+    org = fields.ToOneField('identity.api.OrganizationResource', 'org', null=True)
+
+    class Meta:
+        queryset = Operator.objects.all()
+        excludes = ['login', 'password', 'is_active', 'is_staff', 'is_superuser', 'last_login']
+        authorization= Authorization()
+        filtering = {
+            'id': ALL_WITH_RELATIONS
+        }
         
 class PatientCatalogResource(ModelResource):
     #organizations = fields.ToManyField('identity.api.OrganizationResource', 'organizations', null=True)
@@ -308,3 +317,21 @@ class AppointmentResource(ModelResource):
 		queryset = Appointment.objects.all()
 		excludes = ['id']
 		authorization = Authorization()
+
+class CampaignResource(ModelResource):
+    owner = fields.ToOneField('identity.api.DoctorResource', 'owner')
+    
+    class Meta:
+        queryset = Campaign.objects.all()
+        authentication = Authentication()
+        authorization = Authorization()
+
+class SurveyResource(ModelResource):
+    campaign = fields.ToOneField('identity.api.CampaignResource', 'campaign')
+    patient  = fields.ToOneField('identity.api.PatientResource', 'patient')
+    operator = fields.ToOneField('identity.api.OperatorResource', 'operator')
+    
+    class Meta:
+        queryset = Survey.objects.all()
+        authentication = Authentication()
+        authorization = Authorization()

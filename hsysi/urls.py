@@ -40,6 +40,8 @@ v1_api.register(EmergencyAdmissionResource())
 v1_api.register(TaskResource())
 v1_api.register(ActivityResource())
 v1_api.register(AppointmentResource())
+v1_api.register(CampaignResource())
+v1_api.register(SurveyResource())
 
 urlpatterns = [
     url(r'^accounts/register/patient/$', RegistrationView.as_view(form_class=PatientRegistrationForm), name='register_patient'),
