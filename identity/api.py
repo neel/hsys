@@ -10,6 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 from tastypie.utils import trailing_slash
 from django.http import HttpResponse
 from tastypie.http import HttpUnauthorized, HttpForbidden, HttpNotFound
+from hsysi.utils import delta_string
  
 class UserResource(ModelResource):
     class Meta:
@@ -43,7 +44,8 @@ class UserResource(ModelResource):
                 login(request, user)
                 return self.create_response(request, {
                     'success': True,
-                    'user': user.id
+                    'user': user.id,
+                    'real': user.real().id
                 })
             else:
                 return self.create_response(request, {
@@ -187,6 +189,9 @@ class PatientResource(ModelResource):
         filtering = {
             'id': ALL_WITH_RELATIONS
         }
+    def dehydrate(self, bundle):
+        bundle.data['age'] = delta_string(bundle.obj.age())
+        return bundle
         
 class OperatorResource(ModelResource):
     org = fields.ToOneField('identity.api.OrganizationResource', 'org', null=True)

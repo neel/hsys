@@ -145,7 +145,7 @@ class Person(HmsUser):
     
     def age(self):
         delta = (date.today() - self.dob)
-        return delta    
+        return delta
 
     class Meta:
         abstract = True
