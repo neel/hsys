@@ -13,14 +13,16 @@
 }
 .story-viewer-close{
     position: absolute;
-    top: 26px;
-    right: -29px;
-    font-size: 39px;
+    top: 32px;
+    left: 164px;
+    font-size: 15px;
     color: #4c4c4c;
     cursor: pointer;
+    z-index: 1;
 }
 .story-viewer-close:hover{
-    font-size: 45px;
+    top: 28px;
+    font-size: 20px;
 }
 .story-viewer-meta{
     position: relative;
@@ -69,7 +71,7 @@
 }
 .story-viewer-followers{
     display: block;
-    border-top: 1px dashed #ffa9a7;
+    border-top: 1px dashed #9c27b0;
     float: left;
     width: 100%;
 }

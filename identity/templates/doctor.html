@@ -122,9 +122,11 @@
                     var overlay = $('#story_creation_panel .story-creation-form-overlay');
                     $('.form-field-error ul').html('');
                     overlay.addClass('story-creation-form-overlay-loading');
+                    var form_data = $(this).serializeArray();
+                    form_data.push({'name': 'is_prescription', 'value': 'on'});
                     $.ajax({
                         url:  $(this).attr('action'),
-                        data: $(this).serializeArray(),
+                        data: form_data,
                         type: 'POST',
                         success: function(data){
                             overlay.removeClass('story-creation-form-overlay-loading');
@@ -216,6 +218,11 @@
                         body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
                                         <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                                    \
                                         <div class="medicine-name">'+this.name+'</div>                                                              \
+                                        <div class="medicine-note">'+this.note+'</div>                                                            \                                   \
+                                        </div>'));
+                    }else if(this.type == 'advice'){
+                        body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
+                                        <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                                                         \
                                         <div class="medicine-note">'+this.note+'</div>                                                            \                                   \
                                         </div>'));
                     }
@@ -331,7 +338,18 @@
                   });
                 });
                 $("#advice_medication").click(function(){
-                  alert(1);
+                    bootbox.prompt({
+                        title: "Advice to Patient",
+                        inputType: 'textarea',
+                        callback: function (result){
+                            var data = {"id": (+new Date)+Math.random(), "type": "advice", "note": result};
+                            var prescription = $("#prescription");
+                            var pdata = prescription.data("prescription");
+                            pdata["medicines"].push(data);
+                            prescription.data("prescription", pdata);
+                            render_prescription();
+                        }
+                    });
                 });
                 $("#test_medication").click(function(){
                   var form = $('<form> \
@@ -365,7 +383,13 @@
             });
         </script>
         <script type="text/javascript">
-            function create_prescription(story_id, patient_id, patient_name){
+            function create_prescription(div, story_id, patient_id, patient_name){
+                var story_viewer = $(div).closest('.story-viewer');
+                console.log(story_viewer);
+                story_viewer.css('left', '0px');
+                $('.story-viewer').each(function(){
+                    if(this != story_viewer[0]) $(this).remove();
+                })
                 console.log(story_id, patient_id, patient_name);
                 var panel = $('#story_creation_panel');
                 panel.show();

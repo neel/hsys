@@ -23,7 +23,7 @@
             <ul class="ministories-list">
                 {% for story in story.refers_to.all %}
                     <li class="ministory-list-item">
-                        <div class="ministory">
+                        <div class="ministory ministory-linked">
                             {% view 'identity.sprites.MiniStorySprite' story %}
                         </div>
                     </li>
@@ -36,7 +36,7 @@
             <ul class="ministories-list">
                 {% for story in story.refered_by.all %}
                     <li class="ministory-list-item">
-                        <div class="ministory">
+                        <div class="ministory ministory-linked">
                             {% view 'identity.sprites.MiniStorySprite' story %}
                         </div>
                     </li>
@@ -55,7 +55,7 @@
     <div class="story-viewer-content">
         <div class="story-viewer-actions">
             <div class="story-viewer-action story-viewer-action-share">&nbsp;</div>
-            <div class="story-viewer-action story-viewer-action-reply" onclick="create_prescription({{story.id}}, {{story.patient.id}}, '{{story.patient.get_full_name}}')">&nbsp;</div>
+            <div class="story-viewer-action story-viewer-action-reply" onclick="create_prescription(this, {{story.id}}, {{story.patient.id}}, '{{story.patient.get_full_name}}')">&nbsp;</div>
         </div>
         <div class="story-viewer-subject">
             {{story.subject}}

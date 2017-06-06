@@ -1,8 +1,13 @@
-<div class="ministory-sprite {% if story.mode == Story.ScheduledMode %}ministory-sprite-scheduled{% else %}ministory-sprite-random{% endif %}" data-id="{{story.id}}">
+<div class="ministory-sprite {% if story.mode == Story.ScheduledMode %}ministory-sprite-scheduled{% else %}ministory-sprite-random{% endif %} {% if story.is_prescription %}ministory-sprite-prescription{% else %}ministory-sprite-complaint{% endif %}" data-id="{{story.id}}">
     <input type="hidden" name="id" value="{{story.id}}" />
     <div class="ministory-heading">
-        <div class="ministory-doctor">{{story.doctor}}</div>
-        <div class="ministory-patient">{{story.patient}}</div>
+        {% if story.is_prescription %}
+            <div class="ministory-doctor">{{story.doctor}}</div>
+            <div class="ministory-patient">{{story.patient}}</div>
+        {% else %}
+            <div class="ministory-patient">{{story.patient}}</div>
+            <div class="ministory-doctor">{{story.doctor}}</div>
+        {% endif %}
         <div class="ministory-when">{{story.when}}</div>
     </div>
     <div class="ministory-body">

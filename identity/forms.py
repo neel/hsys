@@ -53,7 +53,7 @@ class AppointmentCreationForm(forms.ModelForm):
 class RandomVisitCreationForm(forms.ModelForm):
     class Meta:
         model = RandomVisit
-        fields = ('patient', 'subject', 'body', 'refers_to')
+        fields = ('patient', 'subject', 'body', 'refers_to', 'is_prescription')
         
 class NegotiationForm(forms.ModelForm):
     class Meta:

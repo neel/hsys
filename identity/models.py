@@ -20,9 +20,11 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.models import AbstractBaseUser, AbstractUser, UserManager, PermissionsMixin
 from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models
 from datetime import datetime
+import json
 
 class HmsUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(_('username'), max_length=30, unique=True,
@@ -263,9 +265,20 @@ class Story(models.Model):
     subject = models.CharField(max_length=1500)
     body    = models.TextField()
     refers_to = models.ManyToManyField('Story', related_name="refered_by", blank=True)
+    is_prescription = models.BooleanField("is_prescription", default=False)
 
     def __unicode__(self):
         return "%s" % (self.subject)
+
+    def clean(self):
+        if self.is_prescription:
+            try:
+                prescription = json.loads(self.body)
+                for m in prescription['medicines']:
+                    del m['id']
+                self.body = json.dumps(prescription)
+            except ValueError:
+                raise ValidationError('Malformed prescription data')
     
 class ScheduledVisit(Story):
     appointment = models.ForeignKey('Appointment', related_name="scheduled_visit")
