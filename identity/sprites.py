@@ -104,6 +104,9 @@ def _ActivitiesSprite(request, activities):
     })
 
 def StoryViewerSprite(request, story):
+    if story.is_prescription:
+        story.body = json.loads(story.body)
+
     return render(request, 'sprite/story-viewer.html', {
         'request': request,
         'story': story

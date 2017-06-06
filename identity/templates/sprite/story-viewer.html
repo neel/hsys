@@ -61,7 +61,15 @@
             {{story.subject}}
         </div>
         <div class="story-viewer-body">
-            {{story.body}}
+            {% if story.is_prescription %}
+                {% for m in story.body.medicines %}
+                    {% if m.type == "periodic" %}
+                        {{ m }}
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                {{story.body}}
+            {% endif %}
         </div>
     </div>
 </div>
