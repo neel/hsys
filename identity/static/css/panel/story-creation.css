@@ -148,68 +148,6 @@
   background-color: #f8f8f8;
   padding-top: 20px;
 }
-.prescription-editor-toolbar{
-  display: block;
-  float: left;
-  position: absolute;
-  top: 26px;
-  right: 2px;
-  height: 40px;
-  width: 482px;
-  padding-top: 2px;
-}
-
-.prescription-editor-toolbar-button{
-  display: block;
-  float: left;
-  position: relative;
-  margin-left: 6px;
-  display: none;
-}
-
-.prescription-editor-toolbar:hover .prescription-editor-toolbar-button{
-  display: block;
-}
-
-.prescription-entry-remove{
-  float: left;
-  cursor: pointer;
-}
-
-.prescription-entry{
-  float: left;
-  width: 100%;
-  margin-top: -20px;
-}
-
-.medicine-name{
-  float: left;
-  margin-left: 5px;
-}
-.medicine-dose{
-  float: left;
-  margin-left: 5px;
-}
-.medicine-interval{
-  float: left;
-  margin-left: 5px;
-}
-.medicine-termination{
-  float: left;
-  margin-left: 5px;
-}
-.medicine-when{
-  float: left;
-  margin-left: 5px;
-}
-.medicine-situation{
-  float: left;
-  margin-left: 5px;
-}
-.medicine-note{
-  float: left;
-  margin-left: 5px;
-}
 
 .bootbox-body{
   margin-top: 11px !important;

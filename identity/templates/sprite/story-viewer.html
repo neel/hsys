@@ -6,8 +6,15 @@
         <div class="story-viewer-info">
             <div class="story-viewer-time">{{story.when}}</div>
             <div class="story-viewer-controls">
+                <!--
                 <div class="story-viewer-control story-viewer-control-prev">previous</div>
                 <div class="story-viewer-control story-viewer-control-prev">next</div>
+                -->
+                {% if story.is_prescription %}
+                    <div class="story-viewer-control story-viewer-type story-viewer-prescription">prescription</div>
+                {% else %}
+                    <div class="story-viewer-control story-viewer-type story-viewer-complaint">complaint</div>
+                {% endif %}
             </div>
         </div>
         <div class="story-viewer-actors">
@@ -63,9 +70,7 @@
         <div class="story-viewer-body">
             {% if story.is_prescription %}
                 {% for m in story.body.medicines %}
-                    {% if m.type == "periodic" %}
-                        {{ m }}
-                    {% endif %}
+                    {{ m|medadvice|safe }}
                 {% endfor %}
             {% else %}
                 {{story.body}}

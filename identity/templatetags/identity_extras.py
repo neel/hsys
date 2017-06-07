@@ -117,3 +117,55 @@ def usertype(u):
     if u.__class__.__name__ == 'AnonymousUser':
         return 'Anonymous'
     return classname(u.real())
+
+@register.filter(name='medadvice')
+def medadvice(obj):
+    if obj['type'] == "periodic":
+        obj['interval'] = int(obj['interval'])
+        obj['termination'] = int(obj['termination'])
+        interval_text = ''
+        if ((obj['interval'] <= 24) and (24 % obj['interval'] == 0)):
+            interval_text = "{} times daily".format(24/obj['interval'])
+        elif (obj['interval'] % 24 == 0):
+            di = obj['interval']/24;
+            dit = '';
+            if (di%10 == 1):
+                dit = "st"
+            elif(di%10 == 2):
+                dit = "nd"
+            elif(di%10 == 3):
+                dit = "rd"
+            else:
+                dit = "th"
+            interval_text = "Every {}{} day".format(di,dit)
+        else:
+            interval_text = "Every {} hours".format(obj['interval'])
+            
+        termination_text = "untill prescribed to stop" if (obj['termination'] == -1) else "For {} days".format(obj['termination'])
+        when_text = obj['when']
+        note_text = "({})".format(obj['note']) if len(obj['note']) else ""
+        return """<div class="prescription-entry prescription-entry-inline medication-periodic well well-sm"> 
+                    <div class="medicine-name">{}</div>
+                    <div class="medicine-dose">{}mg</div>
+                    <div class="medicine-interval">{}</div>
+                    <div class="medicine-termination">{}</div>
+                    <div class="medicine-when">{}</div>
+                    <div class="medicine-note">{}</div>
+                </div>""".format(obj['name'], obj['dose'], interval_text, termination_text, when_text, note_text)
+    elif obj['type'] == 'asrequired':
+        return """<div class="prescription-entry prescription-entry-inline medication-asrequired well well-sm"> 
+                        <div class="medicine-name">{}</div> 
+                        <div class="medicine-dose">{}mg</div> 
+                        <div class="medicine-situation">{}</div> 
+                    </div>""".format(obj['name'], obj['dose'], obj['situation'])
+    elif obj['type'] == 'investigation':
+        return """<div class="prescription-entry prescription-entry-inline medication-investigation well well-sm">
+                    <div class="medicine-name">{}</div>
+                    <div class="medicine-note">{}</div>
+                </div>""".format(obj['name'], obj['note'])
+    elif obj['type'] == 'advice':
+        return """<div class="prescription-entry prescription-entry-inline medication-advice well well-sm">
+                        <div class="medicine-note">{}</div>
+                    </div>""".format(obj['note'])
+    else:
+        return '<div class="prescription-entry prescription-entry-inline medication-malformed well well-sm"> Error </div>'

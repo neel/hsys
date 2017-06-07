@@ -25,6 +25,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from datetime import datetime
 import json
+import uuid
 
 class HmsUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(_('username'), max_length=30, unique=True,
@@ -266,6 +267,7 @@ class Story(models.Model):
     body    = models.TextField()
     refers_to = models.ManyToManyField('Story', related_name="refered_by", blank=True)
     is_prescription = models.BooleanField("is_prescription", default=False)
+    media = models.TextField(null=True)
 
     def __unicode__(self):
         return "%s" % (self.subject)
@@ -279,6 +281,21 @@ class Story(models.Model):
                 self.body = json.dumps(prescription)
             except ValueError:
                 raise ValidationError('Malformed prescription data')
+        if len(self.media) > 0:
+            try:
+                media = json.loads(self.media)
+                for m in media:
+                    label = m['label']
+                    mime  = m['mime']
+                    data  = m['data']
+                    name  = str(uuid.uuid4().hex)
+                    del m['data']
+                    m['name'] = name
+                    with open('/home/sensiaas/projects/hsys/images/{}'.format(name), 'wb+') as destination:
+                        for chunk in f.chunks():
+                            destination.write(chunk)
+            except ValueError:
+                raise ValidationError('Malformed media data')
     
 class ScheduledVisit(Story):
     appointment = models.ForeignKey('Appointment', related_name="scheduled_visit")
