@@ -16,6 +16,26 @@
 .ministory-sprite-random{
     border-left: 3px solid #FCFCB2;
 }
+.ministory-sprite-complaint:before{
+    content:"";
+    display:block;
+    position:absolute;
+    top:0px;
+    left:1px;
+    right:0px;
+    bottom:0px;
+    border-left:3px solid green;
+}
+.ministory-sprite-prescription:before{
+    content:"";
+    display:block;
+    position:absolute;
+    top:0px;
+    left:1px;
+    right:0px;
+    bottom:0px;
+    border-left:3px solid red;
+}
 .ministory-heading{
     float: left;
     width: 100%;
