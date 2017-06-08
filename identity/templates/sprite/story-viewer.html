@@ -12,6 +12,7 @@
                 -->
                 {% if story.is_prescription %}
                     <div class="story-viewer-control story-viewer-type story-viewer-prescription">prescription</div>
+                    <a class="story-viewer-control story-viewer-print glyphicon glyphicon-print" href="/_prescription/{{story.id}}/"></a>
                 {% else %}
                     <div class="story-viewer-control story-viewer-type story-viewer-complaint">complaint</div>
                 {% endif %}

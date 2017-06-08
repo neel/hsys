@@ -48,11 +48,13 @@
     display: block;
     padding-right: 6px;
     cursor: pointer;
-    background-color: red;
-    color: white;
     font-size: 12px;
     padding-top: 2px;
     font-weight: bold;
+}
+.story-viewer-type{
+    background-color: red;
+    color: white;
 }
 .story-viewer-complaint{
     background-color: green;
@@ -60,7 +62,12 @@
 .story-viewer-prescription{
 
 }
-
+.story-viewer-print{
+    margin-left: 4px;
+    font-size: 16px;
+    text-decoration: none;
+    color: black;
+}
 .story-viewer-time{
     float: right;
     font-size: 12px;

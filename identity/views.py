@@ -676,6 +676,25 @@ def _story(request, story_id):
         return StoryViewerSprite(request, story)
     except Story.DoesNotExist:
         return Http404
+
+def _prescription(request, story_id):
+    try:
+        story = Story.objects.get(id=story_id)
+        prescriptions = []
+        complaints    = []
+        if story.is_prescription:
+            story.body = json.loads(story.body)
+            prescriptions.append(story)
+            complaints = story.refers_to.all()
+        else:
+            complaints.append(story)
+            for s in story.refered_by.all():
+                s.body = json.loads(s.body)
+                prescriptions.append(s)
+        
+        return PrescriptionViewerSprite(request, story, complaints, prescriptions)
+    except Story.DoesNotExist:
+        return Http404
     
 def _activity(request, activity_id):
     try:

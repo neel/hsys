@@ -32,5 +32,26 @@ $(document).ready(function(){
                 }
             });
         }
-    })
+    });
+    $(document).on('click', "div.story-viewer-print", function(event){
+        // var viewer = $($(this).closest('.story-viewer'));
+        // var story_id = viewer.data('story');
+        // var dialog = bootbox.dialog({
+        //     title: 'Print Prescription',
+        //     message: 'Loading Prescription ...'
+        // });
+        // dialog.init(function(){
+        //     $.ajax({
+        //         url: '/_prescription/'+story_id
+        //     }).done(function(content, status, xhr){
+        //         var content_length = content.length;
+        //         if(content_length){
+        //             var story_board = $($.trim(content.replace(/\s+/g, " ")));
+
+        //             var body = dialog.find('.bootbox-body');
+        //             body.html(story_board);
+        //         }
+        //     });            
+        // });
+    });
 });

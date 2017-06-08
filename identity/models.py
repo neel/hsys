@@ -206,6 +206,7 @@ class Organization(HmsUser):
 
 class Doctor(Person):
     paramedic     = models.BooleanField()
+    specialization = models.CharField(_('Specialization'), max_length=64, blank=True)
     organizations = models.ManyToManyField(Organization, through='Membership', blank=True)
     
     def get_full_name(self):

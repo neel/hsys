@@ -111,3 +111,11 @@ def StoryViewerSprite(request, story):
         'request': request,
         'story': story
     })
+
+def PrescriptionViewerSprite(request, story, complaints, prescriptions):
+    return render(request, 'sprite/prescription-viewer.html', {
+        'request': request,
+        'story': story,
+        'complaints': complaints,
+        'prescriptions': prescriptions
+    })

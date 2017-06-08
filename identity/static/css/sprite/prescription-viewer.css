@@ -1,0 +1,158 @@
+body{
+  font-family: monospace;
+  font-size: 14px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 20px;
+  background: white;
+  margin: 0px;
+  margin-right: 10px;
+}
+@media print {
+  @page { margin: 0; margin-right: 50px;}
+  body { margin: 1.6cm; }
+}
+#qr{
+    width: 64px;
+    height: 64px;
+    float: right;
+}
+.prescription-logo{
+    width: 64px;
+    height: 64px;
+    float: left;
+    display: block;
+    position: relative;
+    margin-right: 10px;
+}
+.prescription-head{
+    float: left;
+    width: 100%;
+    display: block;
+    position: relative;
+    border-bottom: 1px solid #888;
+    padding-bottom: 2px;
+    font-weight: bold;
+}
+.prescription-content{
+    margin-top: 15px;
+    float: left;
+    width: 100%;
+    display: block;
+    position: relative;
+}
+.prescription-when{
+    float: right;
+    display: block;
+}
+.prescription-doctor{
+    float: left;
+    display: block;
+    position: relative;
+    margin-left: 5px;
+}
+.prescription-patient{
+    float: left;
+    display: block;
+    position: relative;
+    margin-left: 10px;
+    border-left: 1px solid #888;
+    padding-left: 10px;
+}
+.prescription-patient-age{
+    background-color: #888;
+    color: white;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+.prescription-prescriptions{
+    float: left;
+    display: block;
+    position: relative;
+    width: 100%;
+    margin-top: 10px;
+}
+.prescription-prescription-medicines{
+    float: left;
+    display: block;
+    position: relative;
+    width: 100%;
+}
+.prescription-complaints-label, .prescription-prescriptions-label{
+    background: black;
+    color: white;
+    display: inline-block;
+    padding: 0px 5px 5px 5px;
+    -webkit-border-top-right-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -moz-border-radius-topright: 5px;
+    -moz-border-radius-bottomright: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+@media print {
+    .prescription-patient-age, .prescription-complaints-label, .prescription-prescriptions-label {
+        -webkit-print-color-adjust: exact; 
+    }
+}
+
+.prescription-complaint{
+    float: left;
+    display: block;
+    position: relative;
+    width: 100%;
+}
+.prescription-prescription{
+    float: left;
+    display: block;
+    position: relative;
+    width: 100%;
+    margin-top: -10px;
+}
+.prescription-prescription-medicines-list{
+    float: left;
+    display: block;
+    position: relative;
+    list-style-type: decimal;
+}
+.prescription-prescription-medicines-list-item{
+    border-bottom: 1px dashed #808080;
+}
+.prescription-entry{
+  float: left;
+  display: block;
+  position: relative;
+}
+.medicine-name{
+  float: left;
+  margin-left: 5px;
+}
+.medicine-dose{
+  float: left;
+  margin-left: 5px;
+}
+.medicine-interval{
+  float: left;
+  margin-left: 5px;
+}
+.medicine-termination{
+  float: left;
+  margin-left: 5px;
+}
+.medicine-when{
+  float: left;
+  margin-left: 5px;
+}
+.medicine-situation{
+  float: left;
+  margin-left: 5px;
+}
+.medicine-note{
+  float: left;
+  margin-left: 5px;
+}

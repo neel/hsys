@@ -75,6 +75,7 @@ urlpatterns = [
     url(r'^_activities/(?P<task_id>\d+)/$', views._activities, name='_activities'),
     url(r'^_activity/(?P<activity_id>\d+)/$', views._activity, name='_activity'),
     url(r'^_story/(?P<story_id>\d+)/$', views._story, name='_story'),
+    url(r'^_prescription/(?P<story_id>\d+)/$', views._prescription, name='_prescription'),
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include(v1_api.urls))
 ]
