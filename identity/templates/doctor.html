@@ -254,31 +254,31 @@
                       <div class="input-group-btn"> \
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Interval <span class="caret"></span></button> \
                         <ul class="dropdown-menu"> \
-                            <li><a href="#" data-interval="">Once Daily</a></li> \
-                            <li><a href="#" data-interval="">Twice Daily</a></li> \
-                            <li><a href="#" data-interval="">Thrice Daily</a></li> \
-                            <li><a href="#" data-interval="">4 times Daily</a></li> \
+                            <li><a href="#" class="interval-helper" data-interval="24">Once Daily</a></li> \
+                            <li><a href="#" class="interval-helper" data-interval="12">Twice Daily</a></li> \
+                            <li><a href="#" class="interval-helper" data-interval="8">Thrice Daily</a></li> \
+                            <li><a href="#" class="interval-helper" data-interval="6">4 times Daily</a></li> \
                             <li role="separator" class="divider"></li> \
-                            <li><a href="#" data-interval="">Alternate Days</a></li> \
+                            <li><a href="#" class="interval-helper" data-interval="48">Alternate Days</a></li> \
                             <li role="separator" class="divider"></li> \
-                            <li><a href="#" data-interval="">Once in a Week</a></li> \
+                            <li><a href="#" class="interval-helper" data-interval="168">Once in a Week</a></li> \
                         </ul> \
                       </div> \
                       <input type="text" name="medinterval" class="form-control" placeholder="in hours (12 for twice daily)" aria-describedby="basic-addon1"> \
                       <div class="input-group-btn"> \
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Termination <span class="caret"></span></button> \
                         <ul class="dropdown-menu"> \
-                            <li><a href="#" data-interval="">After 1 Week</a></li> \
-                            <li><a href="#" data-interval="">After 2 Weeks</a></li> \
-                            <li><a href="#" data-interval="">After 3 Weeks</a></li> \
-                            <li><a href="#" data-interval="">After 4 Weeks</a></li> \
+                            <li><a href="#" class="termination-helper" data-termination="7">After 1 Week</a></li> \
+                            <li><a href="#" class="termination-helper" data-termination="14">After 2 Weeks</a></li> \
+                            <li><a href="#" class="termination-helper" data-termination="21">After 3 Weeks</a></li> \
+                            <li><a href="#" class="termination-helper" data-termination="28">After 4 Weeks</a></li> \
                             <li role="separator" class="divider"></li> \
-                            <li><a href="#" data-interval="">After 1 month</a></li> \
-                            <li><a href="#" data-interval="">After 2 months</a></li> \
-                            <li><a href="#" data-interval="">After 3 month</a></li> \
-                            <li><a href="#" data-interval="">After 4 months</a></li> \
+                            <li><a href="#" class="termination-helper" data-termination="30">After 1 month</a></li> \
+                            <li><a href="#" class="termination-helper" data-termination="60">After 2 months</a></li> \
+                            <li><a href="#" class="termination-helper" data-termination="90">After 3 month</a></li> \
+                            <li><a href="#" class="termination-helper" data-termination="120">After 4 months</a></li> \
                             <li role="separator" class="divider"></li> \
-                            <li><a href="#" data-interval="">Until adviced</a></li> \
+                            <li><a href="#" class="termination-helper" data-termination="-1">Until adviced</a></li> \
                         </ul> \
                       </div> \
                       <input type="text" name="medterm" class="form-control" placeholder="in days" aria-describedby="basic-addon1"> \
@@ -293,6 +293,16 @@
                       <input name="mednote" type="text" class="form-control" placeholder="Note" aria-describedby="basic-addon1"> \
                     </div> \
                   </form>');
+                  $(form).on("click", ".interval-helper", function(){
+                      var helper = $(this);
+                      var control = helper.closest('.input-group-btn').next('.form-control');
+                      control.val(helper.data("interval"))
+                  });
+                  $(form).on("click", ".termination-helper", function(){
+                      var helper = $(this);
+                      var control = helper.closest('.input-group-btn').next('.form-control');
+                      control.val(helper.data("termination"))
+                  });
                   bootbox.confirm(form, function(result){
                       if(!result) return false;
                       var name = form.find('input[name=medname]').val();
