@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+	</head>
+	<script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var ws = new WebSocket("wss://192.168.0.6:8080/pulse/talksock/");
+			ws.onopen = function() {
+				console.log("websocket opened");
+			};
+			var local_stream;
+			var connection;
+
+			var got_description = function(description){
+				connection.setLocalDescription(description, function(){
+					ws.send(JSON.stringify({'sdp': description}));
+				}, function(error){
+					console.log(error);
+				})
+			}
+
+			var start = function(is_caller){
+				var config = {'iceServers': [{'url': 'stun:stun.services.mozilla.com'}, {'url': 'stun:stun.l.google.com:19302'}]};
+				connection = new RTCPeerConnection(config);
+				connection.onicecandidate = function(event){
+					if(event.candidate != null){
+						ws.send(JSON.stringify({'ice': event.candidate}));
+					}
+				};
+				connection.onaddstream = function(event){
+					console.log('got remote stream', event);
+					var remote_video = document.querySelector('#remote_video');
+					remote_video.src = window.URL.createObjectURL(event.stream);
+				};
+				if(local_stream) connection.addStream(local_stream);
+				if(is_caller){
+					connection.createOffer(got_description, function(error){
+						console.log(error);
+					});
+				}
+			}
+			ws.onmessage = function (message){
+				console.log(message);
+				if(!connection) start(false);
+				var signal = JSON.parse(message.data);
+				if(signal.sdp){
+					connection.setRemoteDescription(new RTCSessionDescription(signal.sdp), function(){
+						if(signal.sdp.type == 'offer'){
+							connection.createAnswer(got_description, function(error){
+								console.log(error);
+							});
+						}
+					});
+				}else if(signal.ice){
+					connection.addIceCandidate(new RTCIceCandidate(signal.ice));
+				}
+			};
+			ws.onclose = function() { 
+				console.log('websocket closed');
+			};
+
+			navigator.getMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+			$('#capture').click(function(){
+				navigator.getMedia({video: true}, function(stream){
+					local_stream = stream;
+					var video = document.querySelector('video');
+					video.src = (window.URL || window.webkitURL).createObjectURL(stream);
+				}, function(error){
+					console.log(error);
+				});
+			});
+			$('#share').click(function(){start(true)});
+		})
+	</script>
+	<script>
+
+	</script>
+	<body>
+		<video id="screen" autoplay></video>
+		<video id="remote_video" autoplay></video>
+		<button id="capture" type="button" class="btn btn-default btn-lg">
+			<span class="glyphicon glyphicon-camera"></span>
+		</button>
+		<button id="share" type="button" class="btn btn-default btn-lg">
+			<span class="glyphicon glyphicon-transfer"></span>
+		</button>
+	</body>
+</html>
