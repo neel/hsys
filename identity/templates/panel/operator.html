@@ -1,0 +1,24 @@
+{# Doctor Panel #}
+{% load identity_extras %}
+
+<div id="doctor-bio">
+    <div class="doctor-pix"></div>
+    <ul class="doctor-infos">
+        <li class="doctor-info">
+            <div class="doctor-info-class">Name</div>
+            <div class="doctor-info-value">{{ operator.get_full_name }}</div>
+        </li>
+        <li class="doctor-info">
+            <div class="doctor-info-class">Age</div>
+            <div class="doctor-info-value">{{ operator.age|delta_string }}</div>
+        </li>
+        <li class="doctor-info">
+            <div class="doctor-info-class">Sex</div>
+            <div class="doctor-info-value">{{ operator.get_sex_display }}</div>
+        </li>
+        <li class="doctor-info">
+            <div class="doctor-info-class">Address</div>
+            <div class="doctor-info-value">{{ operator.address }}</div>
+        </li>
+    </ul>
+</div>

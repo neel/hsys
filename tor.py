@@ -271,6 +271,39 @@ class TalkPulseHandler(PulseHandler):
     def get(self):
         self.render("talk.html")
 
+# one uer can chat with multiple users at the same time
+# the user with whom the user is chating is owner_id (the other party)
+# Different channels will be created for different one-to-one chat sessions
+# id of the other end is provided in owner_id in GET request
+# last_id is the id of the last message recieved in that one-to-one channel
+class ChatPulseHandler(PulseHandler):
+    def get(self, owner_id, last_id):
+        def push(messages, request, viewer):
+            # wrap the messages
+            latest_id = messages.latest('id').id
+            self.set_header('Access-Control-Expose-Headers', 'Last-Id')
+            self.set_header('Last-Id', latest_id)
+            self.write(''.join(content._container))
+            self.finish()
+        def timeout():
+            self.write('')
+            self.finish()
+        def poll(request, owner, viewer, counter=10):
+            if counter:
+                messages = MessageAccess.all(viewer, owner, last_id)
+                if len(messages) > 0: push(messages, request, viewer)
+                else:
+                    tornado.ioloop.IOLoop.instance().add_timeout(time.time() + 2, lambda: poll(request, owner, viewer, counter-1))
+            else: timeout()
+
+        viewer = self.current_user
+        if viewer is None:
+            return None
+        
+        request = self.get_django_request()
+        owner   = HmsUser.objects.get(pk=owner_id).real()
+        poll(request, owner, viewer)
+
 clients = {}
 class TalkWebSocket(tornado.websocket.WebSocketHandler):
     def open(self):

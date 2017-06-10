@@ -1,0 +1,7 @@
+{% load identity_extras %}
+
+{% for message in messages %}
+    <li class="message-list-item">
+    {% message %}
+    </li>
+{% endfor %}

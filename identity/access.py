@@ -95,6 +95,15 @@ class AdmissionAccess:
             return []
         else:
             return []
+
+class MessageAccess:
+    # return what messages of owner that are accessible by user
+    def all(self, user, owner, id=0):
+        viewer = user
+        if not viewer.is_authenticated():
+            return []
+
+        return Message.objects.filter(id__gt=id, source=owner, target=user).order_by('-when')
         
 
         

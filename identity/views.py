@@ -179,6 +179,29 @@ def doctor(request, doctor_id):
         'story_form':   RandomVisitCreationForm()
     })
 
+def operator(request, operator_id):
+    # pdb.set_trace()
+    
+    stories = []
+    patients = []
+    admissions = []
+    appointments = []
+    
+    operator = Operator.objects.get(id=operator_id)
+   
+    stories         = StoryAccess().all(request.user, operator)
+    admissions      = AdmissionAccess().all(request.user, operator)
+    patients        = list(set([story.patient for story in stories]))
+        
+    return render(request, 'operator.html', {
+        'request':      request,
+        'operator':     operator,
+        'stories':      stories,
+        'patients':     patients,
+        'admissions':   admissions,
+        'story_form':   RandomVisitCreationForm()
+    })
+
 def organizations(request):
     return render(request, 'organizations.html', {
         'request': request,

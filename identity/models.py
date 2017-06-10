@@ -268,7 +268,7 @@ class Story(models.Model):
     body    = models.TextField()
     refers_to = models.ManyToManyField('Story', related_name="refered_by", blank=True)
     is_prescription = models.BooleanField("is_prescription", default=False)
-    media = models.TextField(null=True)
+    media = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
         return "%s" % (self.subject)
@@ -278,11 +278,12 @@ class Story(models.Model):
             try:
                 prescription = json.loads(self.body)
                 for m in prescription['medicines']:
-                    del m['id']
+                    if hasattr(m, 'id'):
+                        del m['id']
                 self.body = json.dumps(prescription)
             except ValueError:
                 raise ValidationError('Malformed prescription data')
-        if len(self.media) > 0:
+        if self.media and len(self.media) > 0:
             try:
                 media = json.loads(self.media)
                 for m in media:
@@ -311,7 +312,9 @@ class AdmissionVisit(Story):
         return "%s as admitted %s" % (super(ScheduledVisit, self).__unicode__(), self.admission);
 
 class RandomVisit(Story):
-    
+    operator = models.ForeignKey(Operator, related_name="stories", null=True, blank=True)
+    org = models.ForeignKey(Organization, related_name="stories", null=True, blank=True)
+
     def __unicode__(self):
         return "%s at %s with %s and %s" % (super(RandomVisit, self).__unicode__(), self.when, self.patient, self.doctor);
     
@@ -484,6 +487,20 @@ class Campaign(models.Model):
         ordering = ['-when']
     def __unicode__(self):
         return "Campaign on %s from %s for %s days under supervision of %s" %(self.place, self.when, self.duration, self.owner)
+
+class Message(models.Model):
+    source = models.ForeignKey(HmsUser, related_name="messages_sent")
+    target = models.ForeignKey(HmsUser, related_name="messages_received")
+    when   = models.DateTimeField('when')
+    mime   = models.CharField('mime', max_length=30)
+    msg    = models.TextField()
+
+    class Meta:
+        ordering = ['-when']
+
+    def __unicode__(self):
+        return "%s -> %s on %s '%s'" %(self.source, self.target, self.when, self.msg)
+
 
 class Survey(models.Model):
     campaign 		 = models.ForeignKey(Campaign, related_name="campaign")

@@ -6,6 +6,13 @@ from django.shortcuts import render
 import datetime, json
 import random
 
+def MessagesFlake(request, user, messages):
+    return render(request, 'sprite/_messages.html', {
+        'request': request,
+        'user': user,
+        'messages': messages
+    })
+
 def AppointmentsFlake(request, user, appointments):
     return render(request, 'sprite/_appointments.html', {
         'request': request,

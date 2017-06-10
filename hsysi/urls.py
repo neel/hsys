@@ -56,6 +56,7 @@ urlpatterns = [
     url(r'^doctor/(?P<doctor_id>\d+)/$', views.doctor, name='doctor'),
     url(r'^patients/$', views.patients, name='patients'),
     url(r'^patient/(?P<patient_id>\d+)/$', views.patient, name='patient'),
+    url(r'^operator/(?P<operator_id>\d+)/$', views.operator, name='operator'),
     url(r'^patient/(?P<patient_id>\d+)/admissions$', views.patient_admissions, name='patient_admissions'),
     url(r'^patient/(?P<patient_id>\d+)/appointments$', views.patient_appointments, name='patient_appointments'),
     url(r'^patient/(?P<patient_id>\d+)/stories$', views.patient_stories, name='patient_stories'),

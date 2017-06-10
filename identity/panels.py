@@ -13,6 +13,12 @@ def DoctorPanel(request, doctor):
         'doctor': doctor
     })
 
+def OperatorPanel(request, operator):
+    return render(request, 'panel/operator.html', {
+        'request': request,
+        'operator': operator
+    })
+
 def PatientPanel(request, patient):
     return render(request, 'panel/patient.html', {
         'request': request,
