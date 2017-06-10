@@ -103,7 +103,7 @@ class MessageAccess:
         if not viewer.is_authenticated():
             return []
 
-        return Message.objects.filter(id__gt=id, source=owner, target=user).order_by('-when')
+        return Message.objects.filter(id__gt=id).filter(Q(source=owner, target=user) | Q(source=user, target=owner)).order_by('-when')
         
 
         

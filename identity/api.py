@@ -166,6 +166,42 @@ class DoctorCatalogResource(ModelResource):
         queryset = Doctor.objects.all()
         excludes = ['username', 'password', 'address', 'date_joined', 'is_active', 'is_staff', 'is_superuser', 'last_login']
         paginator_class = NoMetaPaginator
+
+class UserCatalogResource(ModelResource):    
+    def build_filters(self, filters=None):
+        if filters is None:
+            filters = {}
+        orm_filters = super(UserCatalogResource, self).build_filters(filters)
+        
+        if('query' in filters):
+            query = filters['query']
+            query_parts = query.split(' ')
+
+            qset = Q(username__istartswith=query_parts[0])
+            for query_part in query_parts:
+                qset |= Q(username__icontains=query_part)
+    
+            orm_filters.update({'custom': qset})
+            
+        return orm_filters
+    
+    def apply_filters(self, request, applicable_filters):
+        if 'custom' in applicable_filters:
+            custom = applicable_filters.pop('custom')
+        else:
+            custom = None
+            
+        semi_filtered = super(UserCatalogResource, self).apply_filters(request, applicable_filters)
+        return semi_filtered.filter(custom) if custom else semi_filtered
+
+    def obj_get_list(self, bundle, **kwargs):
+        users = super(UserCatalogResource, self).obj_get_list(bundle, kwargs)
+        return [u.real() for u in users]
+
+    class Meta:
+        queryset = HmsUser.objects.all()
+        excludes = ['username', 'password', 'address', 'date_joined', 'is_active', 'is_staff', 'is_superuser', 'last_login']
+        paginator_class = NoMetaPaginator
        
   
 class PatientShallowResource(ModelResource):
