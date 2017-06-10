@@ -277,9 +277,10 @@ class TalkPulseHandler(PulseHandler):
 # id of the other end is provided in owner_id in GET request
 # last_id is the id of the last message recieved in that one-to-one channel
 class ChatPulseHandler(PulseHandler):
+    @tornado.web.asynchronous
     def get(self, owner_id, last_id):
         def push(messages, request, viewer):
-            # wrap the messages
+            content = MessagesFlake(request, viewer, messages)
             latest_id = messages.latest('id').id
             self.set_header('Access-Control-Expose-Headers', 'Last-Id')
             self.set_header('Last-Id', latest_id)
@@ -290,7 +291,7 @@ class ChatPulseHandler(PulseHandler):
             self.finish()
         def poll(request, owner, viewer, counter=10):
             if counter:
-                messages = MessageAccess.all(viewer, owner, last_id)
+                messages = MessageAccess().all(viewer, owner, last_id)
                 if len(messages) > 0: push(messages, request, viewer)
                 else:
                     tornado.ioloop.IOLoop.instance().add_timeout(time.time() + 2, lambda: poll(request, owner, viewer, counter-1))
@@ -335,6 +336,7 @@ def main():
             (r'^/pulse/admissions/(?P<owner_id>\d+)/(?P<last_id>\d+)$',     AdmissionsPulseHandler),
             (r'^/pulse/appointments/(?P<owner_id>\d+)/(?P<last_id>\d+)$',   AppointmentsPulseHandler),
             (r'^/pulse/talk/?$',   TalkPulseHandler),
+            (r'^/pulse/chat/(?P<owner_id>\d+)/(?P<last_id>\d+)$',           ChatPulseHandler),
             (r'^/pulse/talksock/?$',   TalkWebSocket),
             (r'/static/(.*)', NoCacheStaticHandler, {'path': 'identity/static'}),
             ('.*', tornado.web.FallbackHandler, dict(fallback=wsgi_app)),
