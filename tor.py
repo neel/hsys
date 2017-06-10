@@ -8,9 +8,11 @@ from tornado.httpclient import HTTPError
 from httpclient_session import Session
 import tornado.ioloop
 import tornado.web
+import tornado.websocket
 import tornado.wsgi
 from importlib import import_module
 from django.conf.urls import url
+from tornado import template 
 import time
 
 if django.VERSION[1] > 5:
@@ -265,6 +267,27 @@ class AppointmentsPulseHandler(PulseHandler):
         owner   = HmsUser.objects.get(pk=owner_id).real()
         poll(request, owner, viewer)
 
+class TalkPulseHandler(PulseHandler):
+    def get(self):
+        self.render("talk.html")
+
+clients = {}
+class TalkWebSocket(tornado.websocket.WebSocketHandler):
+    def open(self):
+        socket_id = len(clients)
+        self.id = socket_id
+        clients[socket_id] = self
+    def on_close(self):
+        if self.id in clients:
+            del clients[self.id]
+    def on_message(self, message):
+        print(message)
+        for c in clients:
+            client = clients[c]
+            if client != self:
+                client.write_message(message)
+            
+
 class NoCacheStaticHandler(tornado.web.StaticFileHandler):
 	pass
 
@@ -278,11 +301,16 @@ def main():
             (r'^/pulse/stories/(?P<owner_id>\d+)/(?P<last_id>\d+)$',        StoriesPulseHandler),
             (r'^/pulse/admissions/(?P<owner_id>\d+)/(?P<last_id>\d+)$',     AdmissionsPulseHandler),
             (r'^/pulse/appointments/(?P<owner_id>\d+)/(?P<last_id>\d+)$',   AppointmentsPulseHandler),
+            (r'^/pulse/talk/?$',   TalkPulseHandler),
+            (r'^/pulse/talksock/?$',   TalkWebSocket),
             (r'/static/(.*)', NoCacheStaticHandler, {'path': 'identity/static'}),
             ('.*', tornado.web.FallbackHandler, dict(fallback=wsgi_app)),
         ], debug=True)
     logger.info("Tornado server starting...")
-    server = tornado.httpserver.HTTPServer(tornado_app)
+    server = tornado.httpserver.HTTPServer(tornado_app, ssl_options={
+        "certfile": "/home/sensiaas/projects/hsys/hkeys/cert.pem",
+        "keyfile": "/home/sensiaas/projects/hsys/hkeys/key.pem",
+    })
     server.listen(options.port)
     tornado.ioloop.IOLoop.instance().start()
  
