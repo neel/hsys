@@ -2,6 +2,13 @@
 
 {% for message in messages %}
     <li class="message-list-item">
-    {{ message }}
+        <div class="chat-message {% if message.source == request.user %}chat-message-outgoing{% else %}chat-message-incomming{% endif %}">
+            <!--
+            <div class="chat-message-source">{{message.source.real.get_full_name}}</div>
+            <div class="chat-message-target">{{message.target.real.get_full_name}}</div>
+            -->
+            <div class="chat-message-time">{{message.when}}</div>
+            <div class="chat-message-msg">{{message.msg}}</div>
+        </div>
     </li>
 {% endfor %}
