@@ -27,6 +27,7 @@
             @import url('{% static 'css/sprite/patient.css' %}');
             @import url('{% static 'css/sprite/admission.css' %}');
             @import url('{% static 'css/sprite/prescription.css' %}');
+            @import url('{% static 'css/panel/chat.css' %}');
         </style>
         <script type="text/javascript" src="{% static 'js/jquery.1.9.0.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/jquery.sticky-kit.min.js' %}"></script>
@@ -39,6 +40,8 @@
         <script type="text/javascript" src="{% static 'js/panel/ministories.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/panel/admissions.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/sprite/story-viewer.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/nunjucks.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/panel/chat.js' %}"></script>
         <script type="text/javascript">
             $(document).ready(function(){
                 $("#heading").stick_in_parent();
@@ -84,6 +87,7 @@
                 {% view 'identity.panels.MiniStoriesPanel' stories %}
                 {% view 'identity.panels.AdmissionsPanel' admissions %}
             </div>
+            {% view 'identity.panels.ChatPanel' %}
         </div>
     </body>
 </html>

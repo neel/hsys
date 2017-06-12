@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from django.core.exceptions import PermissionDenied
 from django.template import RequestContext, loader
 from django.views.generic.base import View
@@ -513,6 +515,35 @@ class random_story_creation(View):
             return HttpResponse(json.dumps({
                 'success' : False,
                 'errors' : dict(form.errors.items())
+            }), content_type='application/json; charset=UTF-8')
+
+@method_decorator(csrf_exempt, name='dispatch')
+class chat_message_send(View):
+    def post(self, request, *args, **kwargs):
+        if request.user.is_anonymous():
+            raise PermissionDenied()
+
+        try:
+            msg     = json.loads(request.body)
+            
+            mime    = msg['mime']
+            content = msg['message']
+            source  = request.user
+            target  = HmsUser.objects.get(id=msg['to'])
+            time    = datetime.now()
+
+            message = Message(source=source, target=target, mime=mime, when=time, msg=content)
+            message.save();
+
+            return HttpResponse(json.dumps({
+                    'success': True,
+                    'errors':  [],
+                    'message': message.id
+                }), content_type='application/json; charset=UTF-8')
+        except ValueError as e:
+            return HttpResponse(json.dumps({
+                'success' : False,
+                'errors' : e
             }), content_type='application/json; charset=UTF-8')
 
 class negotiation_creation(View):

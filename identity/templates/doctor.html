@@ -34,6 +34,7 @@
             @import url('{% static 'css/sprite/patient.css' %}');
             @import url('{% static 'css/sprite/admission.css' %}');
             @import url('{% static 'css/sprite/prescription.css' %}');
+            @import url('{% static 'css/panel/chat.css' %}');
 
             .component-sprite{
                 margin-right: 3px;
@@ -95,6 +96,8 @@
         <script type="text/javascript" src="{% static 'js/panel/appointment-creation.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/panel/story-creation.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/sprite/story-viewer.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/nunjucks.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/panel/chat.js' %}"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
@@ -442,6 +445,7 @@
                 {% view 'identity.panels.PatientsPanel' patients %}
             </div>
             {% view 'identity.panels.RandomStoryCreationPanel' story_form %}
+            {% view 'identity.panels.ChatPanel' %}
         </div>
     </body>
 </html>

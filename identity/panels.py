@@ -81,3 +81,8 @@ def TaskCreationPanel(request, form, admission):
         'form': form,
         'admission': admission.id
     })
+
+def ChatPanel(request):
+    return render(request, 'panel/chat.html', {
+        'request': request
+    })
