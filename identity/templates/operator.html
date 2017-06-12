@@ -82,21 +82,20 @@
 
             .chat-users{
                 width: 250px;
-                height: 700px;
+                height: 70%;
                 position: fixed;
                 display: block;
                 right: 0px;
                 bottom: 0px;
                 background-color: white;
-                border-left: 1px solid #333;
+                border-left: 1px solid #afadad;
+                z-index: 1;
             }
             .chat-users-search{
-                height: 40px;
                 width: 100%;
                 position: absolute;
                 bottom: 0px;
                 left: 0px;
-                border-top: 1px solid #333;
                 background-color: white;
             }
             .chat-users-list-ul{
@@ -170,7 +169,6 @@
                 display: block;
                 width: 100%;
                 height: 300px;
-                border-top: 1px solid brown;
                 left: 0px;
                 bottom: 0px;
                 padding-right: 250px;
@@ -181,13 +179,30 @@
                 height: 100%;
                 width: 250px;
                 display: block;
-                border-left: 1px solid blue;
-                border-right: 1px solid blue;
+                background-color: white;
+                border-right: 1px solid #afadad;
             }
             .chat-box-title{
                 width: 100%;
                 height: 10%;
-                background-color: red;
+                background-color: #afadad;
+                padding-left: 10px;
+                border-right: 1px solid white;
+            }
+            .chat-box-title-name{
+                padding-top: 3px;
+                padding-top: 4px;
+                font-weight: bold;
+                color: white;
+            }
+            .chat-box-title-control{
+                position: relative;
+                display: block;
+                width: 18px;
+                height: 100%;
+                float: right;
+                margin-top: -16px;
+                cursor: pointer;
             }
             .chat-box-body{
                 height: 78%;
@@ -198,7 +213,6 @@
             .chat-box-write{
                 width: 100%;
                 height: 12%;
-                border-top: 1px solid red;
             }
         </style>
         <script type="text/javascript" src="{% static 'js/jquery.3.2.1.min.js' %}"></script>
@@ -216,6 +230,7 @@
         <script type="text/javascript" src="{% static 'js/panel/appointment-creation.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/panel/story-creation.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/sprite/story-viewer.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/nunjucks.js' %}"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
@@ -295,6 +310,110 @@
                    this.length = 0; //clear original array
                    this.push.apply(this, array); //push all elements except the one we want to delete
                 }
+                function clear_participants(){
+
+                }
+                function clear_participants(){
+                    $('#cusr_list ul').html('');
+                }
+                function add_participant(u){
+                    var real = u.real;
+                    // {% verbatim %}
+                    var template = '<li class="chat-users-list-li">                                                 \
+                        <div class="chat-users-participant" data-id="{{id}}" data-name="{{first_name}} {{last_name}}" data-type="{{type}}">    \
+                            <div class="chat-users-participant-type">{{type}}</div>                                 \
+                            <div class="chat-users-participant-photo"></div>                                        \
+                            <div class="chat-users-participant-info">                                               \
+                                <div class="chat-users-participant-name">{{first_name}} {{last_name}}</div>         \
+                                <div class="chat-users-participant-email">{{email}}</div>                           \
+                                <div class="chat-users-participant-patient-age">{{sex}} {{age}}</div>               \
+                            </div>                                                                                  \
+                        </div>                                                                                      \
+                    </li>';
+                    // {% endverbatim %}
+                    var data = {id: real.id, type: u.type, first_name: real.first_name, last_name: real.last_name, email: u.email, sex: real.sex, age: real.age};
+                    nunjucks.configure({ autoescape: true });
+                    var participant = nunjucks.renderString(template, data);
+                    $('#cusr_list ul').append($(participant));
+                }
+                var CHAT_PEERS = {};
+                function create_chat_box(u){
+                    var exists = false;
+                    $('#cboxs .chat-box').each(function(){
+                        var id = $(this).data('target');
+                        if(id == u.id){
+                            exists = true;
+                        }
+                    })
+                    if(exists) return;
+                    // {% verbatim %}
+                    var template = '<div class="chat-box" data-target="{{id}}" data-last="0">                   \
+                                        <div class="chat-box-title">                                            \
+                                            <div class="chat-box-title-name">{{name}}</div>                     \
+                                            <div class="chat-box-title-control chat-box-title-close glyphicon glyphicon-remove"></div>   \
+                                            <div class="chat-box-title-control chat-box-title-hide glyphicon glyphicon-minus"></div>     \
+                                        </div>                                                                  \
+                                        <div class="chat-box-body">                                             \
+                                        </div>                                                                  \
+                                        <div class="chat-box-write">                                            \
+                                            <div class="chat-box-write-input"></div>                            \
+                                            <div class="chat-box-write-send">                                   \
+                                                <div class="input-group">                                       \
+                                                    <input type="text" class="form-control" placeholder="message" aria-describedby="sizing-addon2"> \
+                                                    <span class="input-group-btn">                              \
+                                                        <button type="submit" class="btn btn-default glyphicon glyphicon-send"></button> \
+                                                    </span>                                                     \
+                                                </div>                                                          \
+                                            </div>                                                              \
+                                        </div>                                                                  \
+                                    </div>';
+                    // {% endverbatim %}
+                    var box = $(nunjucks.renderString(template, u));
+                    $('#cboxs').append(box);
+                    CHAT_PEERS[u.id] = box;
+                    fetch_messages(u.id, box);
+                    return box;
+                }
+                function fetch_messages(id, box){
+                    var last_id = parseInt(box.attr('data-last'));
+                    console.log(last_id);
+                    $.ajax({
+                        url: '/pulse/chat/'+id+'/'+last_id
+                    }).done(function(content, status, xhr){
+                        var content_length = content.length;
+                        var latest_id = xhr.getResponseHeader('Last-Id');
+                        if(content_length){
+                            console.log(content);
+                            var body = box.find('.chat-box-body')[0];
+                            var messages = $($.trim(content.replace(/\s+/g, " ")));
+                            $(body).append(messages);
+                            box.attr('data-last', latest_id);
+                        }
+                        if(id in CHAT_PEERS){
+                            setTimeout(function(){
+                                fetch_messages(id, box);
+                            }, 500);
+                        }
+                    });
+                }
+                $('#user_search').keyup(function(){
+                    clear_participants();
+                    var value = $(this).val();
+                    if(value.length < 2) return;
+                    $.ajax({
+                        url: '/api/v1/usercatalog/?query='+value,
+                        dataType : "json",
+                        contentType: "application/json; charset=utf-8"
+                    }).done(function(content, status, xhr){
+                        $.each(content.objects, function(i, v){
+                            add_participant(v);
+                        });
+                    });
+                });
+                $('#cusr_list .chat-users-list-ul').on("click", ".chat-users-list-li .chat-users-participant", function(){
+                    var participant = {id: $(this).data("id"), name: $(this).data("name"), type: $(this).data("type")};
+                    var box = create_chat_box(participant);
+                })
             });
         </script>
         <script type="text/javascript">
@@ -348,10 +467,15 @@
         </div>
 
         <div class="chat-users" id="cusrs">
-            <div class="chat-users-search" id="cusr_search"></div>
+            <div class="chat-users-search" id="cusr_search">
+                <div class="input-group input-group">
+                    <span class="input-group-addon" id="sizing-addon1">@</span>
+                    <input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon1" id="user_search">
+                </div>                
+            </div>
             <div class="chat-users-list" id="cusr_list">
                 <ul class="chat-users-list-ul">
-                    <li class="chat-users-list-li">
+                    <!--<li class="chat-users-list-li">
                         <div class="chat-users-participant">
                             <div class="chat-users-participant-type">Doctor</div>
                             <div class="chat-users-participant-photo"></div>
@@ -372,12 +496,12 @@
                                 <div class="chat-users-participant-patient-age">M 42 years old 5 months</div>
                             </div>
                         </div>
-                    </li>
+                    </li>-->
                 </ul>
             </div>
         </div>
         <div class="chat-boxes" id="cboxs">
-            <div class="chat-box">
+            <!--<div class="chat-box">
                 <div class="chat-box-title">
                     <div class="chat-box-title-name">name</div>
                     <div class="chat-box-title-control chat-box-title-hide">_</div>
@@ -404,7 +528,7 @@
                     <div class="chat-box-write-input"></div>
                     <div class="chat-box-write-send"></div>
                 </div>
-            </div>
+            </div>-->
         </div>
 <script type="text/javascript">
 // (function($){
