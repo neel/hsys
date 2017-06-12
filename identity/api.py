@@ -11,6 +11,7 @@ from tastypie.utils import trailing_slash
 from django.http import HttpResponse
 from tastypie.http import HttpUnauthorized, HttpForbidden, HttpNotFound
 from hsysi.utils import delta_string
+import json
  
 class UserResource(ModelResource):
     class Meta:
@@ -120,6 +121,11 @@ class DoctorResource(ModelResource):
         }
     
 class DoctorShallowResource(ModelResource):
+    
+    def render(self, request, data):
+        dbundle = self.build_bundle(obj=data,request=request)
+        return self.serialize(None,self.full_dehydrate(dbundle),'application/json')
+
     class Meta:
         queryset = Doctor.objects.all()
         excludes = ['login', 'password', 'is_active', 'is_staff', 'is_superuser', 'last_login']
@@ -180,6 +186,7 @@ class UserCatalogResource(ModelResource):
             qset = Q(username__istartswith=query_parts[0])
             for query_part in query_parts:
                 qset |= Q(username__icontains=query_part)
+                qset |= Q(email__icontains=query_part)
     
             orm_filters.update({'custom': qset})
             
@@ -195,8 +202,22 @@ class UserCatalogResource(ModelResource):
         return semi_filtered.filter(custom) if custom else semi_filtered
 
     def obj_get_list(self, bundle, **kwargs):
-        users = super(UserCatalogResource, self).obj_get_list(bundle, kwargs)
+        users = super(UserCatalogResource, self).obj_get_list(bundle, **kwargs)
         return [u.real() for u in users]
+
+    def alter_list_data_to_serialize(self, request, data):
+        for item in data['objects']:
+            u = item.obj
+            if u.__class__ == Doctor:
+                item.data['type'] = "doctor"
+                item.data['real'] = json.loads(DoctorShallowResource().render(request, item.obj))
+            elif u.__class__ == Patient:
+                item.data['type'] = "patient"
+                item.data['real'] = json.loads(PatientShallowResource().render(request, item.obj))
+            elif u.__class__ == Operator:
+                item.data['type'] = "operator"
+                item.data['real'] = json.loads(OperatorResource().render(request, item.obj))
+        return data
 
     class Meta:
         queryset = HmsUser.objects.all()
@@ -205,6 +226,11 @@ class UserCatalogResource(ModelResource):
        
   
 class PatientShallowResource(ModelResource):
+    
+    def render(self, request, data):
+        dbundle = self.build_bundle(obj=data,request=request)
+        return self.serialize(None,self.full_dehydrate(dbundle),'application/json')
+
     class Meta:
         queryset = Patient.objects.all()
         excludes = ['login', 'password', 'is_active', 'is_staff', 'is_superuser', 'last_login']
@@ -217,7 +243,7 @@ class PatientResource(ModelResource):
     appointments = fields.ToManyField('identity.api.AppointmentResource', 'appointments', full=True, use_in='detail', readonly=True)
     visits = fields.ToManyField('identity.api.StoryResource', 'stories', full=True, use_in='detail', readonly=True)
     admissions = fields.ToManyField('identity.api.AdmissionResource', 'admissions', null=True, use_in='detail', readonly=True)
-    
+
     class Meta:
         queryset = Patient.objects.all()
         excludes = ['login', 'password', 'is_active', 'is_staff', 'is_superuser', 'last_login']
@@ -225,12 +251,18 @@ class PatientResource(ModelResource):
         filtering = {
             'id': ALL_WITH_RELATIONS
         }
+        always_return_data = True
+
     def dehydrate(self, bundle):
         bundle.data['age'] = delta_string(bundle.obj.age())
         return bundle
         
 class OperatorResource(ModelResource):
     org = fields.ToOneField('identity.api.OrganizationResource', 'org', null=True)
+
+    def render(self, request, data):
+        dbundle = self.build_bundle(obj=data,request=request)
+        return self.serialize(None,self.full_dehydrate(dbundle),'application/json')
 
     class Meta:
         queryset = Operator.objects.all()
