@@ -1,5 +1,6 @@
 from django.http import HttpResponse, Http404
 from identity.models import Organization, Patient, Doctor, Admission, Task
+from identity.access import MessageAccess
 from django.views.generic import TemplateView
 from django.template import RequestContext, loader
 from django.shortcuts import render
@@ -83,6 +84,8 @@ def TaskCreationPanel(request, form, admission):
     })
 
 def ChatPanel(request):
+    latest_id = MessageAccess().all(request.user).latest('id').id
     return render(request, 'panel/chat.html', {
-        'request': request
+        'request': request,
+        'latest': latest_id
     })

@@ -278,23 +278,24 @@ class TalkPulseHandler(PulseHandler):
 # last_id is the id of the last message recieved in that one-to-one channel
 class ChatPulseHandler(PulseHandler):
     @tornado.web.asynchronous
-    def get(self, owner_id, last_id):
+    def get(self, last_id):
         def push(messages, request, viewer):
             content = MessagesFlake(request, viewer, messages)
             latest_id = messages.latest('id').id
             self.set_header('Access-Control-Expose-Headers', 'Last-Id')
             self.set_header('Last-Id', latest_id)
-            self.write(''.join(content._container))
+            # self.write(''.join(content._container))
+            self.write(content)
             self.finish()
         def timeout():
             self.write('')
             self.finish()
-        def poll(request, owner, viewer, counter=10):
+        def poll(request, viewer, counter=10):
             if counter:
-                messages = MessageAccess().all(viewer, owner, last_id)
+                messages = MessageAccess().all(viewer, last_id)
                 if len(messages) > 0: push(messages, request, viewer)
                 else:
-                    tornado.ioloop.IOLoop.instance().add_timeout(time.time() + 2, lambda: poll(request, owner, viewer, counter-1))
+                    tornado.ioloop.IOLoop.instance().add_timeout(time.time() + 2, lambda: poll(request, viewer, counter-1))
             else: timeout()
 
         viewer = self.current_user
@@ -302,8 +303,7 @@ class ChatPulseHandler(PulseHandler):
             return None
         
         request = self.get_django_request()
-        owner   = HmsUser.objects.get(pk=owner_id).real()
-        poll(request, owner, viewer)
+        poll(request, viewer)
 
 clients = {}
 class TalkWebSocket(tornado.websocket.WebSocketHandler):
@@ -336,7 +336,7 @@ def main():
             (r'^/pulse/admissions/(?P<owner_id>\d+)/(?P<last_id>\d+)$',     AdmissionsPulseHandler),
             (r'^/pulse/appointments/(?P<owner_id>\d+)/(?P<last_id>\d+)$',   AppointmentsPulseHandler),
             (r'^/pulse/talk/?$',   TalkPulseHandler),
-            (r'^/pulse/chat/(?P<owner_id>\d+)/(?P<last_id>\d+)$',           ChatPulseHandler),
+            (r'^/pulse/chat/(?P<last_id>\d+)$',           ChatPulseHandler),
             (r'^/pulse/talksock/?$',   TalkWebSocket),
             (r'/static/(.*)', NoCacheStaticHandler, {'path': 'identity/static'}),
             ('.*', tornado.web.FallbackHandler, dict(fallback=wsgi_app)),

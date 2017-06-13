@@ -4,6 +4,7 @@ $(document).ready(function(){
     }
     function add_participant(u){
         var real = u.real;
+        if(real == undefined) return;
         // {% verbatim %}
         var template = '<li class="chat-users-list-li">                                                 \
             <div class="chat-users-participant" data-id="{{id}}" data-name="{{first_name}} {{last_name}}" data-type="{{type}}">    \
@@ -31,9 +32,9 @@ $(document).ready(function(){
                 exists = true;
             }
         })
-        if(exists) return;
+        if(exists) return CHAT_PEERS[u.id];
         // {% verbatim %}
-        var template = '<div class="chat-box" data-target="{{id}}" data-last="0">                   \
+        var template = '<div class="chat-box" data-target="{{id}}">                   \
                             <div class="chat-box-title">                                            \
                                 <div class="chat-box-title-name">{{name}}</div>                     \
                                 <div class="chat-box-title-control chat-box-title-close glyphicon glyphicon-remove"></div>   \
@@ -57,29 +58,40 @@ $(document).ready(function(){
         var box = $(nunjucks.renderString(template, u));
         $('#cboxs').append(box);
         CHAT_PEERS[u.id] = box;
-        fetch_messages(u.id, box);
         return box;
     }
-    function fetch_messages(id, box){
-        var last_id = parseInt(box.attr('data-last'));
-        console.log(last_id);
+    function fetch_messages(){
+        var last_id = parseInt($('#cboxs').attr('data-last'));
         $.ajax({
-            url: '/pulse/chat/'+id+'/'+last_id
+            url: '/pulse/chat/'+last_id,
+            dataType : "json",
+            contentType: "application/json; charset=utf-8"
         }).done(function(content, status, xhr){
-            var content_length = content.length;
             var latest_id = xhr.getResponseHeader('Last-Id');
-            if(content_length){
-                console.log(content);
+            console.log(content);
+
+            for(key in content){
+                value = content[key];
+                var msgs = value.chunk;
+                var user = value.user;
+
+                var box = CHAT_PEERS[key];
+                console.log(user, box);
+                if(box == undefined){
+                    box = create_chat_box(user);
+                }
+                
                 var body = box.find('.chat-box-body')[0];
-                var messages = $($.trim(content.replace(/\s+/g, " ")));
+                var messages = $($.trim(msgs.replace(/\s+/g, " ")));
                 $(body).append(messages);
-                box.attr('data-last', latest_id);
-            }
-            if(id in CHAT_PEERS){
-                setTimeout(function(){
-                    fetch_messages(id, box);
-                }, 500);
-            }
+            };
+
+            $('#cboxs').attr('data-last', latest_id);
+
+            setTimeout(function(){
+                fetch_messages();
+            }, 500);
+
         });
     }
     $('#user_search').keyup(function(){
@@ -114,5 +126,6 @@ $(document).ready(function(){
         }).done(function(content, status, xhr){
             console.log(content);
         });
-    })
+    });
+    fetch_messages();
 });
