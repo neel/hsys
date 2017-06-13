@@ -282,12 +282,13 @@ class ChatPulseHandler(PulseHandler):
         def push(messages, request, viewer):
             content = MessagesFlake(request, viewer, messages)
             latest_id = messages.latest('id').id
+            self.set_header('Content-Type', 'application/json')
             self.set_header('Access-Control-Expose-Headers', 'Last-Id')
             self.set_header('Last-Id', latest_id)
-            # self.write(''.join(content._container))
-            self.write(content)
+            self.write(''.join(content._container))
             self.finish()
         def timeout():
+            self.set_header('Content-Type', 'application/json')
             self.write('')
             self.finish()
         def poll(request, viewer, counter=10):

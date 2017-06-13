@@ -62,9 +62,10 @@ $(document).ready(function(){
     }
     function fetch_messages(){
         var last_id = parseInt($('#cboxs').attr('data-last'));
+        console.log('fetching messages', last_id);
         $.ajax({
             url: '/pulse/chat/'+last_id,
-            dataType : "json",
+            dataType: 'json',
             contentType: "application/json; charset=utf-8"
         }).done(function(content, status, xhr){
             var latest_id = xhr.getResponseHeader('Last-Id');
@@ -85,14 +86,18 @@ $(document).ready(function(){
                 var messages = $($.trim(msgs.replace(/\s+/g, " ")));
                 $(body).append(messages);
             };
-
-            $('#cboxs').attr('data-last', latest_id);
-
+            if(latest_id) $('#cboxs').attr('data-last', latest_id);
+            console.log(status);
             setTimeout(function(){
                 fetch_messages();
             }, 500);
 
-        });
+    }).fail(function(xhr, status, error){
+        console.log(status, error, xhr.responseText);
+        setTimeout(function(){
+            fetch_messages();
+        }, 500);
+    });
     }
     $('#user_search').keyup(function(){
         clear_participants();

@@ -20,8 +20,7 @@ def MessagesFlake(request, user, messages):
         })
         body = re.sub(r"\s+", " ", rendered._container[0].strip(), flags=re.UNICODE)
         bins[str(v.id)] = {"chunk": body, "user": {"id": v.id, "name": v.real().get_full_name()}}
-
-    return json.dumps(bins)
+    return HttpResponse(json.dumps(bins), content_type='application/json; charset=UTF-8')
 
 def AppointmentsFlake(request, user, appointments):
     return render(request, 'sprite/_appointments.html', {
