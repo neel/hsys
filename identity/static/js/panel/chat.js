@@ -41,12 +41,13 @@ $(document).ready(function(){
                                 <div class="chat-box-title-control chat-box-title-hide glyphicon glyphicon-minus"></div>     \
                             </div>                                                                  \
                             <div class="chat-box-body">                                             \
+                                <ul class="chat-users-list-ul"> </ul>                               \
                             </div>                                                                  \
                             <div class="chat-box-write">                                            \
                                 <div class="chat-box-write-input"></div>                            \
                                 <div class="chat-box-write-send">                                   \
                                     <div class="input-group">                                       \
-                                        <input type="text" class="form-control" placeholder="message" aria-describedby="sizing-addon2"> \
+                                        <input type="text" class="form-control chat-send-input" placeholder="message" aria-describedby="sizing-addon2"> \
                                         <span class="input-group-btn">                              \
                                             <button type="submit" class="chat-send-btn btn btn-default glyphicon glyphicon-send"></button> \
                                         </span>                                                     \
@@ -82,7 +83,7 @@ $(document).ready(function(){
                     box = create_chat_box(user);
                 }
                 
-                var body = box.find('.chat-box-body')[0];
+                var body = box.find('.chat-users-list-ul')[0];
                 var messages = $($.trim(msgs.replace(/\s+/g, " ")));
                 $(body).append(messages);
             };
@@ -120,8 +121,9 @@ $(document).ready(function(){
     $('#cboxs').on("click", "button.chat-send-btn", function(){
         var box = $(this).closest('.chat-box');
         var msg = $(this).parent().prev().val();
+
+        var self = this;
         var target = box.data('target');
-        alert(1);
         $.ajax({
             method: "POST",
             url: '/chat/send/',
@@ -130,7 +132,37 @@ $(document).ready(function(){
             data: JSON.stringify({to: target, mime: 'text/plain', message: msg, ctime: (new Date())})
         }).done(function(content, status, xhr){
             console.log(content);
+            $(self).parent().prev().val('');
         });
+    });
+    $('#cboxs').on("keypress", "input.chat-send-input", function(e){
+        if(e.which == 13){
+            $($(this).next().find('.chat-send-btn')[0]).trigger('click');
+        }
+    });
+    $('#cboxs').on("click", "div.chat-send-close", function(){
+        
+    });
+    $('#cboxs').on("click", "div.chat-box-title-hide", function(){
+        var box = $(this).closest('.chat-box');
+        var body = $(box).find('.chat-box-body');
+        var writer = $(box).find('.chat-box-write');
+        var state = $(box).attr('data-state');
+        if(state == undefined)
+            state = 'opened'
+
+        console.log(state, state == 'opened', body, writer);
+        if(state == 'opened'){
+            body.css('display', 'none');
+            writer.css('display', 'none');
+            box.css('margin-top', '270px');
+            box.attr('data-state', 'closed');
+        }else{
+            box.css('margin-top', '0px');
+            body.css('display', 'block');
+            writer.css('display', 'block');
+            box.attr('data-state', 'opened');
+        }
     });
     fetch_messages();
 });
