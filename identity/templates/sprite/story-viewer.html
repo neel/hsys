@@ -74,7 +74,10 @@
                     {{ m|medadvice|safe }}
                 {% endfor %}
             {% else %}
-                {{story.body}}
+                {{ story.body.symptoms|complaint_symptions|safe }}
+                {% comment %}
+                    {{story.body}}
+                {% endcomment %}
             {% endif %}
         </div>
     </div>

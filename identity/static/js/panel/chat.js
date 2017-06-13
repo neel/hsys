@@ -8,7 +8,7 @@ $(document).ready(function(){
         // {% verbatim %}
         var template = '<li class="chat-users-list-li">                                                 \
             <div class="chat-users-participant" data-id="{{id}}" data-name="{{first_name}} {{last_name}}" data-type="{{type}}">    \
-                <div class="chat-users-participant-type">{{type}}</div>                                 \
+                <div class="chat-users-participant-type chat-user-participant-type-{{type}}">{{type}}</div>                                 \
                 <div class="chat-users-participant-photo"></div>                                        \
                 <div class="chat-users-participant-info">                                               \
                     <div class="chat-users-participant-name">{{first_name}} {{last_name}}</div>         \

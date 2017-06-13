@@ -169,3 +169,18 @@ def medadvice(obj):
                     </div>""".format(obj['note'])
     else:
         return '<div class="prescription-entry prescription-entry-inline medication-malformed well well-sm"> Error </div>'
+
+@register.filter(name='complaint_symptions')
+def complaint_symptions(obj):
+    html = "";
+    for v in obj:
+        for k1 in v:
+            v1 = v[k1]
+            html += "<div class='symptom-category'><strong>"+k1+"</strong></div>"
+            for k2 in v1:
+                v2 = v1[k2]
+                html += "<div class='symptom-type'><strong> "+k2+"</strong></div>"
+                for k3 in v2:
+                    v3 = v2[k3]
+                    html += "<div class='symptom-qa'><span class='symptom-question'>"+k3 +"</span><span class='symptom-question'>"+ v3 +"</span></div>"
+    return html
