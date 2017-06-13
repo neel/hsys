@@ -1,0 +1,136 @@
+.complaint-section{
+    position: relative;
+    display: block;
+    float: left;
+    width: 100%;
+}
+.complaint-section-heading{
+    width: 20px;
+    float: left;
+    display: block;
+    height: 70px;
+    position: relative;
+}
+.complaint-section-heading-symptom{
+    border-right: 2px solid #d4403c;
+    background: url(/static/pix/symptoms.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 87px;
+    background-color: #d4403c;
+}
+.complaint-section-body{
+    position: relative;
+    display: block;
+    float: left;
+    width: calc(100% - 20px);
+}
+.symptoms-container{
+    position: relative;
+    display: block;
+    float: left;
+    width: 100%;
+}
+.symptom{
+    position: relative;
+    display: block;
+    float: left;
+    width: 100%;
+    margin-left: 0px;
+    padding-left: 0px;
+}
+.symptom-category{
+    position: relative;
+    display: inline;
+    clear: left;
+    float: left;
+    display: block;
+    margin-top: 0px;
+    margin-bottom: 1px;
+    margin-left: 0px;
+    margin-right: 0px;
+    border-top: 4px solid #d4403c;
+    width: 100%;
+    padding: 4px 0px 2px 2px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.symptom-type{
+    position: absolute;
+    display: block;
+    right: 0px;
+    top: 6px;
+    font-size: 14px;
+}
+.symptom-type::before{
+    content: "("
+}
+.symptom-type::after{
+    content: ")"
+}
+.symption-questionnaires{
+    display: none;
+    padding-left: 4px;
+}
+.symptom-qa{
+    border-bottom: 1px solid #cecece;
+}
+.symptom-question{
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: 14px;
+}
+.symptom-answer{
+    font-size: 12px;
+    float: right;
+}
+.complaint-section-heading-observation{
+    border-right: 2px solid #ec27c2;
+    background: url(/static/pix/observations.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 100px;
+    background-color: #ec27c2;
+}
+.observation{
+    border-top: 4px solid #ec27c2;
+}
+.complaint-section-heading-habit{
+    border-right: 2px solid #8f961d;
+    background: url(/static/pix/habits.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 50px;
+    background-color: #8f961d;
+}
+.habit{
+    border-top: 4px solid #8f961d;
+}
+.complaint-section-heading-habit{
+    border-right: 2px solid #8f961d;
+    background: url(/static/pix/habits.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 50px;
+    background-color: #8f961d;
+}
+.habit{
+    border-top: 4px solid #8f961d;
+}
+.complaint-section-heading-history{
+    border-right: 2px solid #50159e;
+    background: url(/static/pix/history.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 62px;
+    background-color: #50159e;
+}
+.history{
+    border-top: 4px solid #50159e;
+}

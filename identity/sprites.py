@@ -5,6 +5,7 @@ from django.template import RequestContext, loader
 from django.shortcuts import render
 import datetime, json
 import random
+import logging
 
 def DoctorSprite(request, doctor):
     return render(request, 'sprite/doctor.html', {
@@ -104,9 +105,8 @@ def _ActivitiesSprite(request, activities):
     })
 
 def StoryViewerSprite(request, story):
-    print(story.body)
     story.body = json.loads(story.body)
-
+    
     return render(request, 'sprite/story-viewer.html', {
         'request': request,
         'story': story

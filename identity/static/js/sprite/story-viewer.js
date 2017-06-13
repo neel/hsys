@@ -33,6 +33,11 @@ $(document).ready(function(){
             });
         }
     });
+    $('#main').on('click', 'h3.symptom-category', function(){
+        var symptom = $(this).parent();
+        var questionnaires = symptom.find('.symption-questionnaires');
+        questionnaires.toggle("slow");
+    });
     $(document).on('click', "div.story-viewer-print", function(event){
         // var viewer = $($(this).closest('.story-viewer'));
         // var story_id = viewer.data('story');

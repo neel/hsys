@@ -170,17 +170,52 @@ def medadvice(obj):
     else:
         return '<div class="prescription-entry prescription-entry-inline medication-malformed well well-sm"> Error </div>'
 
-@register.filter(name='complaint_symptions')
-def complaint_symptions(obj):
-    html = "";
+@register.filter(name='complaint_symptoms')
+def complaint_symptoms(obj):
+    html = "<div class='symptoms-container'>"
     for v in obj:
         for k1 in v:
             v1 = v[k1]
-            html += "<div class='symptom-category'><strong>"+k1+"</strong></div>"
+            html += "<div class='symptom'>"
+            html += "<h3 class='symptom-category'>"+k1+"</h3>"
             for k2 in v1:
                 v2 = v1[k2]
-                html += "<div class='symptom-type'><strong> "+k2+"</strong></div>"
+                html += "<div class='symptom-type'>"+k2+"</div>"
+                html += "<div class='symption-questionnaires'>"
                 for k3 in v2:
                     v3 = v2[k3]
-                    html += "<div class='symptom-qa'><span class='symptom-question'>"+k3 +"</span><span class='symptom-question'>"+ v3 +"</span></div>"
+                    html += "<div class='symptom-qa'><span class='symptom-question'>"+k3 +"</span><span class='symptom-answer'>"+ v3 +"</span></div>"
+                html += "</div>"
+            html += "</div>"
+    html += "</div>"
+    return html
+
+@register.filter(name='complaint_observations')
+def complaint_observations(obj):
+    html = "<div class='observations-container'>"
+    for observation in obj:
+        html += "<div class='observation'>"
+        html += observation
+        html += "</div>"
+    html += "</div>"
+    return html
+
+@register.filter(name='complaint_habits')
+def complaint_habits(obj):
+    html = "<div class='habits-container'>"
+    for observation in obj:
+        html += "<div class='habit'>"
+        html += observation
+        html += "</div>"
+    html += "</div>"
+    return html
+
+@register.filter(name='complaint_history')
+def complaint_history(obj):
+    html = "<div class='history-container'>"
+    for observation in obj:
+        html += "<div class='history'>"
+        html += observation
+        html += "</div>"
+    html += "</div>"
     return html

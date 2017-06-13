@@ -74,7 +74,30 @@
                     {{ m|medadvice|safe }}
                 {% endfor %}
             {% else %}
-                {{ story.body.symptoms|complaint_symptions|safe }}
+                <div class="complaint-section complaint-section-symptom">
+                    <div class="complaint-section-heading complaint-section-heading-symptom"></div>
+                    <div class="complaint-section-body">
+                        {{ story.body.symptoms|complaint_symptoms|safe }}
+                    </div>
+                </div>
+                <div class="complaint-section complaint-section-observation">
+                    <div class="complaint-section-heading complaint-section-heading-observation"></div>
+                    <div class="complaint-section-body">
+                        {{ story.body.generalObservation|complaint_observations|safe }}
+                    </div>
+                </div>
+                <div class="complaint-section complaint-section-habit">
+                    <div class="complaint-section-heading complaint-section-heading-habit"></div>
+                    <div class="complaint-section-body">
+                        {{ story.body.habit|complaint_habits|safe }}
+                    </div>
+                </div>
+                <div class="complaint-section complaint-section-history">
+                    <div class="complaint-section-heading complaint-section-heading-history"></div>
+                    <div class="complaint-section-body">
+                        {{ story.body.medicalHistory|complaint_history|safe }}
+                    </div>
+                </div>
                 {% comment %}
                     {{story.body}}
                 {% endcomment %}
