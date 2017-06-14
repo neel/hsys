@@ -38,6 +38,17 @@ $(document).ready(function(){
         var questionnaires = symptom.find('.complaint-questionnaires');
         questionnaires.toggle("slow");
     });
+    $('#main').on('click', '.story-viewer-action-na', function(){
+        var na = $(this).attr('data-na');
+        if(!na) na = 'shown';
+        if(na == 'shown'){
+            $('.value-na').closest('.complaint-qa').css('display', 'none');
+            $(this).attr('data-na', 'hidden');
+        }else{
+            $('.value-na').closest('.complaint-qa').css('display', 'inline');
+            $(this).attr('data-na', 'shown');
+        }
+    });
     $(document).on('click', "div.story-viewer-print", function(event){
         // var viewer = $($(this).closest('.story-viewer'));
         // var story_id = viewer.data('story');

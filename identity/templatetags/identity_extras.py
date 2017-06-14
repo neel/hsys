@@ -170,6 +170,11 @@ def medadvice(obj):
     else:
         return '<div class="prescription-entry prescription-entry-inline medication-malformed well well-sm"> Error </div>'
 
+def show_value_na(value):
+    if value.lower().strip() == "n/a":
+        return "<span class='value-na'>"+value+"</span>"
+    return value
+
 @register.filter(name='complaint_symptoms')
 def complaint_symptoms(obj):
     html = "<div class='symptoms-container'>"
@@ -184,7 +189,7 @@ def complaint_symptoms(obj):
                 html += "<div class='complaint-questionnaires symption-questionnaires'>"
                 for k3 in v2:
                     v3 = v2[k3]
-                    html += "<div class='complaint-qa symptom-qa'><span class='complaint-question symptom-question'>"+k3 +"</span><span class='complaint-answer symptom-answer'>"+ v3 +"</span></div>"
+                    html += "<div class='complaint-qa symptom-qa'><span class='complaint-question symptom-question'>"+k3 +"</span><span class='complaint-answer symptom-answer'>"+ show_value_na(v3) +"</span></div>"
                 html += "</div>"
             html += "</div>"
     html += "</div>"
@@ -230,7 +235,7 @@ def complaint_postexams(obj):
         html += "<div class='complaint-questionnaires postexam-questionnaires'>"
         for k2 in v1:
             v2 = v1[k2]
-            html += "<div class='complaint-qa postexam-qa'><span class='complaint-question postexam-question'>"+k2+"</span><span class='complaint-answer postexam-answer'>"+v2+"</span></div>"
+            html += "<div class='complaint-qa postexam-qa'><span class='complaint-question postexam-question'>"+k2+"</span><span class='complaint-answer postexam-answer'>"+ show_value_na(v2) +"</span></div>"
         html += "</div>"
         html += "</div>"
     html += "</div>"
