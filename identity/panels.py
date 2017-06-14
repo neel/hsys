@@ -84,7 +84,8 @@ def TaskCreationPanel(request, form, admission):
     })
 
 def ChatPanel(request):
-    latest_id = MessageAccess().all(request.user).latest('id').id
+    messages = MessageAccess().all(request.user)
+    latest_id = messages.latest('id').id if len(messages) else 0
     return render(request, 'panel/chat.html', {
         'request': request,
         'latest': latest_id

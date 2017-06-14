@@ -177,14 +177,14 @@ def complaint_symptoms(obj):
         for k1 in v:
             v1 = v[k1]
             html += "<div class='symptom'>"
-            html += "<h3 class='symptom-category'>"+k1+"</h3>"
+            html += "<h3 class='complaint-category symptom-category'>"+k1+"</h3>"
             for k2 in v1:
                 v2 = v1[k2]
                 html += "<div class='symptom-type'>"+k2+"</div>"
-                html += "<div class='symption-questionnaires'>"
+                html += "<div class='complaint-questionnaires symption-questionnaires'>"
                 for k3 in v2:
                     v3 = v2[k3]
-                    html += "<div class='symptom-qa'><span class='symptom-question'>"+k3 +"</span><span class='symptom-answer'>"+ v3 +"</span></div>"
+                    html += "<div class='complaint-qa symptom-qa'><span class='complaint-question symptom-question'>"+k3 +"</span><span class='complaint-answer symptom-answer'>"+ v3 +"</span></div>"
                 html += "</div>"
             html += "</div>"
     html += "</div>"
@@ -216,6 +216,37 @@ def complaint_history(obj):
     for observation in obj:
         html += "<div class='history'>"
         html += observation
+        html += "</div>"
+    html += "</div>"
+    return html
+
+@register.filter(name='complaint_postexams')
+def complaint_postexams(obj):
+    html = "<div class='postexams-container'>"
+    for k1 in obj:
+        v1 = obj[k1]
+        html += "<div class='postexam'>"
+        html += "<h3 class='complaint-category postexam-category'>"+k1+"</h3>"
+        html += "<div class='complaint-questionnaires postexam-questionnaires'>"
+        for k2 in v1:
+            v2 = v1[k2]
+            html += "<div class='complaint-qa postexam-qa'><span class='complaint-question postexam-question'>"+k2+"</span><span class='complaint-answer postexam-answer'>"+v2+"</span></div>"
+        html += "</div>"
+        html += "</div>"
+    html += "</div>"
+    return html
+
+@register.filter(name='complaint_family')
+def complaint_family(obj):
+    html = "<div class='family-container'>"
+    for relation in obj:
+        value = obj[relation]
+        html += "<div class='family'>"
+        html += "<h3 class='complaint-category family-category'>"+relation+"("+str(len(value['history']))+")"+"</h3>"
+        html += "<div class='complaint-questionnaires family-questionnaires'>"
+        for history in value['history']:
+            html += "<div class='complaint-qa family-qa'><span class='complaint-question family-question'>"+history+"</span></div>"
+        html += "</div>"
         html += "</div>"
     html += "</div>"
     return html

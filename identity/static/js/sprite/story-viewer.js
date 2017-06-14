@@ -33,9 +33,9 @@ $(document).ready(function(){
             });
         }
     });
-    $('#main').on('click', 'h3.symptom-category', function(){
+    $('#main').on('click', 'h3.complaint-category', function(){
         var symptom = $(this).parent();
-        var questionnaires = symptom.find('.symption-questionnaires');
+        var questionnaires = symptom.find('.complaint-questionnaires');
         questionnaires.toggle("slow");
     });
     $(document).on('click', "div.story-viewer-print", function(event){

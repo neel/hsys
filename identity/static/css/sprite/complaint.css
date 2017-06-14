@@ -40,7 +40,7 @@
     margin-left: 0px;
     padding-left: 0px;
 }
-.symptom-category{
+.complaint-category{
     position: relative;
     display: inline;
     clear: left;
@@ -50,12 +50,14 @@
     margin-bottom: 1px;
     margin-left: 0px;
     margin-right: 0px;
-    border-top: 4px solid #d4403c;
     width: 100%;
     padding: 4px 0px 2px 2px;
     font-size: 15px;
     font-weight: bold;
     cursor: pointer;
+}
+.symptom-category{
+    border-top: 4px solid #d4403c;
 }
 .symptom-type{
     position: absolute;
@@ -70,22 +72,28 @@
 .symptom-type::after{
     content: ")"
 }
-.symption-questionnaires{
+.complaint-questionnaires{
     display: none;
     padding-left: 4px;
 }
-.symptom-qa{
-    border-bottom: 1px solid #cecece;
-}
-.symptom-question{
+.complaint-qa{}
+.complaint-question{
     font-weight: bold;
     margin-right: 10px;
     font-size: 14px;
 }
-.symptom-answer{
+.complaint-answer{
     font-size: 12px;
     float: right;
 }
+
+.symption-questionnaires{}
+.symptom-qa{
+    border-bottom: 1px solid #cecece;
+}
+.symptom-question{}
+.symptom-answer{}
+
 .complaint-section-heading-observation{
     border-right: 2px solid #ec27c2;
     background: url(/static/pix/observations.png);
@@ -133,4 +141,32 @@
 }
 .history{
     border-top: 4px solid #50159e;
+}
+.complaint-section-heading-postexams{
+    border-right: 2px solid #275d05;
+    background: url(/static/pix/postexams.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 87px;
+    background-color: #275d05;
+}
+.postexam-category{
+    border-top: 4px solid #275d05;
+}
+
+.complaint-section-heading-family{
+    border-right: 2px solid #092352;
+    background: url(/static/pix/family.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 87px;
+    background-color: #092352;
+}
+.family-category{
+    border-top: 4px solid #092352;
+}
+.family-question{
+    padding-left: 6px;
 }
