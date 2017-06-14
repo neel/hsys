@@ -195,6 +195,27 @@ def complaint_symptoms(obj):
     html += "</div>"
     return html
 
+@register.filter(name='complaint_symptoms_summarized')
+def complaint_symptoms_summarized(obj):
+    html = "<div class='symptoms-container'>"
+    for v in obj:
+        for k1 in v:
+            v1 = v[k1]
+            html += "<div class='symptom'>"
+            html += "<h3 class='complaint-category symptom-category'>"+k1+"</h3>"
+            for k2 in v1:
+                v2 = v1[k2]
+                html += "<div class='symptom-type'>"+k2+"</div>"
+                html += "<div class='complaint-questionnaires symption-questionnaires'>"
+                for k3 in v2:
+                    v3 = v2[k3]
+                    if v3.strip().lower() != "n/a":
+                        html += "<div class='complaint-qa symptom-qa'><span class='complaint-question symptom-question'>"+k3 +"</span><span class='complaint-answer symptom-answer'>"+ show_value_na(v3) +"</span></div>"
+                html += "</div>"
+            html += "</div>"
+    html += "</div>"
+    return html
+
 @register.filter(name='complaint_observations')
 def complaint_observations(obj):
     html = "<div class='observations-container'>"
@@ -241,6 +262,24 @@ def complaint_postexams(obj):
     html += "</div>"
     return html
 
+@register.filter(name='complaint_postexams_summarized')
+def complaint_postexams_summarized(obj):
+    html = "<div class='postexams-container'>"
+    for k1 in obj:
+        v1 = obj[k1]
+        html += "<div class='postexam'>"
+        html += "<h3 class='complaint-category postexam-category'>"+k1+"</h3>"
+        html += "<div class='complaint-questionnaires postexam-questionnaires'>"
+        for k2 in v1:
+            v2 = v1[k2]
+            if v2.strip().lower() != "n/a":
+                html += "<div class='complaint-qa postexam-qa'><span class='complaint-question postexam-question'>"+k2+"</span><span class='complaint-answer postexam-answer'>"+ show_value_na(v2) +"</span></div>"
+        html += "</div>"
+        html += "</div>"
+    html += "</div>"
+    return html
+
+
 @register.filter(name='complaint_family')
 def complaint_family(obj):
     html = "<div class='family-container'>"
@@ -253,5 +292,21 @@ def complaint_family(obj):
             html += "<div class='complaint-qa family-qa'><span class='complaint-question family-question'>"+history+"</span></div>"
         html += "</div>"
         html += "</div>"
+    html += "</div>"
+    return html
+
+@register.filter(name='complaint_family_summarized')
+def complaint_family_summarized(obj):
+    html = "<div class='family-container'>"
+    for relation in obj:
+        value = obj[relation]
+        if len(value['history']) > 0:
+            html += "<div class='family'>"
+            html += "<h3 class='complaint-category family-category'>"+relation+"("+str(len(value['history']))+")"+"</h3>"
+            html += "<div class='complaint-questionnaires family-questionnaires'>"
+            for history in value['history']:
+                html += "<div class='complaint-qa family-qa'><span class='complaint-question family-question'>"+history+"</span></div>"
+            html += "</div>"
+            html += "</div>"
     html += "</div>"
     return html

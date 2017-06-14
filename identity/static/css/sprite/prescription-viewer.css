@@ -96,7 +96,7 @@ body{
 }
 
 @media print {
-    .prescription-patient-age, .prescription-complaints-label, .prescription-prescriptions-label {
+    .prescription-patient-age, .prescription-complaints-label, .prescription-prescriptions-label , .complaint-section-heading{
         -webkit-print-color-adjust: exact; 
     }
 }
@@ -106,6 +106,7 @@ body{
     display: block;
     position: relative;
     width: 100%;
+    margin-top: 10px;
 }
 .prescription-prescription{
     float: left;
@@ -155,4 +156,191 @@ body{
 .medicine-note{
   float: left;
   margin-left: 5px;
+}
+
+.prescription-complaints{
+    display: block;
+    position: relative;
+    width: 100%;
+    float: left;
+}
+
+.complaint-section{
+    position: relative;
+    display: block;
+    float: left;
+    width: 100%;
+}
+.complaint-section-heading{
+    width: 20px;
+    float: left;
+    display: block;
+    height: 70px;
+    position: relative;
+}
+.complaint-section-heading-symptom{
+    border-right: 2px solid #5a5a5a;
+    background: url(/static/pix/symptoms.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 90px;
+    background-color: #5a5a5a;
+}
+.complaint-section-body{
+    position: relative;
+    display: block;
+    float: left;
+    width: calc(100% - 24px);
+}
+.symptoms-container{
+    position: relative;
+    display: block;
+    float: left;
+    width: 100%;
+}
+.symptom{
+    position: relative;
+    display: block;
+    float: left;
+    width: 100%;
+    margin-left: 0px;
+    padding-left: 0px;
+}
+.complaint-category{
+    position: relative;
+    display: inline;
+    clear: left;
+    float: left;
+    display: block;
+    margin-top: 0px;
+    margin-bottom: 1px;
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 100%;
+    padding: 4px 0px 2px 2px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.symptom-category{
+    border-top: 4px solid #5a5a5a;
+}
+.symptom-type{
+    position: absolute;
+    display: block;
+    right: 0px;
+    top: 6px;
+    font-size: 14px;
+}
+.symptom-type::before{
+    content: "("
+}
+.symptom-type::after{
+    content: ")"
+}
+.complaint-questionnaires{
+    /*display: none;*/
+    padding-left: 4px;
+}
+.complaint-qa{}
+.complaint-question{
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: 14px;
+}
+.complaint-answer{
+    font-size: 12px;
+    float: right;
+}
+
+.symption-questionnaires{}
+.symptom-qa{
+    border-bottom: 1px solid #cecece;
+}
+.symptom-question{}
+.symptom-answer{}
+
+.complaint-section-heading-observation{
+    border-right: 2px solid #9e9e9e;
+    background: url(/static/pix/observations.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 100px;
+    background-color: #9e9e9e;
+}
+.observation{
+    border-top: 4px solid #9e9e9e;
+}
+.complaint-section-heading-habit{
+    border-right: 2px solid #272727;
+    background: url(/static/pix/habits.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 50px;
+    background-color: #272727;
+}
+.habit{
+    border-top: 4px solid #272727;
+}
+.complaint-section-heading-history{
+    border-right: 2px solid #464646;
+    background: url(/static/pix/history.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 70px;
+    background-color: #464646;
+}
+.history{
+    border-top: 4px solid #464646;
+}
+.complaint-section-heading-postexams{
+    border-right: 2px solid #5a5a5a;
+    background: url(/static/pix/postexams.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 100px;
+    background-color: #5a5a5a;
+}
+.postexam-category{
+    border-top: 4px solid #5a5a5a;
+}
+
+.complaint-section-heading-family{
+    border-right: 2px solid #383838;
+    background: url(/static/pix/family.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 87px;
+    background-color: #383838;
+}
+.family-category{
+    border-top: 4px solid #383838;
+}
+.family-question{
+    padding-left: 6px;
+}
+
+.complaint-section-symptom{
+    min-height: 120px;
+}
+.complaint-section-observation{
+    min-height: 120px;
+}
+.complaint-section-habit{
+    min-height: 70px;
+}
+.complaint-section-history{
+    min-height: 80px;
+}
+.complaint-section-postexams{
+    min-height: 110px;
+}
+.complaint-section-family{
+    min-height: 120px;
 }

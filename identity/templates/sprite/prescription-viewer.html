@@ -6,7 +6,7 @@
         <style type='text/css'>
             @import url("{% static 'css/common.css' %}");
             @import url("{% static 'css/heading.css' %}");
-            @import url("{% static 'css/sprite//prescription-viewer.css' %}");
+            @import url("{% static 'css/sprite/prescription-viewer.css' %}");
         </style>
         <script type="text/javascript" src="{% static 'js/jquery.1.9.0.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/jquery.sticky-kit.min.js' %}"></script>
@@ -45,7 +45,42 @@
                             </div>
                             {% for complaint in complaints %}
                                 <div class="prescription-complaint">
-                                    {{complaint}}
+                                    <div class="complaint-section complaint-section-symptom">
+                                        <div class="complaint-section-heading complaint-section-heading-symptom"></div>
+                                        <div class="complaint-section-body">
+                                            {{ complaint.body.symptoms|complaint_symptoms_summarized|safe }}
+                                        </div>
+                                    </div>
+                                    <div class="complaint-section complaint-section-observation">
+                                        <div class="complaint-section-heading complaint-section-heading-observation"></div>
+                                        <div class="complaint-section-body">
+                                            {{ complaint.body.generalObservation|complaint_observations|safe }}
+                                        </div>
+                                    </div>
+                                    <div class="complaint-section complaint-section-habit">
+                                        <div class="complaint-section-heading complaint-section-heading-habit"></div>
+                                        <div class="complaint-section-body">
+                                            {{ complaint.body.habit|complaint_habits|safe }}
+                                        </div>
+                                    </div>
+                                    <div class="complaint-section complaint-section-history">
+                                        <div class="complaint-section-heading complaint-section-heading-history"></div>
+                                        <div class="complaint-section-body">
+                                            {{ complaint.body.medicalHistory|complaint_history|safe }}
+                                        </div>
+                                    </div>
+                                    <div class="complaint-section complaint-section-postexams">
+                                        <div class="complaint-section-heading complaint-section-heading-postexams"></div>
+                                        <div class="complaint-section-body">
+                                            {{ complaint.body.post_exam|complaint_postexams_summarized|safe }}
+                                        </div>
+                                    </div>
+                                    <div class="complaint-section complaint-section-family">
+                                        <div class="complaint-section-heading complaint-section-heading-family"></div>
+                                        <div class="complaint-section-body">
+                                            {{ complaint.body.familyHistory|complaint_family_summarized|safe }}
+                                        </div>
+                                    </div>
                                 </div>
                             {% endfor %}
                         </div>

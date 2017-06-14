@@ -739,7 +739,9 @@ def _prescription(request, story_id):
         if story.is_prescription:
             story.body = json.loads(story.body)
             prescriptions.append(story)
-            complaints = story.refers_to.all()
+            for complaint in story.refers_to.all():
+                complaint.body = json.loads(complaint.body)
+                complaints.append(complaint)
         else:
             complaints.append(story)
             for s in story.refered_by.all():
