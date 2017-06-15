@@ -27,13 +27,14 @@ class DateTimeEncoder(json.JSONEncoder):
         return encoded_object
 
 def index(request):
-    return render(request, 'index.html', {
-        'request':       request,
-        'organizations': Organization.objects.all(),
-        'doctors':       Doctor.objects.all(),
-        'patients':      Patient.objects.all(),
-        'beds':          Bed.objects.all(),
-    })
+    return HttpResponseRedirect(reverse('land'))
+    # return render(request, 'index.html', {
+    #     'request':       request,
+    #     'organizations': Organization.objects.all(),
+    #     'doctors':       Doctor.objects.all(),
+    #     'patients':      Patient.objects.all(),
+    #     'beds':          Bed.objects.all(),
+    # })
 
 def user_login(request):
     username = password = ''
