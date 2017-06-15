@@ -68,7 +68,7 @@ def user_logout(request):
 
 def user_land(request):
     if(request.user.is_anonymous()):
-        raise Http404()
+        return HttpResponseRedirect(reverse('login'))
     else:
         return HttpResponseRedirect(request.user.real().profile())
 
