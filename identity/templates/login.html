@@ -1,9 +1,13 @@
 {% load staticfiles %}
 {% load identity_extras %}
+{% load widget_tweaks %}
 <!DOCTYPE html>
 <html>
     <head>
         <title>Patient {{patient.get_full_name}}</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
         <style type='text/css'>
             @import url('{% static 'css/daterangepicker.css' %}');
             @import url('{% static 'css/login.css' %}');
@@ -11,12 +15,148 @@
             @import url('{% static 'css/form.css' %}');
             @import url('{% static 'css/heading.css' %}');
             @import url('{% static 'css/sprite/notice.css' %}');
+
+            .actions{
+                text-align: center;
+            }
+.card-container.card {
+    max-width: 350px;
+    padding: 40px 40px;
+}
+
+.btn {
+    font-weight: 700;
+    height: 36px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+/*
+ * Card component
+ */
+.card {
+    background-color: #F7F7F7;
+    /* just in case there no content*/
+    padding: 20px 25px 30px;
+    margin: 0 auto 25px;
+    margin-top: 50px;
+    /* shadows and rounded borders */
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.profile-img-card {
+    width: 128px;
+    height: 128px;
+    margin: 0 auto 10px;
+    display: block;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}
+
+/*
+ * Form styles
+ */
+.profile-name-card {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0 0;
+    min-height: 1em;
+}
+
+.reauth-email {
+    display: block;
+    color: #404040;
+    line-height: 2;
+    margin-bottom: 10px;
+    font-size: 14px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.form-signin .input_email,
+.form-signin .input_password {
+    direction: ltr;
+    height: 44px;
+    font-size: 16px;
+}
+
+.form-signin input[type=email],
+.form-signin input[type=password],
+.form-signin input[type=text],
+.form-signin button {
+    width: 100%;
+    display: block;
+    margin-bottom: 10px;
+    z-index: 1;
+    position: relative;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.form-signin .form-control:focus {
+    border-color: rgb(104, 145, 162);
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgb(104, 145, 162);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgb(104, 145, 162);
+}
+
+.btn.btn-signin {
+    /*background-color: #4d90fe; */
+    background-color: rgb(104, 145, 162);
+    /* background-color: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));*/
+    padding: 0px;
+    font-weight: 700;
+    font-size: 14px;
+    height: 36px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    border: none;
+    -o-transition: all 0.218s;
+    -moz-transition: all 0.218s;
+    -webkit-transition: all 0.218s;
+    transition: all 0.218s;
+}
+
+.btn.btn-signin:hover,
+.btn.btn-signin:active,
+.btn.btn-signin:focus {
+    background-color: rgb(12, 97, 33);
+}
+
+.forgot-password {
+    color: rgb(104, 145, 162);
+}
+
+.forgot-password:hover,
+.forgot-password:active,
+.forgot-password:focus{
+    color: rgb(12, 97, 33);
+}
         </style>
-        <script type="text/javascript" src="{% static 'js/jquery.1.9.0.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.3.2.1.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/jquery.sticky-kit.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/d3.v3.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/jquery.daterangepicker.js' %}"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
                 $("#heading").stick_in_parent();
@@ -30,43 +170,116 @@
             <div class="search">
                 <input type="text" value="" class="search-input" />
             </div>
-            <div class="navigation">
+            <!--<div class="navigation">
                 <ul class="links">
                     <li class="link"><a href="#"></a></li>
                 </ul>
-            </div>
+            </div>-->
+            <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a href="#" class="navbar-brand">Remote Health</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a href="#">Login<span class="sr-only">(current)</span></a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Register<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Patient</a></li>
+                                    <li><a href="#">Doctor</a></li>
+                                    <li><a href="#">Care Giver</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="#">Health Kiosk</a></li>
+                                </ul>
+                            </li>
+                            <li class="active"><a href="#">Scan Prescription</a></li>
+                        </ul>
+                        <!--<form class="navbar-form navbar-right">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Search">
+                            </div>
+                            <button type="submit" class="btn btn-default">Search</button>
+                        </form>-->
+                    </div>
+                </div>
+            </nav>
             <div class="map"></div>
         </div>
         <div class="main" id="main">
-            <div class="left-panel">
-                
+            <div class="container">
+                <div class="card card-container">
+                    <!-- <img class="profile-img-card" src="//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" alt="" /> -->
+                    <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+                    <p id="profile-name" class="profile-name-card"></p>
+                    <form class="form-signin" method="post" action="{% url 'login' %}">
+                        <span id="reauth-email" class="reauth-email"></span>
+                        {% csrf_token %}
+                        <div class="login-field login-field-status">
+                            {{ form.username.errors }}
+                            {{ form.username|add_class:'form-control input_email'|attr:"autofocus"|attr:"placeholder:username"|attr:"required" }}
+                            <div class="form-field-error login-field-error"><ul></ul></div>
+                        </div>
+                        <div class="login-field login-field-note">
+                            {{ form.password|add_class:'form-control input_password'|attr:"placeholder:password"|attr:"required" }}
+                            <div class="form-field-error login-field-error"><ul></ul></div>
+                        </div>
+                        <!--<input type="email" class="form-control input-email" placeholder="Email address" required autofocus>
+                        <input type="password" class="form-control input-password" placeholder="Password" required>-->
+                        <div id="remember" class="checkbox">
+                            <label>
+                                <input type="checkbox" value="remember-me"> Remember me
+                            </label>
+                        </div>
+                        <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign in</button>
+                    </form><!-- /form -->
+                    <a href="#" class="forgot-password">
+                        Forgot the password?
+                    </a>
+                </div>
             </div>
             <div class="content">
-                <div class="banner">
-                    <div class="slogan">Health Management System</div>
-                    <div class="fastgan">Patient + Doctor + Organization + Paramedic + Operator</div>
-                </div>
-                <div class="form-container login">
-                    <div class="form-overlay login-overlay">{{status}}</div>
-                    <div class="form-error login-form-error">
-                        {{ form.non_field_errors }}
+                <!--
+                <div class="central jumbotron">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                            <img src="/static/pix/patient-silhouette-full.png" alt="...">
+                            <div class="caption">
+                                <h3 class="actions">Patients</h3>
+                                <p>Patients from Rural villages</p>
+                                <p class="actions"><a href="#" class="btn btn-primary" role="button">Register</a> <a href="#" class="btn btn-default" role="button">login</a></p>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                            <img src="/static/pix/doctor-silhouette-full.png" alt="...">
+                            <div class="caption">
+                                <h3 class="actions">Doctors</h3>
+                                <p>Doctorsa from the City</p>
+                                <p class="actions"><a href="#" class="btn btn-primary" role="button">Register</a> <a href="#" class="btn btn-default" role="button">Login</a></p>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                            <img src="/static/pix/doctor-silhouette-full.png" alt="...">
+                            <div class="caption">
+                                <h3 class="actions">Care Giver</h3>
+                                <p>Lorem Ipsum dolor sit amet</p>
+                                <p class="actions"><a href="#" class="btn btn-primary" role="button">Register</a> <a href="#" class="btn btn-default" role="button">Login</a></p>
+                            </div>
+                            </div>
+                        </div>
                     </div>
-                    <form class="form login-form" method="post" action="{% url 'login' %}">
-                        {% csrf_token %}
-                        <div class="form-field login-field login-field-status">
-                            {{ form.username.errors }}
-                            <label for="id_username" class="form-field-label login-label login-label-username">Username</label>
-                            {{ form.username }}
-                            <div class="form-field-error login-field-error"><ul></ul></div>
-                        </div>
-                        <div class="form-field login-field login-field-note">
-                            <label for="id_password" class="form-field-label login-label login-label-password">Password</label>
-                            {{ form.password }}
-                            <div class="form-field-error login-field-error"><ul></ul></div>
-                        </div>
-                        <input type="submit" value="Log In" class="identity-action-button red form-action login-action" />
-                    </from>
-                </div>
+                    -->
             </div>
         </div>
     </body>
