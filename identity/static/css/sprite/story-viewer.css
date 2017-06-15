@@ -11,7 +11,6 @@
     background-image: url("/static/pix/az-subtle.png");
     border-right: 1px solid #dadada;
     overflow-y: auto;
-    margin-top: 18px;
 }
 .story-viewer-close{
     position: absolute;
