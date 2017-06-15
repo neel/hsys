@@ -26,6 +26,7 @@ from django.db import models
 from datetime import datetime
 import json
 import uuid
+import base64
 
 class HmsUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(_('username'), max_length=30, unique=True,
@@ -127,6 +128,12 @@ class HmsUser(AbstractBaseUser, PermissionsMixin):
     def really(self, user_type):
         return isinstance(self.real(), user_type)
     
+def rename_image(instance, filename):
+    ext = filename.split('.')[-1]
+    if instance.pk:
+        return 'images/{}.{}.{}'.format(instance.pk, uuid.uuid4().hex, ext)
+    else:
+        return 'images/{}.{}'.format(uuid.uuid4().hex, ext)
 
 class Person(HmsUser):
     GENDER_CHOICES = (
@@ -138,6 +145,7 @@ class Person(HmsUser):
     dob        = models.DateField('Date Of Birth')
     sex        = models.CharField(max_length=1, choices=GENDER_CHOICES)
     address    = models.CharField(max_length=300, blank=True)
+    image      = models.ImageField(upload_to=rename_image, null=True, blank=True)
     
     def get_full_name(self):
         full_name = '%s %s' % (self.first_name, self.last_name)
@@ -274,6 +282,7 @@ class Story(models.Model):
         return "%s" % (self.subject)
 
     def clean(self):
+        print("HERE HERE HERE HERE")
         if self.is_prescription:
             try:
                 prescription = json.loads(self.body)
@@ -285,19 +294,24 @@ class Story(models.Model):
                 raise ValidationError('Malformed prescription data')
         if self.media and len(self.media) > 0:
             try:
-                media = json.loads(self.media)
+                media = self.media
                 for m in media:
                     label = m['label']
                     mime  = m['mime']
                     data  = m['data']
                     name  = str(uuid.uuid4().hex)
+                    decoded = base64.b64decode(data)
                     del m['data']
                     m['name'] = name
                     with open('/home/sensiaas/projects/hsys/images/{}'.format(name), 'wb+') as destination:
-                        for chunk in f.chunks():
-                            destination.write(chunk)
+                        destination.write(decoded)
+                self.media = json.dumps(media)
             except ValueError:
                 raise ValidationError('Malformed media data')
+
+    def save(self, **kwargs):
+        self.clean()
+        return super(Story, self).save(**kwargs)
     
 class ScheduledVisit(Story):
     appointment = models.ForeignKey('Appointment', related_name="scheduled_visit")

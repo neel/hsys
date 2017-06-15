@@ -27,7 +27,7 @@ class ActivityForm(forms.ModelForm):
 class PatientRegistrationForm(RegistrationForm):
     class Meta:
         model = Patient
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'dob', 'sex', 'address', )
+        fields = ('username', 'first_name', 'last_name', 'image', 'email', 'password1', 'password2', 'dob', 'sex', 'address', )
         exclude = ('password', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'groups', 'user_permissions', 'date_joined',)
         
 class DoctorRegistrationForm(RegistrationForm):

@@ -16,7 +16,7 @@ class DoctorCreationForm(forms.ModelForm):
     
     class Meta:
         model = Doctor
-        fields = ('email', 'first_name', 'last_name', 'dob', 'sex', 'address', 'paramedic')
+        fields = ('email', 'image', 'first_name', 'last_name', 'dob', 'sex', 'address', 'paramedic')
     
     def clean_password2(self):
         # Check that the two password entries match
@@ -54,7 +54,7 @@ class DoctorAdmin(UserAdmin):
     form     = DoctorChangeForm
     
     fieldsets = (
-        (None,              {'fields': ('username', 'email', 'password',)}),
+        (None,              {'fields': ('username', 'image', 'email', 'password',)}),
         ('Personal info',   {'fields': ('first_name', 'last_name', 'dob', 'sex', 'address',)}),
         ('Medical info',    {'fields': ('paramedic',)}),
         ('Permissions',     {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
@@ -62,7 +62,7 @@ class DoctorAdmin(UserAdmin):
     )
     
     add_fieldsets = (
-        (None,              {'fields': ('username', 'email', 'password1', 'password2',)}),
+        (None,              {'fields': ('username', 'image', 'email', 'password1', 'password2',)}),
         ('Personal info',   {'fields': ('first_name', 'last_name', 'dob', 'sex', 'address',)}),
         ('Medical info',    {'fields': ('paramedic',)}),
         ('Permissions',     {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
@@ -75,7 +75,7 @@ class PatientCreationForm(forms.ModelForm):
     
     class Meta:
         model = Patient
-        fields = ('email', 'first_name', 'last_name', 'dob', 'sex', 'address',)
+        fields = ('email', 'image', 'first_name', 'last_name', 'dob', 'sex', 'address',)
     
     def clean_password2(self):
         # Check that the two password entries match
@@ -113,14 +113,14 @@ class PatientAdmin(UserAdmin):
     form     = PatientChangeForm
     
     fieldsets = (
-        (None,              {'fields': ('username', 'email', 'password',)}),
+        (None,              {'fields': ('username', 'image', 'email', 'password',)}),
         ('Personal info',   {'fields': ('first_name', 'last_name', 'dob', 'sex', 'address',)}),
         ('Permissions',     {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login',)}),
     )
     
     add_fieldsets = (
-        (None,              {'fields': ('username', 'email', 'password1', 'password2',)}),
+        (None,              {'fields': ('username', 'image', 'email', 'password1', 'password2',)}),
         ('Personal info',   {'fields': ('first_name', 'last_name', 'dob', 'sex', 'address',)}),
         ('Permissions',     {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login',)}),
@@ -314,7 +314,7 @@ class OperatorCreationForm(forms.ModelForm):
     
     class Meta:
         model = Operator
-        fields = ('email', 'first_name', 'last_name', 'dob', 'sex', 'address', 'org')
+        fields = ('email', 'image', 'first_name', 'last_name', 'dob', 'sex', 'address', 'org')
     
     def clean_password2(self):
         # Check that the two password entries match
@@ -352,7 +352,7 @@ class OperatorAdmin(UserAdmin):
     form     = OperatorChangeForm
     
     fieldsets = (
-        (None,              {'fields': ('username', 'email', 'password',)}),
+        (None,              {'fields': ('username', 'image', 'email', 'password',)}),
         ('Personal info',   {'fields': ('first_name', 'last_name', 'dob', 'sex', 'address',)}),
         ('Medical info',    {'fields': ('org',)}),
         ('Permissions',     {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
@@ -360,7 +360,7 @@ class OperatorAdmin(UserAdmin):
     )
     
     add_fieldsets = (
-        (None,              {'fields': ('username', 'email', 'password1', 'password2',)}),
+        (None,              {'fields': ('username', 'image', 'email', 'password1', 'password2',)}),
         ('Personal info',   {'fields': ('first_name', 'last_name', 'dob', 'sex', 'address',)}),
         ('Medical info',    {'fields': ('org',)}),
         ('Permissions',     {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),

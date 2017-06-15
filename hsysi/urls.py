@@ -18,7 +18,9 @@ from django.contrib import admin
 from tastypie.api import Api
 from identity.api import *
 from identity import views
+from django.conf import settings
 from django.contrib.auth import views as auth_views
+from django.views.static import serve
 from registration.backends.simple.views import RegistrationView
 from identity.forms import PatientRegistrationForm, DoctorRegistrationForm, OperatorRegistrationForm
 
@@ -46,6 +48,7 @@ v1_api.register(CampaignResource())
 v1_api.register(SurveyResource())
 
 urlpatterns = [
+    url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
     url(r'^accounts/register/patient/$', RegistrationView.as_view(form_class=PatientRegistrationForm), name='register_patient'),
     url(r'^accounts/register/doctor/$', RegistrationView.as_view(form_class=DoctorRegistrationForm), name='register_doctor'),
     url(r'^accounts/register/operator/$', RegistrationView.as_view(form_class=OperatorRegistrationForm), name='register_operator'),

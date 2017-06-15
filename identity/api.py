@@ -87,6 +87,21 @@ class StoryResource(ModelResource):
             'subject': ['like']
         }
         
+class StoryShallowResource(ModelResource):
+    when = fields.DateTimeField(attribute='when', readonly=True, null=True, blank=True)
+    doctor = fields.ToOneField('identity.api.DoctorShallowResource', 'doctor', full=True)
+    patient = fields.ToOneField('identity.api.PatientShallowResource', 'patient', full=True)   
+    
+    class Meta:
+        queryset = Story.objects.all()
+        excludes = ['body', 'media']
+        filtering = {
+            'doctor': ALL_WITH_RELATIONS,
+            'patient': ALL_WITH_RELATIONS,
+            'when':  ['range', 'gt', 'gte', 'lt', 'lte'],
+            'subject': ['like']
+        }
+        
   
 class RandomVisitResource(ModelResource):
     doctor = fields.ToOneField('identity.api.DoctorResource', 'doctor')
@@ -226,7 +241,6 @@ class UserCatalogResource(ModelResource):
        
   
 class PatientShallowResource(ModelResource):
-    
     def render(self, request, data):
         dbundle = self.build_bundle(obj=data,request=request)
         return self.serialize(None,self.full_dehydrate(dbundle),'application/json')
@@ -241,7 +255,7 @@ class PatientShallowResource(ModelResource):
        
 class PatientResource(ModelResource):
     appointments = fields.ToManyField('identity.api.AppointmentResource', 'appointments', full=True, use_in='detail', readonly=True)
-    visits = fields.ToManyField('identity.api.StoryResource', 'stories', full=True, use_in='detail', readonly=True)
+    visits = fields.ToManyField('identity.api.StoryShallowResource', 'stories', full=True, use_in='detail', readonly=True)
     admissions = fields.ToManyField('identity.api.AdmissionResource', 'admissions', null=True, use_in='detail', readonly=True)
 
     class Meta:
