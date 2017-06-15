@@ -170,3 +170,45 @@
 .family-question{
     padding-left: 6px;
 }
+
+.complaint-section-heading-media{
+    border-right: 2px solid #092352;
+    background: url(/static/pix/family.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 87px;
+    background-color: #092352;
+}
+.complaint-section-media{}
+.complaint-section-media-body{
+    height: 120px;
+    overflow-x: auto;
+}
+.complaint-media{
+    position: relative;
+    display: block;
+    float: left;
+    width: 100px;
+    height: 100px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+.complaint-media-label{
+    position: absolute;
+    font-size: 12px;
+    width: 100%;
+    color: black;
+    opacity: 0.1;
+    color: white;
+    text-align: center;
+    bottom: 0px;
+    left: 0px;
+}
+.complaint-media:hover .complaint-media-label{
+    opacity: 0.8;
+}
+.complaint-media-image{
+    width: 100px;
+    height: 100px;
+}

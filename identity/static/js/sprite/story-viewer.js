@@ -49,6 +49,26 @@ $(document).ready(function(){
             $(this).attr('data-na', 'shown');
         }
     });
+    $('#main').on('click', '.complaint-media-image', function(){
+        var src   = $(this).attr('src');
+        var title = $(this).prev().html();
+        $(this).fancybox({
+            'transitionIn'	:	'elastic',
+            'transitionOut'	:	'elastic',
+            'speedIn'		:	600, 
+            'speedOut'		:	200, 
+            'href'          :   src,
+            'title'   		:   title
+        });
+    //     var src = $(this).attr('src');
+    //     var viewer = ImageViewer();
+    //     $('.gallery-items').click(function () {
+    //         var imgSrc = src,
+    //             highResolutionImage = $(this).data(src);
+    
+    //         viewer.show(imgSrc, highResolutionImage);
+    //     });
+    });
     $(document).on('click', "div.story-viewer-print", function(event){
         // var viewer = $($(this).closest('.story-viewer'));
         // var story_id = viewer.data('story');

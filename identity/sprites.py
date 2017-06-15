@@ -106,7 +106,7 @@ def _ActivitiesSprite(request, activities):
 
 def StoryViewerSprite(request, story):
     story.body = json.loads(story.body)
-    
+    story.media = json.loads(story.media)
     return render(request, 'sprite/story-viewer.html', {
         'request': request,
         'story': story
