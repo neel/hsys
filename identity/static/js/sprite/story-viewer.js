@@ -60,14 +60,6 @@ $(document).ready(function(){
             'href'          :   src,
             'title'   		:   title
         });
-    //     var src = $(this).attr('src');
-    //     var viewer = ImageViewer();
-    //     $('.gallery-items').click(function () {
-    //         var imgSrc = src,
-    //             highResolutionImage = $(this).data(src);
-    
-    //         viewer.show(imgSrc, highResolutionImage);
-    //     });
     });
     $(document).on('click', "div.story-viewer-print", function(event){
         // var viewer = $($(this).closest('.story-viewer'));
