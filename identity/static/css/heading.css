@@ -80,6 +80,10 @@
 
 .main{
     margin-top: 2px;
+    position: relative;
+    display: block;
+    float: left;
+    width: 100%;
 }
 .main .name{
     color: #CCCEDF;
