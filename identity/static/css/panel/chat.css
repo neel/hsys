@@ -233,3 +233,25 @@
 .chat-message:hover .chat-message-time{
     display: block;
 }
+.chat-box-video{
+    display: none;
+}
+.chat-box-camera{
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: -248px;
+    left: -100px;
+    background-color: black;
+}
+.chat-box-screen{
+    width: 248px;
+    height: 248px;
+    background-color: black;
+    top: -248px;
+    left: 0px;
+    position: absolute;
+}
+.chat-message-meta{
+    display: none;
+}

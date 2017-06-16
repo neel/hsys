@@ -23,7 +23,9 @@ $(document).ready(function(){
         var participant = nunjucks.renderString(template, data);
         $('#cusr_list ul').append($(participant));
     }
+    var init_video = null;
     var CHAT_PEERS = {};
+    var WEBRTC_PEERS = {};
     function create_chat_box(u){
         var exists = false;
         $('#cboxs .chat-box').each(function(){
@@ -35,10 +37,13 @@ $(document).ready(function(){
         if(exists) return CHAT_PEERS[u.id];
         // {% verbatim %}
         var template = '<div class="chat-box" data-target="{{id}}">                   \
+                            <video class="chat-box-video local chat-box-camera" autoplay />                            \
+                            <video class="chat-box-video remote chat-box-screen" autoplay />                           \
                             <div class="chat-box-title">                                            \
                                 <div class="chat-box-title-name">{{name}}</div>                     \
                                 <div class="chat-box-title-control chat-box-title-close glyphicon glyphicon-remove"></div>   \
                                 <div class="chat-box-title-control chat-box-title-hide glyphicon glyphicon-minus"></div>     \
+                                <div class="chat-box-title-control chat-box-title-call glyphicon glyphicon-modal-window"></div>   \
                             </div>                                                                  \
                             <div class="chat-box-body">                                             \
                                 <ul class="chat-users-list-ul"> </ul>                               \
@@ -82,10 +87,51 @@ $(document).ready(function(){
                 if(box == undefined){
                     box = create_chat_box(user);
                 }
+                var target = key;
                 
                 var body = box.find('.chat-users-list-ul')[0];
                 var messages = $($.trim(msgs.replace(/\s+/g, " ")));
                 $(body).append(messages);
+
+                var meta = messages.find('.chat-data-meta');
+                if(meta.length > 0){
+                    console.log("abol");
+                    $(meta).each(function(){
+                        console.log("tabol");
+                        var data   = this;
+                        var type   = $(this).attr('data-type');
+                        var value  = $(this).val();
+                        console.log("TYPE "+type);
+                        if(type == 'init'){
+                            // initialize video conversation
+                            console.log("INITIALIZING LOCAL VIDEO");
+                            init_video(box);
+                        }else if(type == 'sdp'){
+                            console.log("SDP RECIEVED");
+                            var signal = JSON.parse(value);
+                            if(WEBRTC_PEERS[target]){
+                                connection = WEBRTC_PEERS[target];
+                                connection.setRemoteDescription(new RTCSessionDescription(signal.sdp), function(){
+                                    if(signal.sdp.type == 'offer'){
+                                        connection.createAnswer(function(description){
+                                            got_description(target, description);
+                                        }, function(error){
+                                            console.log(error);
+                                        });
+                                    }
+                                });
+                            }
+                        }else if(type == 'ice'){
+                            console.log("ICE RECIEVED");
+                            var signal = JSON.parse(value);
+                            if(WEBRTC_PEERS[target]){
+                                connection = WEBRTC_PEERS[target];
+                                connection.addIceCandidate(new RTCIceCandidate(signal.ice));
+                            }
+                        }
+                        console.log(data);
+                    })
+                }
             };
             if(latest_id) $('#cboxs').attr('data-last', latest_id);
             console.log(status);
@@ -118,6 +164,17 @@ $(document).ready(function(){
         var participant = {id: $(this).data("id"), name: $(this).data("name"), type: $(this).data("type")};
         var box = create_chat_box(participant);
     })
+    send_message = function(target, mime_type, msg, callback){
+        $.ajax({
+            method: "POST",
+            url: '/chat/send/',
+            dataType : "json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({to: target, mime: mime_type, message: msg, ctime: (new Date())})
+        }).done(function(content, status, xhr){
+            callback(content, status, xhr);
+        });
+    }
     $('#cboxs').on("click", "button.chat-send-btn", function(){
         var box = $(this).closest('.chat-box');
         var msg = $(this).parent().prev().val();
@@ -142,6 +199,77 @@ $(document).ready(function(){
     });
     $('#cboxs').on("click", "div.chat-send-close", function(){
         
+    });
+
+    var got_description = function(target, description){
+        connection.setLocalDescription(description, function(){
+            send_message(target, 'chat/sdp', JSON.stringify({'sdp': description}), function(){
+                // show call initiated (sdp)
+                console.log("SENDING SDP");
+            });
+        }, function(error){
+            console.log(error);
+        })
+    }
+
+    var init_video = function(box, is_caller){
+        var local_video = box.find('video.local');
+        var target = box.data('target');
+
+        navigator.getMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        navigator.getMedia({video: true}, function(stream){
+            var video = local_video[0];
+            video.src = (window.URL || window.webkitURL).createObjectURL(stream);
+
+            if(is_caller){
+                send_message(target, 'chat/init', '.', function(){
+                    console.log("SENDING INIT");
+                    // show call in progress (ice)
+                });
+            }
+
+            var config = {'iceServers': [{'url': 'stun:stun.services.mozilla.com'}, {'url': 'stun:stun.l.google.com:19302'}]};
+            connection = new RTCPeerConnection(config);
+            connection.onicecandidate = function(event){
+                if(event.candidate != null){
+                    send_message(target, 'chat/ice', JSON.stringify({'ice': event.candidate}), function(){
+                        console.log("SENDING ICE");
+                        // show call in progress (ice)
+                    });
+                }
+            };
+            connection.onaddstream = function(event){
+                var remote_video = box.find('video.remote');
+
+                console.log('got remote stream', event);
+                var remote_video = remote_video[0];
+                remote_video.src = window.URL.createObjectURL(event.stream);
+            };
+            if(stream) connection.addStream(stream);
+            if(is_caller){
+                setTimeout(function(){
+                    connection.createOffer(function(description){
+                        got_description(target, description)
+                    }, function(error){
+                        console.log(error);
+                    });
+                }, 5000);
+            }
+            console.log(WEBRTC_PEERS[target], !WEBRTC_PEERS[target]);
+            if(!WEBRTC_PEERS[target]){
+                console.log("SETTING LOCAL CONNECTION");
+                WEBRTC_PEERS[target] = connection;
+                box.find('.chat-box-video').show();
+            }
+        }, function(error){
+            console.log(error);
+        });
+    }
+
+    $('#cboxs').on("click", "div.chat-box-title-call", function(){
+        var button = $(this);
+        var box = $(this).closest('.chat-box');
+        init_video(box, true);
     });
     $('#cboxs').on("click", "div.chat-box-title-hide", function(){
         var box = $(this).closest('.chat-box');

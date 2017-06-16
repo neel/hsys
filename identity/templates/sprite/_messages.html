@@ -1,6 +1,28 @@
 {% load identity_extras %}
 
 {% for message in messages %}
+    {% if message.mime == 'chat/init' %}
+    <li class='message-list-item'>
+        <div class='chat-message chat-message-meta chat-message-meta-init {% if message.source == request.user %}chat-message-outgoing{% else %}chat-message-incomming{% endif %}'>
+            <div class='chat-message-msg'>{{message.msg}}</div>
+            <input type="hidden" class="chat-data-meta{% if message.source == request.user %}-ignore{% endif %}" value="{{message.msg}}" data-type="init" />
+        </div>
+    </li>
+    {% elif message.mime == 'chat/sdp' %}
+    <li class='message-list-item'>
+        <div class='chat-message chat-message-meta chat-message-meta-sdp {% if message.source == request.user %}chat-message-outgoing{% else %}chat-message-incomming{% endif %}'>
+            <div class='chat-message-msg'>{{message.msg}}</div>
+            <input type="hidden" class="chat-data-meta{% if message.source == request.user %}-ignore{% endif %}" value="{{message.msg}}" data-type="sdp" />
+        </div>
+    </li>
+    {% elif message.mime == 'chat/ice' %}
+    <li class='message-list-item'>
+        <div class='chat-message chat-message-meta chat-message-meta-ice {% if message.source == request.user %}chat-message-outgoing{% else %}chat-message-incomming{% endif %}'>
+            <div class='chat-message-msg'>{{message.msg}}</div>
+            <input type="hidden" class="chat-data-meta{% if message.source == request.user %}-ignore{% endif %}" value="{{message.msg}}" data-type="ice" />
+        </div>
+    </li>
+    {% else %}
     <li class='message-list-item'>
         <div class='chat-message {% if message.source == request.user %}chat-message-outgoing{% else %}chat-message-incomming{% endif %}'>
             {% comment %}
@@ -11,4 +33,5 @@
             <div class='chat-message-msg'>{{message.msg}}</div>
         </div>
     </li>
+    {% endif %}
 {% endfor %}

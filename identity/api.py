@@ -253,6 +253,35 @@ class PatientShallowResource(ModelResource):
             'id': ALL_WITH_RELATIONS
         }
        
+      
+# https://stackoverflow.com/questions/28356711/trying-to-upload-image-to-a-filefield-model-using-rest-framework-or-tastypie
+class MultipartPatientResource(object):
+        def deserialize(self, request, data, format=None):
+            if not format:
+                 format = request.META.get('CONTENT_TYPE', 'application/json')
+            if format =='application/x-www-form-urlencoded':
+                return request.POST
+            if format.startswith('multipart'):
+                data = request.POST.copy()
+                patient = Patient()
+                patient.image = request.FILES['image']
+                patient.first_name = request.POST.get('first_name')
+                patient.last_name  = request.POST.get('last_name')
+                patient.address    = request.POST.get('address')
+                patient.dob        = request.POST.get('dob')
+                patient.sex        = request.POST.get('sex')
+                patient.username   = request.POST.get('username')
+                patient.password   = request.POST.get('password')
+                patient.save()
+                # ... etc
+                return data
+            return super(PatientResource, self).deserialize(request, data, format)
+
+        # overriding the save method to prevent the object getting saved twice 
+        def obj_create(self, bundle, request=None, **kwargs):
+             pass
+
+
 class PatientResource(ModelResource):
     image = fields.FileField(attribute='image', null=True, blank=True)
     appointments = fields.ToManyField('identity.api.AppointmentResource', 'appointments', full=True, use_in='detail', readonly=True)
