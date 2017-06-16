@@ -114,14 +114,18 @@
                 <div class="complaint-section complaint-section-media">
                     <div class="complaint-section-heading complaint-section-heading-media"></div>
                     <div class="complaint-section-body complaint-section-media-body">
+                       <ul class="complaint-media-ul">
                        {% for media in story.media %}
-                        <div class="complaint-media">
+                       <li class="complaint-media-li">
+                         <div class="complaint-media">
                             <div class="complaint-media-label">{{media.label}}</div>
                             {% if 'image' in media.mime %}
                                 <img class="complaint-media-image" src="/media/attachments/{{media.name}}" />
                             {% endif %}
-                        </div>
+                         </div>
+                       </li>
                        {% endfor %}
+                       </ul>
                     </div>
                 </div>
                 {% comment %}

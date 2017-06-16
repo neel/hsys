@@ -212,3 +212,10 @@
     width: 100px;
     height: 100px;
 }
+.complaint-media-ul{
+    padding-left: 0px;
+}
+.complaint-media-li{
+    list-style-type: none;
+    float: left;
+}
