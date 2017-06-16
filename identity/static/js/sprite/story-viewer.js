@@ -53,6 +53,7 @@ $(document).ready(function(){
         var src   = $(this).attr('src');
         var title = $(this).prev().html();
         $(this).fancybox({
+            type : 'image',
             'transitionIn'	:	'elastic',
             'transitionOut'	:	'elastic',
             'speedIn'		:	600, 

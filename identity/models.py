@@ -24,9 +24,13 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models
 from datetime import datetime
+import os
 import json
 import uuid
 import base64
+import mimetypes
+
+mimetypes.init()
 
 class HmsUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(_('username'), max_length=30, unique=True,
@@ -302,9 +306,18 @@ class Story(models.Model):
                     name  = str(uuid.uuid4().hex)
                     decoded = base64.b64decode(data)
                     del m['data']
-                    m['name'] = name
-                    with open('/home/sensiaas/projects/hsys/images/{}'.format(name), 'wb+') as destination:
+
+                    extension = '.unknown'
+                    if(mime != 'image/jpeg'):
+                        extension = 'jpg'
+                    else:
+                        extensions = mimetypes.guess_all_extensions(mime)
+                        extension  = extensions[0] if len(extensions) > 0 else '.bin'
+                    m['name'] = '{}{}'.format(name, extension)
+
+                    with open(os.path.join(os.getcwd(), 'hsysi/media/attachments/{}'.format(m['name'])), 'wb+') as destination:
                         destination.write(decoded)
+
                 self.media = json.dumps(media)
             except ValueError:
                 raise ValidationError('Malformed media data')

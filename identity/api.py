@@ -254,6 +254,7 @@ class PatientShallowResource(ModelResource):
         }
        
 class PatientResource(ModelResource):
+    image = fields.FileField(attribute='image', null=True, blank=True)
     appointments = fields.ToManyField('identity.api.AppointmentResource', 'appointments', full=True, use_in='detail', readonly=True)
     visits = fields.ToManyField('identity.api.StoryShallowResource', 'stories', full=True, use_in='detail', readonly=True)
     admissions = fields.ToManyField('identity.api.AdmissionResource', 'admissions', null=True, use_in='detail', readonly=True)
