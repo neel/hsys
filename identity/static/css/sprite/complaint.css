@@ -173,11 +173,11 @@
 
 .complaint-section-heading-media{
     border-right: 2px solid #092352;
-    background: url(/static/pix/family.png);
+    background: url(/static/pix/attachments.png);
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center center;
-    height: 87px;
+    height: 100px;
     background-color: #092352;
 }
 .complaint-section-media{}
