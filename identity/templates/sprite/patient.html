@@ -2,7 +2,7 @@
 
 {% load identity_extras %}
 <div class="patient-canvas{% if patient.paramedic %} patient-paramedic{% endif %}" data-id="{{ patient.id }}" data-organizations="{{ organizations }}">
-    <div class="patient-pic"></div>
+    <div class="patient-pic"><img src="/media/{{ patient.image }}" class="patient-pic-photo" /></div>
     <div class="patient-info patient-info-intro">
         <div class="patient-name"><a href="/patient/{{ patient.id }}">{{ patient.get_full_name }}</a></div>
         <div class="patient-email">{{ patient.email }}</div>

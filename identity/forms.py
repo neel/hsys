@@ -25,6 +25,9 @@ class ActivityForm(forms.ModelForm):
         fields = ['note', 'status']
 
 class PatientRegistrationForm(RegistrationForm):
+    dob = forms.DateTimeField()
+    image = forms.ImageField()
+
     class Meta:
         model = Patient
         fields = ('username', 'first_name', 'last_name', 'image', 'email', 'password1', 'password2', 'dob', 'sex', 'address', )

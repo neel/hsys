@@ -12,6 +12,10 @@ from django.http import HttpResponse
 from tastypie.http import HttpUnauthorized, HttpForbidden, HttpNotFound
 from hsysi.utils import delta_string
 import json
+import base64
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
+from django.contrib.auth.hashers import make_password
  
 class UserResource(ModelResource):
     class Meta:
@@ -254,39 +258,30 @@ class PatientShallowResource(ModelResource):
         }
        
       
-# https://stackoverflow.com/questions/28356711/trying-to-upload-image-to-a-filefield-model-using-rest-framework-or-tastypie
-class MultipartPatientResource(object):
-        def deserialize(self, request, data, format=None):
-            if not format:
-                 format = request.META.get('CONTENT_TYPE', 'application/json')
-            if format =='application/x-www-form-urlencoded':
-                return request.POST
-            if format.startswith('multipart'):
-                data = request.POST.copy()
-                patient = Patient()
-                patient.image = request.FILES['image']
-                patient.first_name = request.POST.get('first_name')
-                patient.last_name  = request.POST.get('last_name')
-                patient.address    = request.POST.get('address')
-                patient.dob        = request.POST.get('dob')
-                patient.sex        = request.POST.get('sex')
-                patient.username   = request.POST.get('username')
-                patient.password   = request.POST.get('password')
-                patient.save()
-                # ... etc
-                return data
-            return super(PatientResource, self).deserialize(request, data, format)
+# https://stackoverflow.com/questions/22912237/how-to-upload-a-file-with-django-tastypie
+class MultiPartResource(object):
+    def deserialize(self, request, data, format=None):
+        if not format:
+            format = request.Meta.get('CONTENT_TYPE', 'application/json')
+        if format == 'application/x-www-form-urlencoded':
+            return request.POST
+        if format.startswith('multipart'):
+            data = request.POST.copy()
+            data.update(request.FILES)
+            return data
+        return super(MultiPartResource, self).deserialize(request, data, format)
 
-        # overriding the save method to prevent the object getting saved twice 
-        def obj_create(self, bundle, request=None, **kwargs):
-             pass
-
-
-class PatientResource(ModelResource):
+class PatientResource(MultiPartResource, ModelResource):
     image = fields.FileField(attribute='image', null=True, blank=True)
     appointments = fields.ToManyField('identity.api.AppointmentResource', 'appointments', full=True, use_in='detail', readonly=True)
     visits = fields.ToManyField('identity.api.StoryShallowResource', 'stories', full=True, use_in='detail', readonly=True)
     admissions = fields.ToManyField('identity.api.AdmissionResource', 'admissions', null=True, use_in='detail', readonly=True)
+
+    def obj_create(self, bundle, request=None, **kwargs):
+        bundle = super(PatientResource, self).obj_create(bundle, request=request, **kwargs)
+        bundle.obj.set_password("hsys@p123456")
+        bundle.obj.save()
+        return bundle
 
     class Meta:
         queryset = Patient.objects.all()
@@ -296,6 +291,20 @@ class PatientResource(ModelResource):
             'id': ALL_WITH_RELATIONS
         }
         always_return_data = True
+        
+
+    # attach the base64 encoded media in image
+    # def obj_create(self, bundle, request=None, **kwargs):
+    #     image_encoded = bundle.data['image']
+    #     image_decoded = base64.b64decode(image_encoded)
+       
+    #     image_file = NamedTemporaryFile(suffix='.jpeg', delete=True)
+    #     image_file.write(image_decoded)
+    #     image_file.flush()
+
+    #     res = super(PatientResource, self).obj_create(bundle, request=request, **kwargs)
+    #     res.obj.image.save(image_file.name, File(image_file))
+    #     return res 
 
     def dehydrate(self, bundle):
         bundle.data['age'] = delta_string(bundle.obj.age())

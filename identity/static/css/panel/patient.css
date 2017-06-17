@@ -16,6 +16,10 @@
     margin-right: auto;
     margin-top: 20px;
 }
+.patient-pix-photo{
+    height: 100%;
+    width: 100%;
+}
 .patient-infos{
     margin: 0px;
     padding: 0px;

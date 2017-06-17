@@ -16,6 +16,10 @@
     margin-right: auto;
     margin-top: 20px;
 }
+.doctor-pix-photo{
+    height: 100%;
+    width: 100%;
+}
 .doctor-infos{
     margin: 0px;
     padding: 0px;

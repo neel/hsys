@@ -60,6 +60,13 @@
     margin-bottom: 9px;
     margin-top: 12px;
 }
+.patient-pic-photo{
+    width: 100%;
+    height: 100%;
+    -webkit-border-radius: 80px;
+    -moz-border-radius: 80px;
+    border-radius: 22px;
+}
 .patient-name{
     font-weight: bold;
 }
