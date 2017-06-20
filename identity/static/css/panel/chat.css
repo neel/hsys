@@ -255,3 +255,195 @@
 .chat-message-meta{
     display: none;
 }
+.chat-video-call{
+    width: 100%;
+    float: left;
+    position: relative;
+    display: block;
+    height: 30px;
+}
+.chat-video-request{
+    width: 100%;
+    float: left;
+    position: relative;
+    display: block;
+    height: 100%;
+    color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.chat-video-request-phone{
+    width: calc( 100% - 30px);
+    height: 100%;
+    float: left;
+    position: relative;
+    display: block;
+    padding-left: 72px;
+    padding-top: 5px;
+    font-size: 13px;
+
+    background: rgba(73,155,234,1);
+    background: -moz-linear-gradient(top, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(73,155,234,1)), color-stop(100%, rgba(32,124,229,1)));
+    background: -webkit-linear-gradient(top, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    background: -o-linear-gradient(top, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    background: -ms-linear-gradient(top, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    background: linear-gradient(to bottom, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#499bea', endColorstr='#207ce5', GradientType=0 );
+
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.chat-video-request-drop{
+    width: 30px;
+    height: 100%;
+    float: left;
+    position: relative;
+    display: block;
+    text-align: center;
+    padding-top: 6px;
+    font-size: 18px;
+    margin-top: -1px;
+    cursor: pointer;
+
+    background: rgba(234,72,94,1);
+    background: -moz-linear-gradient(top, rgba(234,72,94,1) 0%, rgba(229,31,48,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(234,72,94,1)), color-stop(100%, rgba(229,31,48,1)));
+    background: -webkit-linear-gradient(top, rgba(234,72,94,1) 0%, rgba(229,31,48,1) 100%);
+    background: -o-linear-gradient(top, rgba(234,72,94,1) 0%, rgba(229,31,48,1) 100%);
+    background: -ms-linear-gradient(top, rgba(234,72,94,1) 0%, rgba(229,31,48,1) 100%);
+    background: linear-gradient(to bottom, rgba(234,72,94,1) 0%, rgba(229,31,48,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ea485e', endColorstr='#e51f30', GradientType=0 );
+
+    -webkit-border-top-right-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -moz-border-radius-topright: 5px;
+    -moz-border-radius-bottomright: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.chat-video-call-status-progress:after {
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+  -webkit-animation: ellipsis steps(4,end) 900ms infinite;      
+  animation: ellipsis steps(4,end) 900ms infinite;
+  content: "\2026"; /* ascii code for the ellipsis character */
+  width: 0px;
+}
+@keyframes ellipsis {
+  to {
+    width: 20px;    
+  }
+}
+@-webkit-keyframes ellipsis {
+  to {
+    width: 20px;    
+  }
+}
+.chat-video-ring{
+    width: 100%;
+    float: left;
+    position: relative;
+    display: block;
+    height: 100%;
+    color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.chat-video-ring-accept{
+    width: 30px;
+    height: 100%;
+    float: left;
+    position: relative;
+    display: block;
+    text-align: center;
+    padding-top: 6px;
+    font-size: 18px;
+    margin-top: -1px;
+    cursor: pointer;
+
+    background: rgba(64,161,176,1);
+    background: -moz-linear-gradient(left, rgba(64,161,176,1) 0%, rgba(54,132,150,1) 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(64,161,176,1)), color-stop(100%, rgba(54,132,150,1)));
+    background: -webkit-linear-gradient(left, rgba(64,161,176,1) 0%, rgba(54,132,150,1) 100%);
+    background: -o-linear-gradient(left, rgba(64,161,176,1) 0%, rgba(54,132,150,1) 100%);
+    background: -ms-linear-gradient(left, rgba(64,161,176,1) 0%, rgba(54,132,150,1) 100%);
+    background: linear-gradient(to right, rgba(64,161,176,1) 0%, rgba(54,132,150,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#40a1b0', endColorstr='#368496', GradientType=1 );
+
+
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.chat-video-ring-phone{
+    width: calc( 100% - 60px);
+    height: 100%;
+    float: left;
+    position: relative;
+    display: block;
+    padding-left: 42px;
+    padding-top: 5px;
+    font-size: 13px;
+
+    background: rgba(73,155,234,1);
+    background: -moz-linear-gradient(top, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(73,155,234,1)), color-stop(100%, rgba(32,124,229,1)));
+    background: -webkit-linear-gradient(top, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    background: -o-linear-gradient(top, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    background: -ms-linear-gradient(top, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    background: linear-gradient(to bottom, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#499bea', endColorstr='#207ce5', GradientType=0 );
+}
+.chat-video-ring-reject{
+    width: 30px;
+    height: 100%;
+    float: left;
+    position: relative;
+    display: block;
+    text-align: center;
+    padding-top: 6px;
+    font-size: 18px;
+    margin-top: -1px;
+    cursor: pointer;
+
+    background: rgba(240,61,82,1);
+    background: -moz-linear-gradient(top, rgba(240,61,82,1) 0%, rgba(237,18,32,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(240,61,82,1)), color-stop(100%, rgba(237,18,32,1)));
+    background: -webkit-linear-gradient(top, rgba(240,61,82,1) 0%, rgba(237,18,32,1) 100%);
+    background: -o-linear-gradient(top, rgba(240,61,82,1) 0%, rgba(237,18,32,1) 100%);
+    background: -ms-linear-gradient(top, rgba(240,61,82,1) 0%, rgba(237,18,32,1) 100%);
+    background: linear-gradient(to bottom, rgba(240,61,82,1) 0%, rgba(237,18,32,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f03d52', endColorstr='#ed1220', GradientType=0 );
+
+    -webkit-border-top-right-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -moz-border-radius-topright: 5px;
+    -moz-border-radius-bottomright: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.chat-video-call-status-accepted{
+    padding-left: 0px;
+    text-align: center;
+}
+.chat-video-call-status-sdp{
+    padding-left: 0px;
+    text-align: center;
+}
+.chat-video-call-status-ice{
+    padding-left: 0px;
+    text-align: center;
+}

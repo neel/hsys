@@ -12,18 +12,18 @@
                 appointment_sprite_el.addClass('appointment-sprite-none');
                 negotiations_el.css('display', 'block')
             }
-        })
-        $('.appointments-heading-filter-range > .filter-range').dateRangePicker({
-            setValue: function(s,s1,s2){
-                var self = $(this);
+        });
+        // $('.appointments-heading-filter-range > .filter-range').dateRangePicker({
+        //     setValue: function(s,s1,s2){
+        //         var self = $(this);
                 
-                var from = self.find('.filter-range-from > input[type="text"]');
-                var to   = self.find('.filter-range-to   > input[type="text"]');
+        //         var from = self.find('.filter-range-from > input[type="text"]');
+        //         var to   = self.find('.filter-range-to   > input[type="text"]');
                 
-                from.val(s1);
-                to.val(s2);
-            }
-        })
+        //         from.val(s1);
+        //         to.val(s2);
+        //     }
+        // });
         $('.negotiation-sprite-reply-btn-respond').click(function(){
             var reply_menu = $($(this).parent().children('.negotiation-sprite-reply-menu')[0]);
             if(reply_menu.is(':visible')){
@@ -33,7 +33,7 @@
                 reply_menu.show()
                 $(this).hide();
             }
-        })
+        });
         $('.negotiation-proposal input[name="when"]').datetimepicker({
             format:'Y-m-d H:i',
             step: 15,
