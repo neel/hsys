@@ -108,9 +108,10 @@ class StoryShallowResource(ModelResource):
         
   
 class RandomVisitResource(ModelResource):
-    doctor = fields.ToOneField('identity.api.DoctorResource', 'doctor')
-    patient = fields.ToOneField('identity.api.PatientResource', 'patient')  
-    story = fields.ToOneField('identity.api.StoryResource', 'story_ptr', readonly=True) 
+    doctor   = fields.ToOneField('identity.api.DoctorResource', 'doctor')
+    patient  = fields.ToOneField('identity.api.PatientResource', 'patient')  
+    story    = fields.ToOneField('identity.api.StoryResource', 'story_ptr', readonly=True) 
+    operator = fields.ToOneField('identity.api.OperatorResource', 'operator', null=True, blank=True)
 
     class Meta:
         queryset = RandomVisit.objects.all()
