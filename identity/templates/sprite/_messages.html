@@ -8,6 +8,13 @@
             <input type="hidden" class="chat-data-meta{% if message.source == request.user %}-ignore{% endif %}" value="{{message.msg}}" data-type="init" />
         </div>
     </li>
+    {% elif message.mime == 'chat/okay' %}
+    <li class='message-list-item'>
+        <div class='chat-message chat-message-meta chat-message-meta-okay {% if message.source == request.user %}chat-message-outgoing{% else %}chat-message-incomming{% endif %}'>
+            <div class='chat-message-msg'>{{message.msg}}</div>
+            <input type="hidden" class="chat-data-meta{% if message.source == request.user %}-ignore{% endif %}" value="{{message.msg}}" data-type="okay" />
+        </div>
+    </li>
     {% elif message.mime == 'chat/sdp' %}
     <li class='message-list-item'>
         <div class='chat-message chat-message-meta chat-message-meta-sdp {% if message.source == request.user %}chat-message-outgoing{% else %}chat-message-incomming{% endif %}'>

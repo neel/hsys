@@ -103,18 +103,71 @@ $(document).ready(function(){
                         var value  = $(this).val();
                         console.log("TYPE "+type);
                         if(type == 'init'){
+                            var token = value;
                             // initialize video conversation
                             console.log("INITIALIZING LOCAL VIDEO");
-                            init_video(box);
+                            var template = '<div class="chat-video-call" data-token="{{token}}">                                    \
+                                                <div class="chat-video-ring">                                                       \
+                                                    <div class="chat-video-ring-accept glyphicon glyphicon-ok-circle"></div>        \
+                                                    <div class="chat-video-call-status chat-video-call-status-progress chat-video-ring-phone">Ringing</div>                                \
+                                                    <div class="chat-video-ring-reject glyphicon glyphicon-ban-circle"></div>       \
+                                                </div>                                                                              \
+                                            </div>';
+                            var message = $(nunjucks.renderString(template, {token: token}));
+                            $(body).append(message);
+                            $(message).find('.chat-video-ring-accept').click(function(){
+                                init_video(box, false);
+                                send_message(target, 'chat/okay', value, function(){
+                                    console.log("SENDING OKAY");
+                                    $('.chat-video-call').each(function(){
+                                        if($(this).attr('data-token') == token){
+                                            var status = $(this).find('.chat-video-call-status');
+                                            $(status).removeClass('chat-video-call-status-progress');
+                                            $(status).addClass('chat-video-call-status-accepted');
+                                            status.html('Accepted');
+                                        }
+                                    });
+                                    // show call in progress (okay)
+                                });
+                            });
+                        }else if(type == 'okay'){
+                            console.log("OKAY RECIEVED");
+                            var token = value;
+                            $(box).find('.chat-video-call').each(function(){
+                                if($(this).attr('data-token') == token){
+                                    var status = $(this).find('.chat-video-call-status');
+                                    $(status).removeClass('chat-video-call-status-progress');
+                                    $(status).addClass('chat-video-call-status-accepted');
+                                    status.html('Accepted');
+                                }
+                            });
+                            if(WEBRTC_PEERS[target]){
+                                connection = WEBRTC_PEERS[target];
+                                connection.createOffer(function(description){
+                                    got_description(token, box, target, description);
+                                }, function(error){
+                                    console.log(error);
+                                });
+                            }
                         }else if(type == 'sdp'){
                             console.log("SDP RECIEVED");
                             var signal = JSON.parse(value);
                             if(WEBRTC_PEERS[target]){
                                 connection = WEBRTC_PEERS[target];
                                 connection.setRemoteDescription(new RTCSessionDescription(signal.sdp), function(){
+                                    var token = signal.token;
+                                    $(box).find('.chat-video-call').each(function(){
+                                        if($(this).attr('data-token') == token){
+                                            var status = $(this).find('.chat-video-call-status');
+                                            $(status).removeClass('chat-video-call-status-progress');
+                                            $(status).removeClass('chat-video-call-status-accepted');
+                                            $(status).addClass('chat-video-call-status-sdp');
+                                            status.html('recv:sdp:'+signal.sdp.type);
+                                        }
+                                    });
                                     if(signal.sdp.type == 'offer'){
                                         connection.createAnswer(function(description){
-                                            got_description(target, description);
+                                            got_description(token, box, target, description);
                                         }, function(error){
                                             console.log(error);
                                         });
@@ -124,6 +177,17 @@ $(document).ready(function(){
                         }else if(type == 'ice'){
                             console.log("ICE RECIEVED");
                             var signal = JSON.parse(value);
+                            var token = signal.token;
+                            $(box).find('.chat-video-call').each(function(){
+                                if($(this).attr('data-token') == token){
+                                    var status = $(this).find('.chat-video-call-status');
+                                    $(status).removeClass('chat-video-call-status-progress');
+                                    $(status).removeClass('chat-video-call-status-accepted');
+                                    $(status).removeClass('chat-video-call-status-sdp');
+                                    $(status).addClass('chat-video-call-status-ice');
+                                    status.html('recv:ice');
+                                }
+                            });
                             if(WEBRTC_PEERS[target]){
                                 connection = WEBRTC_PEERS[target];
                                 connection.addIceCandidate(new RTCIceCandidate(signal.ice));
@@ -201,18 +265,28 @@ $(document).ready(function(){
         
     });
 
-    var got_description = function(target, description){
+    var got_description = function(token, box, target, description){
         connection.setLocalDescription(description, function(){
-            send_message(target, 'chat/sdp', JSON.stringify({'sdp': description}), function(){
+            send_message(target, 'chat/sdp', JSON.stringify({'sdp': description, 'token': token}), function(){
                 // show call initiated (sdp)
                 console.log("SENDING SDP");
+
+                $(box).find('.chat-video-call').each(function(){
+                    if($(this).attr('data-token') == token){
+                        var status = $(this).find('.chat-video-call-status');
+                        $(status).removeClass('chat-video-call-status-progress');
+                        $(status).removeClass('chat-video-call-status-accepted');
+                        $(status).addClass('chat-video-call-status-sdp');
+                        status.html('send:sdp:'+description.type);
+                    }
+                });
             });
         }, function(error){
             console.log(error);
         })
     }
 
-    var init_video = function(box, is_caller){
+    var init_video = function(box, is_caller, token){
         var local_video = box.find('video.local');
         var target = box.data('target');
 
@@ -221,8 +295,8 @@ $(document).ready(function(){
             var video = local_video[0];
             video.src = (window.URL || window.webkitURL).createObjectURL(stream);
 
-            if(is_caller){
-                send_message(target, 'chat/init', '.', function(){
+            if(is_caller){                
+                send_message(target, 'chat/init', token, function(){
                     console.log("SENDING INIT");
                     // show call in progress (ice)
                 });
@@ -232,8 +306,19 @@ $(document).ready(function(){
             connection = new RTCPeerConnection(config);
             connection.onicecandidate = function(event){
                 if(event.candidate != null){
-                    send_message(target, 'chat/ice', JSON.stringify({'ice': event.candidate}), function(){
+                    send_message(target, 'chat/ice', JSON.stringify({'ice': event.candidate, 'token': token}), function(){
                         console.log("SENDING ICE");
+
+                        $(box).find('.chat-video-call').each(function(){
+                            if($(this).attr('data-token') == token){
+                                var status = $(this).find('.chat-video-call-status');
+                                $(status).removeClass('chat-video-call-status-progress');
+                                $(status).removeClass('chat-video-call-status-accepted');
+                                $(status).removeClass('chat-video-call-status-sdp');
+                                $(status).addClass('chat-video-call-status-ice');
+                                status.html('send:ice');
+                            }
+                        });
                         // show call in progress (ice)
                     });
                 }
@@ -246,15 +331,7 @@ $(document).ready(function(){
                 remote_video.src = window.URL.createObjectURL(event.stream);
             };
             if(stream) connection.addStream(stream);
-            if(is_caller){
-                setTimeout(function(){
-                    connection.createOffer(function(description){
-                        got_description(target, description)
-                    }, function(error){
-                        console.log(error);
-                    });
-                }, 5000);
-            }
+
             console.log(WEBRTC_PEERS[target], !WEBRTC_PEERS[target]);
             if(!WEBRTC_PEERS[target]){
                 console.log("SETTING LOCAL CONNECTION");
@@ -267,9 +344,21 @@ $(document).ready(function(){
     }
 
     $('#cboxs').on("click", "div.chat-box-title-call", function(){
-        var button = $(this);
-        var box = $(this).closest('.chat-box');
-        init_video(box, true);
+        var button   = $(this);
+        var box      = $(this).closest('.chat-box');
+        var body     = box.find('.chat-users-list-ul')[0];
+        var token    = (+new Date).toString()+Math.random().toString().substr(1);
+
+        var template = '<div class="chat-video-call" data-token="{{token}}">                                 \
+                            <div class="chat-video-request">                                                 \
+                                <div class="chat-video-call-status chat-video-call-status-progress chat-video-request-phone">Dialling</div>                         \
+                                <div class="chat-video-request-drop glyphicon glyphicon-ban-circle"></div>   \
+                            </div>                                                                           \
+                        </div>';
+        var message  = $(nunjucks.renderString(template, {token: token}));
+
+        $(body).append(message);
+        init_video(box, true, token);
     });
     $('#cboxs').on("click", "div.chat-box-title-hide", function(){
         var box = $(this).closest('.chat-box');
