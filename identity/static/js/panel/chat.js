@@ -292,6 +292,7 @@ $(document).ready(function(){
 
         navigator.getMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
         navigator.getMedia({video: true}, function(stream){
+
             var video = local_video[0];
             video.src = (window.URL || window.webkitURL).createObjectURL(stream);
 
@@ -301,9 +302,12 @@ $(document).ready(function(){
                     // show call in progress (ice)
                 });
             }
-
+            
             var config = {'iceServers': [{'url': 'stun:stun.services.mozilla.com'}, {'url': 'stun:stun.l.google.com:19302'}]};
+
+            window.RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
             connection = new RTCPeerConnection(config);
+
             connection.onicecandidate = function(event){
                 if(event.candidate != null){
                     send_message(target, 'chat/ice', JSON.stringify({'ice': event.candidate, 'token': token}), function(){
@@ -323,6 +327,7 @@ $(document).ready(function(){
                     });
                 }
             };
+
             connection.onaddstream = function(event){
                 var remote_video = box.find('video.remote');
 
@@ -331,13 +336,14 @@ $(document).ready(function(){
                 remote_video.src = window.URL.createObjectURL(event.stream);
             };
             if(stream) connection.addStream(stream);
-
+            
             console.log(WEBRTC_PEERS[target], !WEBRTC_PEERS[target]);
             if(!WEBRTC_PEERS[target]){
                 console.log("SETTING LOCAL CONNECTION");
                 WEBRTC_PEERS[target] = connection;
-                box.find('.chat-box-video').show();
             }
+
+            box.find('.chat-box-video').show();
         }, function(error){
             console.log(error);
         });
