@@ -1,0 +1,155 @@
+{% load staticfiles %}
+{% load identity_extras %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Patient {{patient.get_full_name}}</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+        <style type='text/css'>
+            @import url('{% static 'css/daterangepicker.css' %}');
+            @import url('{% static 'css/login.css' %}');
+            @import url('{% static 'css/common.css' %}');
+            @import url('{% static 'css/form.css' %}');
+            @import url('{% static 'css/heading.css' %}');
+            @import url('{% static 'css/sprite/notice.css' %}');
+
+            .scan-container{
+                /* float: left; */
+                position: relative;
+                display: block;
+                width: 80%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .preview{
+                position: relative;
+                display: block;
+                width: 40%;
+                float: left;
+                margin: 0px;
+                padding: 0px;
+                background-color: black;
+                margin-top: 36px;
+                height: 400px;
+            }
+            .banner{
+                float: left;
+                position: relative;
+                display: block;
+                width: calc(60% - 30px);
+                margin-left: 15px;
+                padding-left: 15px;
+                height: 400px;
+                margin-top: 36px;
+                background-color: #f7f7f7;
+                padding-top: 15px;
+            }
+            .banner p{
+                color: #4a4a4a;
+                font-weight: normal;
+            }
+        </style>
+        <script type="text/javascript" src="{% static 'js/jquery.3.2.1.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.sticky-kit.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/d3.v3.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/instascan.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.qrcode.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.daterangepicker.js' %}"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("#heading").stick_in_parent();
+                // https://github.com/schmich/instascan
+                var scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+                scanner.addListener('scan', function (content) {
+                    console.log(content);
+                    var json = JSON.parse(content);
+                    if(json){
+                        var patient = json.p;
+                        var doctor = json.d;
+                        var story = json.s;
+
+                        var url = "/_prescription/"+story+"/";
+                        location.href = url;
+                    }
+                });
+                Instascan.Camera.getCameras().then(function (cameras) {
+                    if (cameras.length > 0) {
+                        scanner.start(cameras[0]);
+                    } else {
+                        console.error('No cameras found.');
+                    }
+                }).catch(function (e) {
+                    console.error(e);
+                });
+                $('#qr').qrcode({text: "{'p':0,'d':0,'s':0}", width: 128, height: 128, ecLevel: 'L'});
+            })
+        </script>
+    </head>
+    <body>
+        <div class="heading" id="heading">
+            <!--<div class="logo">//smcc:identity//</div>
+            <div class="search">
+                <input type="text" value="" class="search-input" />
+            </div>-->
+            <!--<div class="navigation">
+                <ul class="links">
+                    <li class="link"><a href="#"></a></li>
+                </ul>
+            </div>-->
+            <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a href="#" class="navbar-brand">Remote Health</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a href="#">Login<span class="sr-only">(current)</span></a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Register<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Patient</a></li>
+                                    <li><a href="#">Doctor</a></li>
+                                    <li><a href="#">Care Giver</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="#">Health Kiosk</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#">Scan Prescription</a></li>
+                        </ul>
+                        <form class="navbar-form navbar-right">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Search">
+                            </div>
+                            <button type="submit" class="btn btn-default">Search</button>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+            <div class="map"></div>
+        </div>
+        <div class="main" id="main">
+            <div class="scan-container">
+                <video id="preview" class="preview" autoplay></video>
+                <div class="banner jumbotron">
+                    <h1>Remote Health</h1>
+                    <p>Show the QR code. Which is printed on the top right corder of the prescription. The QR code will look like the following image. Once scanned you will be forwarded to the prescription.</p>
+                    <p><div id="qr"></div></p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+

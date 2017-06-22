@@ -57,6 +57,7 @@ urlpatterns = [
     url(r'^user/land/$', views.user_land, name='land'),
     url(r'^user/login/$', views.user_login, name='login'),
     url(r'^user/logout/$',  auth_views.logout, {'next_page': '/user/login'}, name='logout'),
+    url(r'^scan/$', views.scan, name='scan'),
     url(r'^doctors/$', views.doctors, name='doctors'),
     url(r'^doctor/(?P<doctor_id>\d+)/$', views.doctor, name='doctor'),
     url(r'^patients/$', views.patients, name='patients'),

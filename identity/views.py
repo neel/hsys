@@ -205,6 +205,9 @@ def operator(request, operator_id):
         'story_form':   RandomVisitCreationForm()
     })
 
+def scan(request):
+    return render(request, 'scan.html', {})
+
 def organizations(request):
     return render(request, 'organizations.html', {
         'request': request,
