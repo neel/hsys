@@ -15,7 +15,7 @@
         <script type="text/javascript" src="{% static 'js/jquery.qrcode.min.js' %}"></script>
         <script type="text/javascript">
             $(document).ready(function(){
-                $('#qr').qrcode({text: "{p:{{story.patient.id}},d:{{story.doctor.id}},s:{{story.id}}}", width: 64, height: 64});
+                $('#qr').qrcode({text: "{p:{{story.patient.id}},d:{{story.doctor.id}},s:{{story.id}}}", width: 128, height: 128, ecLevel: 'L'});
             })
         </script>
     </head>
@@ -24,18 +24,20 @@
             <div class="content">
                 <div class="prescription">
                     <div class="prescription-head">
-                        <img class="prescription-logo" src="/static/pix/doctor-logo.png" />
+                        <img class="prescription-logo" src="/static/pix/doctor-logo.jpg" />
                         <div id="qr" class="prescription-qr"></div>
-                        <div class="prescription-doctor">
-                            <div class="prescription-doctor-name">{{story.doctor.get_full_name}}</div>
-                            <div class="prescription-doctor-specialization">{{story.doctor.specialization}}</div>
-                            <div class="prescription-doctor-email">{{story.doctor.email}}</div>
-                            <div class="prescription-when">{{story.when}}</div>
-                        </div>
-                        <div class="prescription-patient">
-                            <div class="prescription-patient-name">{{story.patient.get_full_name}}</div>
-                            <div class="prescription-patient-age">{{story.patient.sex}} {{story.patient.age|delta_string}}</div>
-                            <div class="prescription-patient-email">{{story.patient.email}}</div>
+                        <div class="prescription-meta">
+                            <div class="prescription-doctor">
+                                <div class="prescription-doctor-name">{{story.doctor.get_full_name}}</div>
+                                <div class="prescription-doctor-specialization">{{story.doctor.specialization}}</div>
+                                <div class="prescription-doctor-email">{{story.doctor.email}}</div>
+                                <div class="prescription-when">{{story.when}}</div>
+                            </div>
+                            <div class="prescription-patient">
+                                <div class="prescription-patient-name">{{story.patient.get_full_name}}</div>
+                                <div class="prescription-patient-age">{{story.patient.sex}} {{story.patient.age|delta_string}}</div>
+                                <div class="prescription-patient-email">{{story.patient.email}}</div>
+                            </div>
                         </div>
                     </div>
                     <div class="prescription-content">

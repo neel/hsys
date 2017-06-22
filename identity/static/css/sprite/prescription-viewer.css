@@ -24,13 +24,12 @@ body{
   body { margin: 1.0cm; }
 }
 #qr{
-    width: 64px;
-    height: 64px;
+    width: 128px;
+    height: 128px;
     float: right;
 }
 .prescription-logo{
-    width: 64px;
-    height: 64px;
+    height: 128px;
     float: left;
     display: block;
     position: relative;
@@ -45,6 +44,11 @@ body{
     padding-bottom: 2px;
     font-weight: bold;
 }
+.prescription-meta{
+    display: block;
+    position: relative;
+    float: left;
+}
 .prescription-content{
     margin-top: 15px;
     float: left;
@@ -53,17 +57,18 @@ body{
     position: relative;
 }
 .prescription-when{
-    float: right;
+    float: left;
     display: block;
 }
 .prescription-doctor{
     float: left;
     display: block;
     position: relative;
-    margin-left: 5px;
+    margin-left: 10px;
+    border-bottom: 1px solid #333;
+    padding-left: 10px;
 }
 .prescription-patient{
-    float: left;
     display: block;
     position: relative;
     margin-left: 10px;
