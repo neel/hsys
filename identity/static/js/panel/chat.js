@@ -291,7 +291,7 @@ $(document).ready(function(){
         var target = box.data('target');
 
         navigator.getMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-        navigator.getMedia({video: true}, function(stream){
+        navigator.getMedia({video: true, audio: true}, function(stream){
             var video = local_video[0];
             video.src = (window.URL || window.webkitURL).createObjectURL(stream);
 
@@ -302,7 +302,13 @@ $(document).ready(function(){
                 });
             }
 
-            var config = {'iceServers': [{'url': 'stun:stun.services.mozilla.com'}, {'url': 'stun:stun.l.google.com:19302'}]};
+            var config = {'iceServers': [
+            	{'url': 'stun:stun.services.mozilla.com'}, 
+            	{'url': 'stun:stun.l.google.com:19302'}, 
+            	{url: 'turn:numb.viagenie.ca', credential: 'muazkh', username: 'webrtc@live.com'},
+            	{url: "turn:numb.viagenie.ca", credential: "123456", username: "sunanda.bose@msn.com"},
+            	{url: 'turn:remotehealth.org:3478', credential: 'r3m0t3', username: 'neel'}
+            ]};
             connection = new RTCPeerConnection(config);
             connection.onicecandidate = function(event){
                 if(event.candidate != null){
