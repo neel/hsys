@@ -305,11 +305,15 @@ $(document).ready(function(){
             var config = {'iceServers': [
             	{'url': 'stun:stun.services.mozilla.com'}, 
             	{'url': 'stun:stun.l.google.com:19302'}, 
-            	{url: 'turn:numb.viagenie.ca', credential: 'muazkh', username: 'webrtc@live.com'},
-            	{url: "turn:numb.viagenie.ca", credential: "123456", username: "sunanda.bose@msn.com"},
-            	{url: 'turn:remotehealth.org:3478', credential: 'r3m0t3', username: 'neel'}
+            	{'url': 'turn:numb.viagenie.ca', 'credential': 'muazkh', 'username': 'webrtc@live.com'},
+            	{'url': "turn:numb.viagenie.ca", 'credential': "123456", 'username': "sunanda.bose@msn.com"},
+            	{'url': 'turn:remotehealth.org:3478', 'credential': 'r3m0t3', 'username': 'neel'}
             ]};
+            
+            window.RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+
             connection = new RTCPeerConnection(config);
+
             connection.onicecandidate = function(event){
                 if(event.candidate != null){
                     send_message(target, 'chat/ice', JSON.stringify({'ice': event.candidate, 'token': token}), function(){
@@ -329,6 +333,7 @@ $(document).ready(function(){
                     });
                 }
             };
+
             connection.onaddstream = function(event){
                 var remote_video = box.find('video.remote');
 
@@ -337,13 +342,14 @@ $(document).ready(function(){
                 remote_video.src = window.URL.createObjectURL(event.stream);
             };
             if(stream) connection.addStream(stream);
-
+            
             console.log(WEBRTC_PEERS[target], !WEBRTC_PEERS[target]);
             if(!WEBRTC_PEERS[target]){
                 console.log("SETTING LOCAL CONNECTION");
                 WEBRTC_PEERS[target] = connection;
-                box.find('.chat-box-video').show();
             }
+
+            box.find('.chat-box-video').show();
         }, function(error){
             console.log(error);
         });
