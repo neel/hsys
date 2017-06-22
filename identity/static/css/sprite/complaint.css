@@ -219,3 +219,29 @@
     list-style-type: none;
     float: left;
 }
+.complaint-section-heading-vitals{
+    border-right: 2px solid #092352;
+    background: url(/static/pix/vitals.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center 5px;
+    height: 100px;
+    background-color: #092352;
+}
+.vitals-container{
+    display: table;
+    display: table;
+    position: relative;
+    float: left;
+    width: 100%;
+}
+.vital{
+    display: table-row;
+    float: left;
+}
+.vital-category{
+    display: table-cell;
+}
+.vital-value{
+    display: table-cell;
+}

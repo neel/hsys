@@ -81,6 +81,12 @@
                         {{ story.body.symptoms|complaint_symptoms|safe }}
                     </div>
                 </div>
+                <div class="complaint-section complaint-section-vitals">
+                    <div class="complaint-section-heading complaint-section-heading-vitals"></div>
+                    <div class="complaint-section-body">
+                        {{ story.body.sensorData|complaint_vitals|safe }}
+                    </div>
+                </div>
                 <div class="complaint-section complaint-section-observation">
                     <div class="complaint-section-heading complaint-section-heading-observation"></div>
                     <div class="complaint-section-body">
