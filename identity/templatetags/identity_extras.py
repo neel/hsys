@@ -195,6 +195,24 @@ def complaint_symptoms(obj):
     html += "</div>"
     return html
 
+@register.filter(name='complaint_vitals')
+def complaint_vitals(obj):
+    html = "<div class='vitals-container'>"
+    for type in obj:
+        value = obj[type]
+        html += "<div class='vital'>"
+        html += "<div class='complaint-category vital-category'>"+type+"</div>"
+        html += "<div class='complaint-vital vital-value'>"
+        try:
+            d = value+1
+            html += str(value)
+        except TypeError:
+            html += value
+        html += "</div>"
+        html += "</div>"
+    html += "</div>"
+    return html
+
 @register.filter(name='complaint_symptoms_summarized')
 def complaint_symptoms_summarized(obj):
     html = "<div class='symptoms-container'>"
