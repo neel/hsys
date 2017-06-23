@@ -18,7 +18,7 @@ import time
 if django.VERSION[1] > 5:
     django.setup()
     
-define('port', type=int, default=8080)
+define('port', type=int, default=8000)
 tornado.options.parse_command_line()
 
 from identity.panels import *
@@ -176,7 +176,7 @@ class ActivitiesPulseHandler(PulseHandler):
 class StoriesPulseHandler(PulseHandler):
     @tornado.web.asynchronous
     def get(self, owner_id, last_id):
-        def push(stories, request, vewer):
+        def push(stories, request, viewer):
             content = StoriesFlake(request, viewer, stories)
             latest_id = stories.latest('id').id
             self.set_header('Access-Control-Expose-Headers', 'Last-Id')
@@ -343,10 +343,13 @@ def main():
             ('.*', tornado.web.FallbackHandler, dict(fallback=wsgi_app)),
         ], debug=True)
     logger.info("Tornado server starting...")
-    server = tornado.httpserver.HTTPServer(tornado_app, ssl_options={
-        "certfile": "/home/sensiaas/projects/hsys/hkeys/cert.pem",
-        "keyfile": "/home/sensiaas/projects/hsys/hkeys/key.pem",
-    })
+#    logger.info("Using ssl certificate {}".format(os.path.join(os.getcwd(), "ssl/remotehealth_org.crt")))
+#    ssl_options = {
+#        "certfile": os.path.join(os.getcwd(), "ssl/remotehealth_org.crt"),
+#        "keyfile": os.path.join(os.getcwd(), "ssl/remotehealth_org.key"),
+#    }
+#    server = tornado.httpserver.HTTPServer(tornado_app, ssl_options=ssl_options)
+    server = tornado.httpserver.HTTPServer(tornado_app)
     server.listen(options.port)
     tornado.ioloop.IOLoop.instance().start()
  
