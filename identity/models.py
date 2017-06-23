@@ -107,13 +107,13 @@ class HmsUser(AbstractBaseUser, PermissionsMixin):
         return self._profile_cache
     
     def real(self, ):
-        try: return self.doctor
+        try: return self if isinstance(self, Doctor) else self.doctor
         except Doctor.DoesNotExist:
-            try: return self.operator
+            try: return self if isinstance(self, Operator) else self.operator
             except Operator.DoesNotExist:
-                try: return self.patient
+                try: return self if isinstance(self, Patient) else self.patient
                 except Patient.DoesNotExist:
-                    try: return self.organization
+                    try: return self if isinstance(self, Organization) else self.organization
                     except Organization.DoesNotExist:
                         return self
                     
