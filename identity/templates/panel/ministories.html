@@ -40,7 +40,7 @@
         if(panel_last !== panel_last)
             panel_last = 0;
         $.ajax({
-            url: '/pulse/stories/{{user.id}}/'+panel_last
+            url: '/pulse/stories/{{owner.id}}/'+panel_last
         }).done(function(content, status, xhr){
             var content_length = content.length;
             var latest_id = xhr.getResponseHeader('Last-Id');

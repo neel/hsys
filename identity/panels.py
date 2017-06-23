@@ -64,10 +64,11 @@ def AppointmentsPanel(request, appointments):
         'user': user
     })
 
-def MiniStoriesPanel(request, stories):
+def MiniStoriesPanel(request, stories, owner):
     return render(request, 'panel/ministories.html', {
         'request': request,
-        'stories': stories
+        'stories': stories,
+        'owner': owner
     })
 
 def AdmissionsPanel(request, admissions):

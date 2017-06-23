@@ -137,7 +137,7 @@
                 {% for notice in notices %}
                     {% view 'identity.sprites.NoticeSprite' notice %}
                 {% endfor %}
-                {% view 'identity.panels.MiniStoriesPanel' stories %}
+                {% view 'identity.panels.MiniStoriesPanel' stories patient %}
             </div>
             {% view 'identity.panels.RandomStoryCreationPanel' story_form %}
         </div>
