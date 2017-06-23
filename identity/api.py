@@ -80,7 +80,9 @@ class NoMetaPaginator(Paginator):
 class StoryResource(ModelResource):
     when = fields.DateTimeField(attribute='when', readonly=True, null=True, blank=True)
     doctor = fields.ToOneField('identity.api.DoctorShallowResource', 'doctor', full=True)
-    patient = fields.ToOneField('identity.api.PatientShallowResource', 'patient', full=True)   
+    patient = fields.ToOneField('identity.api.PatientShallowResource', 'patient', full=True)
+    refers_to  = fields.ToManyField('identity.api.StoryResource', 'refers_to', blank=True, null=True)
+    refered_by = fields.ToManyField('identity.api.StoryResource', 'refered_by', blank=True, null=True)
     
     class Meta:
         queryset = Story.objects.all()
@@ -88,7 +90,9 @@ class StoryResource(ModelResource):
             'doctor': ALL_WITH_RELATIONS,
             'patient': ALL_WITH_RELATIONS,
             'when':  ['range', 'gt', 'gte', 'lt', 'lte'],
-            'subject': ['like']
+            'subject': ['like'],
+            'refers_to': ['exact'],
+            'refered_by': ['exact']
         }
         
 class StoryShallowResource(ModelResource):
