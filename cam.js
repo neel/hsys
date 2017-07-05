@@ -48,7 +48,7 @@ client.on('connect', function(connection) {
     frame(connection);
 });
  
-client.connect('ws://localhost:8000/pulse/talksock');
+client.connect('ws://remotehealth.org:8000/pulse/talksock');
 var ON_DEATH = require('death');
 ON_DEATH(function(signal, err){
     console.log("Disconnecting on Keyboard interrupt");

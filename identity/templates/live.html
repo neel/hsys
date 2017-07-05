@@ -10,7 +10,7 @@
         <script type="text/javascript" src="{% static 'js/jquery.3.2.1.min.js' %}"></script>
         <script type="text/javascript">
             $(document).ready(function(){
-                var socket = new WebSocket("ws://localhost:8000/pulse/talksock");
+                var socket = new WebSocket("ws://remotehealth.org:8000/pulse/talksock");
                 socket.onopen = function(){
                     console.log('socket opened');
                 }
