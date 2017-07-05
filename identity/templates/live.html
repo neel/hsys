@@ -1,0 +1,30 @@
+{% load staticfiles %}
+{% load identity_extras %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lab</title>
+        <style type='text/css'>
+
+        </style>
+        <script type="text/javascript" src="{% static 'js/jquery.3.2.1.min.js' %}"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                var socket = new WebSocket("ws://localhost:8000/pulse/talksock");
+                socket.onopen = function(){
+                    console.log('socket opened');
+                }
+                socket.onclose = function(){
+                    console.log('socket closed');
+                }
+                socket.onmessage = function(message){
+                    console.log(message);
+                    $('#frame').attr('src', message.data);
+                }
+            })
+        </script>
+    </head>
+    <body>
+        <img id="frame" src="">
+    </body>
+</html>

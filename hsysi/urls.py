@@ -85,5 +85,6 @@ urlpatterns = [
     url(r'^_prescription/(?P<story_id>\d+)/$', views._prescription, name='_prescription'),
     url(r'^chat/send/$', views.chat_message_send.as_view(), name='chat_message_send'),
     url(r'^admin/', admin.site.urls),
-    url(r'^api/', include(v1_api.urls))
+    url(r'^api/', include(v1_api.urls)),
+    url(r'^live/$', views.live, name='live')
 ]

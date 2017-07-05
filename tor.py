@@ -307,20 +307,29 @@ class ChatPulseHandler(PulseHandler):
         poll(request, viewer)
 
 clients = {}
+counter = 0
 class TalkWebSocket(tornado.websocket.WebSocketHandler):
     def open(self):
-        socket_id = len(clients)
+        global counter
+        socket_id = counter
+        counter += 1
         self.id = socket_id
         clients[socket_id] = self
+        print("socket opened", self.id)
+        print("after adding ", len(clients))
     def on_close(self):
-        if self.id in clients:
-            del clients[self.id]
+        print("socket closed", self.id)
+        del clients[self.id]
+        print("after removal ", len(clients))
     def on_message(self, message):
-        print(message)
+        print(len(clients))
         for c in clients:
             client = clients[c]
             if client != self:
                 client.write_message(message)
+            else:
+                size = str(len(message))
+                client.write_message(size)
             
 
 class NoCacheStaticHandler(tornado.web.StaticFileHandler):

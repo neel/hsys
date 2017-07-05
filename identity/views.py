@@ -773,3 +773,5 @@ def _activities(request, task_id):
     except Task.DoesNotExist:
         raise Http404
     
+def live(request):
+    return render(request, 'live.html', {})
