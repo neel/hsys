@@ -13,7 +13,11 @@ import tornado.wsgi
 from importlib import import_module
 from django.conf.urls import url
 from tornado import template 
+from tornado.locks import Condition
 import time
+import re
+import StringIO
+from PIL import Image, ImageFont, ImageDraw
 
 if django.VERSION[1] > 5:
     django.setup()
@@ -330,6 +334,65 @@ class TalkWebSocket(tornado.websocket.WebSocketHandler):
             else:
                 size = str(len(message))
                 client.write_message(size)
+
+from itertools import islice
+frames = {}
+condition = Condition()
+# feeds = [{time: stamp, data: base64encoded}]
+class VideoFeedPulseHandler(PulseHandler):
+    def post(self, last_id):
+        global frames
+        msg  = tornado.escape.json_decode(self.request.body)
+        data = msg['data']
+        now  = int(time.time()*1000000)
+
+        # image_data = re.sub('^data:image/.+;base64,', '', data).decode('base64')
+        # io    = StringIO.StringIO(image_data)
+        # image = Image.open(io)
+        # draw  = ImageDraw.Draw(image)
+        # font  = ImageFont.truetype("sans-serif.ttf", 16)
+        # draw.text((0, 0), str(time.time()),(255,255,255))
+        # image.save(io, format="jpeg") 
+        # data = "data:image/jpeg;base64,"+base64.b64encode(image.tobytes())
+        # print(base64.b64encode(image.tobytes()))
+
+        frames[now] = {"time": now, "data": data}
+        counter = 10
+        if len(frames) > 20:
+            for k in sorted(frames.keys()):
+                if counter > 0:
+                    del frames[k]
+                    counter -= 1 
+
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps({"time": now, "length": len(data)}))
+
+    @tornado.web.asynchronous
+    def get(self, last_id):
+        def push(pending, request, viewer):
+            feed = pending[0]
+            self.set_header('Content-Type', 'text/plain')
+            self.set_header('Access-Control-Expose-Headers', 'Last-Id')
+            self.set_header('Last-Id', str(feed['time']))
+            self.write(feed['data'])
+            self.finish()
+        def timeout():
+            self.set_header('Content-Type', 'text/plain')
+            self.write('')
+            self.finish()
+        def poll(request, viewer, counter=10):
+            if counter:
+                pending = [v for k,v in frames.items() if k >= int(last_id)]
+
+                if len(pending) > 0: push(pending, request, viewer)
+                else:
+                    tornado.ioloop.IOLoop.instance().add_timeout(time.time() + 2, lambda: poll(request, viewer, counter-1))
+            else: timeout()
+
+        viewer = self.current_user
+        
+        request = self.get_django_request()
+        poll(request, viewer)
             
 
 class NoCacheStaticHandler(tornado.web.StaticFileHandler):
@@ -345,11 +408,12 @@ def main():
             (r'^/pulse/stories/(?P<owner_id>\d+)/(?P<last_id>\d+)$',        StoriesPulseHandler),
             (r'^/pulse/admissions/(?P<owner_id>\d+)/(?P<last_id>\d+)$',     AdmissionsPulseHandler),
             (r'^/pulse/appointments/(?P<owner_id>\d+)/(?P<last_id>\d+)$',   AppointmentsPulseHandler),
-            (r'^/pulse/talk/?$',   TalkPulseHandler),
-            (r'^/pulse/chat/(?P<last_id>\d+)$',           ChatPulseHandler),
-            (r'^/pulse/talksock/?$',   TalkWebSocket),
-            (r'/static/(.*)', NoCacheStaticHandler, {'path': 'identity/static'}),
-            ('.*', tornado.web.FallbackHandler, dict(fallback=wsgi_app)),
+            (r'^/pulse/talk/?$',                                            TalkPulseHandler),
+            (r'^/pulse/chat/(?P<last_id>\d+)$',                             ChatPulseHandler),
+            (r'^/pulse/talksock/?$',                                        TalkWebSocket),
+            (r'^/pulse/talkpoll/(?P<last_id>\d+)$',                         VideoFeedPulseHandler),
+            (r'/static/(.*)',                                               NoCacheStaticHandler, {'path': 'identity/static'}),
+            ('.*',                                                          tornado.web.FallbackHandler, dict(fallback=wsgi_app)),
         ], debug=True)
     logger.info("Tornado server starting...")
 #    logger.info("Using ssl certificate {}".format(os.path.join(os.getcwd(), "ssl/remotehealth_org.crt")))

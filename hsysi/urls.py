@@ -86,5 +86,6 @@ urlpatterns = [
     url(r'^chat/send/$', views.chat_message_send.as_view(), name='chat_message_send'),
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include(v1_api.urls)),
-    url(r'^live/$', views.live, name='live')
+    url(r'^live/$', views.live, name='live'),
+    url(r'^live/poll/$', views.live_poll, name='live_poll')
 ]

@@ -1,0 +1,38 @@
+{% load staticfiles %}
+{% load identity_extras %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lab</title>
+        <style type='text/css'>
+
+        </style>
+        <script type="text/javascript" src="{% static 'js/jquery.3.2.1.min.js' %}"></script>
+        <script type="text/javascript">
+            (function($){
+                var update = function(){
+                    var panel = $('#frame');
+                    var panel_last = parseInt(panel.attr('data-last'));
+                    if(panel_last !== panel_last)
+                        panel_last = 0;
+                    $.ajax({
+                        url: '/pulse/talkpoll/'+panel_last,
+                        dataType: 'text'
+                    }).done(function(content, status, xhr){
+                        var content_length = content.length;
+                        var latest_id = xhr.getResponseHeader('Last-Id');
+                        panel.attr('data-last', latest_id);
+                        if(content_length){
+                            $("#frame")[0].src = content;
+                        }
+                        setTimeout(update, 500);
+                    });
+                };
+                setTimeout(update, 500);
+            })(jQuery);
+        </script>
+    </head>
+    <body>
+        <img id="frame" src="" data-last="0">
+    </body>
+</html>

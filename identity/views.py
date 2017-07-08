@@ -775,3 +775,6 @@ def _activities(request, task_id):
     
 def live(request):
     return render(request, 'live.html', {})
+
+def live_poll(request):
+    return render(request, 'live.poll.html', {})
