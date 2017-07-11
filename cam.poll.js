@@ -1,6 +1,12 @@
 var NodeWebcam = require("node-webcam");
 var http = require("http");
 
+// require('global-tunnel').initialize({
+//   tunnel: 'both',
+//   host: '192.168.250.21',
+//   port: 3128
+// });
+
 var opts = {
     quality: 50,
     delay: 0,
@@ -24,13 +30,13 @@ function frame(req){
 }
 
 function feed(){
-    var options = {
-        path: '/pulse/talkpoll/0',
-        port: 443,
-        host: 'remotehealth.org',
+    var opts = {
+        host: '192.168.250.21',
+        port: 3128,
+        path: 'http://remotehealth.org:8000/pulse/talkpoll/0',
         method: 'POST'
     };
-    var req = http.request(options, function(res){
+    var req = http.request(opts, function(res){
         setTimeout(function(){
             res.setEncoding('utf8');
             res.on('data', function(chunk){

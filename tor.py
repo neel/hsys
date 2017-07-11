@@ -382,7 +382,7 @@ class VideoFeedPulseHandler(PulseHandler):
             self.finish()
         def poll(request, viewer, counter=10):
             if counter:
-                pending = [v for k,v in frames.items() if k >= int(last_id)]
+                pending = [v for k,v in frames.items() if k > int(last_id)]
 
                 if len(pending) > 0: push(pending, request, viewer)
                 else:
