@@ -10,6 +10,8 @@
         <style type='text/css'>
             @import url('{% static 'css/daterangepicker.css' %}');
             @import url('{% static 'css/jquery.datetimepicker.css' %}');
+            @import url('{% static 'css/jquery-clockpicker.css' %}');
+            @import url('{% static 'css/bootstrap-clockpicker.css' %}');
             @import url('{% static 'css/common.css' %}');
             @import url('{% static 'css/heading.css' %}');
             @import url('{% static 'css/doctor.css' %}');
@@ -90,6 +92,7 @@
         <script type="text/javascript" src="{% static 'js/jquery.sticky-kit.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/jquery.cookie.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/d3.v3.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/bootstrap-clockpicker.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/jquery.datetimepicker.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/jquery.daterangepicker.js' %}"></script>
@@ -506,6 +509,22 @@
                                     <li role="separator" class="divider"></li>
                                     <li><a href="#">Others</a></li>
                                 </ul>
+                            </div>
+                            <div class="form-inline">
+                                <div class="btn-group btn-group-justified medication-mode" role="group" aria-label="...">
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-default">Clock</button>
+                                    </div>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-default">Event</button>
+                                    </div>
+                                </div>
+                                <div class="input-group clockpicker" data-placement="left" data-align="top" data-autoclose="true">
+                                    <input type="text" class="form-control" value="13:14">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-time"></span>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
