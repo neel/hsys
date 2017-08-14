@@ -7,26 +7,50 @@ from django.db.models import Q
 
 class StoryAccess:
     # return what stories of owner that are accessible by user
-    def all(self, user, owner, id=0):
+    def all(self, user, owner, id=0, limit=0):
         viewer = user
         if not viewer.is_authenticated():
             return []
         if(viewer.id == owner.id):
-            return owner.stories.filter(id__gt=id).order_by('-when')
+            l = owner.stories.filter(id__gt=id).order_by('-when')
+            return l[:limit] if limit > 0 else l
         elif(viewer.is_doctor() and owner.is_patient()):
             doctor  = viewer.real()
             patient = owner.real()
-            return patient.stories.filter(id__gt=id, doctor=doctor).order_by('-when')
+            l = patient.stories.filter(id__gt=id, doctor=doctor).order_by('-when')
+            return l[:limit] if limit > 0 else l
         elif(viewer.is_patient() and owner.is_doctor()):
             patient = viewer.real()
             doctor  = owner.real()
-            return doctor.stories.filter(id__gt=id, patient=patient).order_by('-when')
+            l = doctor.stories.filter(id__gt=id, patient=patient).order_by('-when')
+            return l[:limit] if limit > 0 else l
         elif(viewer.is_doctor() and owner.is_doctor()):
             return []
         elif(viewer.is_patient() and owner.is_patient()):
             return []
         else:
             return []
+
+    def count(self, user, owner, id=0):
+        viewer = user
+        if not viewer.is_authenticated():
+            return 0
+        if(viewer.id == owner.id):
+            return owner.stories.filter(id__gt=id).order_by('-when').count()
+        elif(viewer.is_doctor() and owner.is_patient()):
+            doctor  = viewer.real()
+            patient = owner.real()
+            return patient.stories.filter(id__gt=id, doctor=doctor).order_by('-when').count()
+        elif(viewer.is_patient() and owner.is_doctor()):
+            patient = viewer.real()
+            doctor  = owner.real()
+            return doctor.stories.filter(id__gt=id, patient=patient).order_by('-when').count()
+        elif(viewer.is_doctor() and owner.is_doctor()):
+            return 0
+        elif(viewer.is_patient() and owner.is_patient()):
+            return 0
+        else:
+            return 0
         
 class AppointmentAccess:
     # return what appointments of owner that are accessible by user

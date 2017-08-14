@@ -143,10 +143,23 @@
     margin-top: 0px;
 }
 .story-creation-form-field-input-body{
-  height: 200px;
+  height: 300px;
   margin-top: 25px;
   background-color: #f8f8f8;
   padding-top: 20px;
+}
+.story-creation-form-field-input-body-editor{
+    height: 300px;
+    margin-top: 25px;
+    background-color: #dddddd;
+    padding-top: 20px;
+    position: absolute;
+    top: 0px;
+    opacity: 0.5;
+    display: none;
+}
+.editor-panel{
+
 }
 
 .bootbox-body{

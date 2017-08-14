@@ -129,7 +129,8 @@ def patient(request, patient_id):
         #     admissions = patient.admissions.all()
         #     appointments = patient.appointments.filter(doctor=doctor)
         
-        stories         = StoryAccess().all(request.user, patient)
+        stories         = StoryAccess().all(request.user, patient, 0, 10)
+        nstories        = StoryAccess().count(request.user, patient)
         admissions      = AdmissionAccess().all(request.user, patient)
         appointments    = AppointmentAccess().all(request.user, patient)
 
@@ -137,6 +138,7 @@ def patient(request, patient_id):
         'request': request,
         'patient': patient,
         'stories': stories,
+        'nstories': nstories,
         'notices': notices,
         'admissions': admissions,
         'appointments': appointments
@@ -167,7 +169,8 @@ def doctor(request, doctor_id):
     #             admissions = [a for a in [p.admission() for p in patients] if (a is not None and a.doctor() == doctor)]
     #             appointments = doctor.appointments.filter(patient=patient)
     
-    stories         = StoryAccess().all(request.user, doctor)
+    stories         = StoryAccess().all(request.user, doctor, 0, 10)
+    nstories        = StoryAccess().count(request.user, doctor)
     admissions      = AdmissionAccess().all(request.user, doctor)
     appointments    = AppointmentAccess().all(request.user, doctor)
     patients        = list(set([story.patient for story in stories]))
@@ -176,6 +179,7 @@ def doctor(request, doctor_id):
         'request':      request,
         'doctor':       doctor,
         'stories':      stories,
+        'nstories':     nstories,
         'patients':     patients,
         'admissions':   admissions,
         'appointments': appointments,
@@ -192,7 +196,8 @@ def operator(request, operator_id):
     
     operator = Operator.objects.get(id=operator_id)
    
-    stories         = StoryAccess().all(request.user, operator)
+    stories         = StoryAccess().all(request.user, operator, 0, 10)
+    nstories        = StoryAccess().count(request.user, operator)
     admissions      = AdmissionAccess().all(request.user, operator)
     patients        = list(set([story.patient for story in stories]))
         
@@ -200,6 +205,7 @@ def operator(request, operator_id):
         'request':      request,
         'operator':     operator,
         'stories':      stories,
+        'nstories':     nstories,
         'patients':     patients,
         'admissions':   admissions,
         'story_form':   RandomVisitCreationForm()
@@ -339,6 +345,7 @@ def patient_stories(request, patient_id):
         'request': request,
         'patient': patient,
         'stories': stories,
+        'nstories': len(stories),
         'notices': notices,
         'story_form': RandomVisitCreationForm()
     })

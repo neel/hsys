@@ -251,6 +251,11 @@
                   console.log(json);
                 });
                 $("#periodic_medication").click(function(){
+                    $('#prescription_body_editor').html('');
+                    $('#prescription_body_editor').append($('#snippet_medication_periodic'));
+                    $('#prescription_body_editor').css('display', 'block');
+                });
+                $("#periodic_medication1").click(function(){
                   var form = $('<form> \
                     <div class="input-group"> \
                       <span class="input-group-addon" id="basic-addon1">Medicine Name</span> \
@@ -446,11 +451,66 @@
                 {% endfor %}
                 {% view 'identity.panels.AdmissionsPanel' admissions %}
                 {% view 'identity.panels.AppointmentsPanel' appointments %}
-                {% view 'identity.panels.MiniStoriesPanel' stories doctor %}
+                {% view 'identity.panels.MiniStoriesPanel' stories nstories doctor %}
                 {% view 'identity.panels.PatientsPanel' patients %}
             </div>
             {% view 'identity.panels.RandomStoryCreationPanel' story_form %}
             {% view 'identity.panels.ChatPanel' %}
+        </div>
+        <div id="snippet_store">
+            <div id="snippet_medication_periodic" class="snippet">
+                <div class="panel panel-default editor-panel">
+                    <div class="panel-body">
+                        <div class="well well-sm">
+                            <div class="btn-group" role="group" aria-label="Form">
+                                <button type="button" class="btn btn-default">Tablet</button>
+                                <button type="button" class="btn btn-default">Capsule</button>
+                                <button type="button" class="btn btn-default">Syrup</button>
+                                <button type="button" class="btn btn-default">Ointment</button>
+                                <button type="button" class="btn btn-default">Injection</button>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">Name</span>
+                            <input name="medname" type="text" class="form-control" placeholder="Medicine Name" aria-describedby="basic-addon1">
+                            <span class="input-group-addon" id="basic-addon1">Dose</span>
+                            <input name="meddose" type="text" class="form-control" placeholder="in mg" aria-describedby="basic-addon1">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Unit <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">mg</a></li>
+                                    <li><a href="#">Mg</a></li>
+                                    <li><a href="#">g</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="#">ml</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-btn dropup">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Frequency <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Once (1)</a></li>
+                                    <li><a href="#">Twice (2)</a></li>
+                                    <li><a href="#">Thrice (3)</a></li>
+                                    <li><a href="#">4 Times</a></li>
+                                    <li><a href="#">5 Times</a></li>
+                                    <li><a href="#">6 Times</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="#">As Needed</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="#">Others</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>
