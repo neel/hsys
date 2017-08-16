@@ -472,7 +472,18 @@
                 $('.story-refer').trigger("click");
             }
             function make_med_text(medicine){
-                var str = medicine.type+" "+medicine.name+" "+medicine.interval.frequency+" daily";
+                var str = medicine.type+" "+medicine.name+" "+medicine.dose+medicine.unit+" "+medicine.interval.frequency+" daily ";
+                if(medicine.mode == 'clock'){
+                    $(medicine.interval.clocks).each(function(){
+                        str += this;
+                    });
+                }else{
+                    str += medicine.interval.event.when;
+                    $(medicine.interval.context).each(function(){
+                        str += this
+                    });
+                }
+                return str;
             }
             function make_medicine(elem){
                 var medicine = {
@@ -485,7 +496,7 @@
                         mode: '',    // clock or event
                         clocks: [],
                         event: {
-                            context: '', // breakfast | Lunch | Dinner | Anytime
+                            context: [], // breakfast | Lunch | Dinner | Anytime
                             when: '' // before | after | not applicable 
                         },
                         custom: ''
@@ -504,7 +515,7 @@
                 medicine.interval.clocks = [];
                 var clocksv = $(elem).find('.med-timmed-clocks')[0];
                 var clocks = $(clocksv).find('.med-clock');
-                clocks.each(function(){
+                $(clocks).each(function(){
                     var input = $(this).find('input');
                     var time = $(input).val();
                     medicine.interval.clocks.push(time);
@@ -512,12 +523,14 @@
 
                 var contexts = $(elem).find('.med-when-context').find('input:checkbox:checked');
                 var ctxs = [];
-                contexts.each(function(){
+                $(contexts).each(function(){
                     ctxs.push($(this).val());
                 });
                 medicine.interval.event.when = $(elem).find('.med-when-ba').find('input:radio:checked').val();
                 medicine.interval.event.context = ctxs;
                 
+                $(elem).find('.medicine-text').html(make_med_text(medicine));
+
                 console.log(medicine);
             }
         </script>
