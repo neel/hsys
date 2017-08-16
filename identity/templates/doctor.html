@@ -255,7 +255,7 @@
                 });
                 $("#periodic_medication").click(function(){
                     $('#prescription_body_editor').html('');
-                    $('#prescription_body_editor').append($('#snippet_medication_periodic'));
+                    $('#prescription_body_editor').append($($('#snippet_medication_periodic').html()));
                     $('#prescription_body_editor').css('display', 'block');
                 });
                 $("#periodic_medication1").click(function(){
@@ -407,6 +407,52 @@
                 $("#remark_medication").click(function(){
                   alert(3);
                 });
+
+                $("#prescription_body_editor").on('click', "ul.med-freq-selector li", function(){
+                    var freq = parseInt($(this).attr('data-freq'));
+                    var freq_row = $(this).closest('.frequency-row');
+                    $(freq_row).find(".medication-mode").attr('data-freq', freq);
+                    $(freq_row).find('.medicine-editor-med-frequency').attr('data-freq', freq);
+                    $(freq_row).find('.medicine-editor-med-frequency').html('Frequency ('+freq+') <span class="caret"></span>');
+                    $(freq_row).find(".medication-mode").css('display', 'block');
+                    $(freq_row).find('.med-timmed-clocks').html('');
+                    $(freq_row).find('.med-timmed-clocks').css('display', 'none');
+                    $(freq_row).find('.med-event').css('display', 'none');
+                });
+                $("#prescription_body_editor").on('click', ".med-dose-unit ul.dropdown-menu li", function(){
+                    var unit = $(this).closest('.med-dose-unit');
+                    unit.attr('data-unit', $(this).attr('value'));
+                    unit.find('.dropdown-toggle').html("Unit ("+unit.attr('data-unit')+') <span class="caret"></span>');
+                });
+                // $("#prescription_body_editor").on('click', ".med-when-context ul.dropdown-menu li", function(){
+                //     console.log(this);
+                //     var ctx = $(this).closest('.med-when-context');
+                //     ctx.attr('data-context', $(this).attr('value'));
+                //     ctx.find('.dropdown-toggle').html("Event ("+ctx.attr('data-context')+') <span class="caret"></span>');
+                // });
+                $('#prescription_body_editor').on('click', '.med-mode-timmed', function(){
+                    var template = $($('.med-timmed-clock-template')[0]).html();
+                    var form = $(this).parent().parent().parent();
+                    var freq = parseInt($(this).parent().parent().attr('data-freq'));
+                    $(form).find('.med-timmed-clocks').html('');
+                    for(var i =0; i< freq; ++i){
+                        $(form).find('.med-timmed-clocks').append($(template));
+                    }
+                    $(form).find('.med-timmed-clocks').css('display', 'block');
+                    $(this).parent().parent().css('display', 'none');
+                    $(this).parent().parent().attr('data-mode', 'clock');
+                    $('.clockpicker').clockpicker();
+                });
+                $('#prescription_body_editor').on('click', '.med-mode-event', function(){
+                    var med_event = $(this).closest('.form-inline').find('.med-event')[0];
+                    med_event.style.setProperty('display', 'inline-table', 'important');
+                    $(this).parent().parent().css('display', 'none');
+                    $(this).parent().parent().attr('data-mode', 'event');
+                });
+                $('#prescription_body_editor').on('click', '.medicine-editor-med-okay', function(){
+                    var editor = $(this).closest('.editor-panel');
+                    console.log(make_medicine(editor));
+                });
             });
         </script>
         <script type="text/javascript">
@@ -424,6 +470,55 @@
                 $("#id_patient_selector").val(patient_name);
                 $('#id_story_referer').val(story_id);
                 $('.story-refer').trigger("click");
+            }
+            function make_med_text(medicine){
+                var str = medicine.type+" "+medicine.name+" "+medicine.interval.frequency+" daily";
+            }
+            function make_medicine(elem){
+                var medicine = {
+                    type: '', // tablet | capsule | ointment | injection 
+                    name: '', // name of the medicine
+                    dose: 0,  // dose
+                    unit: '', // unit of dose
+                    interval: {
+                        frequency: '', // numeric | 0 means as needed | -1 means custom
+                        mode: '',    // clock or event
+                        clocks: [],
+                        event: {
+                            context: '', // breakfast | Lunch | Dinner | Anytime
+                            when: '' // before | after | not applicable 
+                        },
+                        custom: ''
+                    },
+                    note: '' // some extra notes if required
+                };
+
+                medicine.type = $(elem).find('.medicine-editor-med-type').find('input:radio:checked').val();
+
+                medicine.name = $(elem).find('.med-name').val();
+                medicine.dose = parseInt($(elem).find('.med-dose').val());
+                medicine.unit = $(elem).find('.med-dose-unit').attr('data-unit');
+                medicine.interval.frequency = $(elem).find('.medicine-editor-med-frequency').attr('data-freq');
+                medicine.interval.mode = $(elem).find('.medication-mode').attr('data-mode');
+
+                medicine.interval.clocks = [];
+                var clocksv = $(elem).find('.med-timmed-clocks')[0];
+                var clocks = $(clocksv).find('.med-clock');
+                clocks.each(function(){
+                    var input = $(this).find('input');
+                    var time = $(input).val();
+                    medicine.interval.clocks.push(time);
+                });
+
+                var contexts = $(elem).find('.med-when-context').find('input:checkbox:checked');
+                var ctxs = [];
+                contexts.each(function(){
+                    ctxs.push($(this).val());
+                });
+                medicine.interval.event.when = $(elem).find('.med-when-ba').find('input:radio:checked').val();
+                medicine.interval.event.context = ctxs;
+                
+                console.log(medicine);
             }
         </script>
     </head>
@@ -465,68 +560,117 @@
                 <div class="panel panel-default editor-panel">
                     <div class="panel-body">
                         <div class="well well-sm">
-                            <div class="btn-group" role="group" aria-label="Form">
-                                <button type="button" class="btn btn-default">Tablet</button>
-                                <button type="button" class="btn btn-default">Capsule</button>
-                                <button type="button" class="btn btn-default">Syrup</button>
-                                <button type="button" class="btn btn-default">Ointment</button>
-                                <button type="button" class="btn btn-default">Injection</button>
+                            <div class="btn-group medicine-editor-med-type" data-toggle="buttons">
+                                <label class="btn btn-primary active">
+                                    <input type="radio" name="options" id="option1" autocomplete="off" value="tablet"> Tablet
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="options" id="option2" autocomplete="off" value="capsule"> Capsule
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="options" id="option3" autocomplete="off" value="syrup"> Syrup
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="options" id="option3" autocomplete="off" value="ointment"> Ointment
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="options" id="option3" autocomplete="off" value="injection"> Injection
+                                </label>
+                            </div>
+                            <div class="medicine-editor-med-control">
+                                <button type="button" class="btn btn-success medicine-editor-med-okay" aria-label="Left Align">
+                                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn btn-danger medicine-editor-med-cancel" aria-label="Left Align">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                </button>
                             </div>
                         </div>
 
                         <div class="input-group">
                             <span class="input-group-addon" id="basic-addon1">Name</span>
-                            <input name="medname" type="text" class="form-control" placeholder="Medicine Name" aria-describedby="basic-addon1">
+                            <input name="medname" type="text" class="form-control med-name" placeholder="Medicine Name" aria-describedby="basic-addon1">
                             <span class="input-group-addon" id="basic-addon1">Dose</span>
-                            <input name="meddose" type="text" class="form-control" placeholder="in mg" aria-describedby="basic-addon1">
-                            <div class="input-group-btn">
+                            <input name="meddose" type="text" class="form-control med-dose" placeholder="in mg" aria-describedby="basic-addon1">
+                            <div class="input-group-btn med-dose-unit">
                                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Unit <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#">mg</a></li>
-                                    <li><a href="#">Mg</a></li>
-                                    <li><a href="#">g</a></li>
+                                    <li value="mg"><a href="#">mg</a></li>
+                                    <li value="Mg"><a href="#">Mg</a></li>
+                                    <li value="g"><a href="#">g</a></li>
                                     <li role="separator" class="divider"></li>
-                                    <li><a href="#">ml</a></li>
+                                    <li value="ml"><a href="#">ml</a></li>
                                 </ul>
                             </div>
                         </div>
-                        <div class="input-group">
+                        <div class="input-group frequency-row">
                             <div class="input-group-btn dropup">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button type="button" class="btn btn-default dropdown-toggle medicine-editor-med-frequency" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Frequency <span class="caret"></span>
                                 </button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Once (1)</a></li>
-                                    <li><a href="#">Twice (2)</a></li>
-                                    <li><a href="#">Thrice (3)</a></li>
-                                    <li><a href="#">4 Times</a></li>
-                                    <li><a href="#">5 Times</a></li>
-                                    <li><a href="#">6 Times</a></li>
+                                <ul class="med-freq-selector dropdown-menu">
+                                    <li data-freq="1"><a href="#">Once (1)</a></li>
+                                    <li data-freq="2"><a href="#">Twice (2)</a></li>
+                                    <li data-freq="3"><a href="#">Thrice (3)</a></li>
+                                    <li data-freq="4"><a href="#">4 Times</a></li>
+                                    <li data-freq="5"><a href="#">5 Times</a></li>
+                                    <li data-freq="6"><a href="#">6 Times</a></li>
                                     <li role="separator" class="divider"></li>
-                                    <li><a href="#">As Needed</a></li>
+                                    <li data-freq="0"><a href="#">As Needed</a></li>
                                     <li role="separator" class="divider"></li>
-                                    <li><a href="#">Others</a></li>
+                                    <li data-freq="-1"><a href="#">Others</a></li>
                                 </ul>
                             </div>
                             <div class="form-inline">
-                                <div class="btn-group btn-group-justified medication-mode" role="group" aria-label="...">
+                                <div class="btn-group btn-group-justified medication-mode" role="group" aria-label="..." data-freq="" data-mode="">
                                     <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-default">Clock</button>
+                                        <button id="" type="button" class="btn btn-success med-mode-timmed">Clock</button>
                                     </div>
                                     <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-default">Event</button>
+                                        <button id="" type="button" class="btn btn-success med-mode-event">Event</button>
                                     </div>
                                 </div>
-                                <div class="input-group clockpicker" data-placement="left" data-align="top" data-autoclose="true">
-                                    <input type="text" class="form-control" value="13:14">
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-time"></span>
-                                    </span>
+                                <div class="med-timmed-clock-template">
+                                    <div class="input-group clockpicker med-clock" data-placement="left" data-align="top" data-autoclose="true">
+                                        <input type="text" class="form-control" value="00:00">
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-time"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div id="" class="med-timmed-clocks"></div>
+                                <div id="" class="med-event input-group form-inline">
+                                    <div class="btn-group med-when-ba" data-toggle="buttons">
+                                        <label class="btn btn-info active">
+                                            <input type="radio" name="options" id="option2" autocomplete="off" value="n/a"> Not Applicable
+                                        </label>
+                                        <label class="btn btn-info">
+                                            <input type="radio" name="options" id="option1" autocomplete="off" value="before"> Before
+                                        </label>
+                                        <label class="btn btn-info">
+                                            <input type="radio" name="options" id="option2" autocomplete="off" value="after"> After
+                                        </label>
+                                    </div>
+                                    <div class="btn-group med-when-context" data-toggle="buttons">
+                                        <label class="btn btn-info">
+                                            <input type="checkbox" name="options" id="option2" autocomplete="off" value="anytime"> Anytime
+                                        </label>
+                                        <label class="btn btn-info">
+                                            <input type="checkbox" name="options" id="option1" autocomplete="off" value="breakfast"> Breakfast
+                                        </label>
+                                        <label class="btn btn-info">
+                                            <input type="checkbox" name="options" id="option2" autocomplete="off" value="lunch"> Lunch
+                                        </label>
+                                        <label class="btn btn-info">
+                                            <input type="checkbox" name="options" id="option2" autocomplete="off" value="dinner"> Dinner
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="medicine-text alert alert-success">Text</div>
                     </div>
                 </div>
             </div>

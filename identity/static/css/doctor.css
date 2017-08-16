@@ -4,3 +4,38 @@
 .medication-mode{
     width: 112px;
 }
+.med-timmed-clocks{
+    display: none;
+    margin-left: 10px;
+}
+.medication-mode{
+    display: none;
+}
+.med-timmed-clock-template{
+    display: none;
+}
+.med-clock{
+    width: 112px;
+}
+.med-event{
+    display: none !important;
+}
+.editor-panel .panel-body{
+
+}
+.frequency-row{
+    margin-top: 8px;
+}
+.med-when-context{
+    padding-left: 5px;
+}
+.medicine-text{
+    margin-top: 8px;
+    padding: 5px;
+}
+.medicine-editor-med-control{
+    float: right;
+}
+.med-when-ba{
+    margin-left: 32px;
+}
