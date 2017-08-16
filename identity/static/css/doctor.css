@@ -39,3 +39,26 @@
 .med-when-ba{
     margin-left: 32px;
 }
+.translatable{
+    text-align: left;
+    font-size: 15px;
+    padding-left: 2px;
+    padding-right: 2px;
+    display: inline-block;
+    cursor: pointer;
+}
+.translatable:hover{
+    background-color: yellow;
+}
+.error-input{
+    clear: right;
+    display: block;
+    text-align: left;
+    font-size: 15px;
+    padding-left: 2px;
+    padding-right: 2px;
+    color: red;
+}
+.med-termination{
+
+}

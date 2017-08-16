@@ -412,24 +412,45 @@
                     var freq = parseInt($(this).attr('data-freq'));
                     var freq_row = $(this).closest('.frequency-row');
                     $(freq_row).find(".medication-mode").attr('data-freq', freq);
+                    $(freq_row).find(".medication-mode").attr('data-mode', '');
                     $(freq_row).find('.medicine-editor-med-frequency').attr('data-freq', freq);
                     $(freq_row).find('.medicine-editor-med-frequency').html('Frequency ('+freq+') <span class="caret"></span>');
                     $(freq_row).find(".medication-mode").css('display', 'block');
                     $(freq_row).find('.med-timmed-clocks').html('');
                     $(freq_row).find('.med-timmed-clocks').css('display', 'none');
                     $(freq_row).find('.med-event').css('display', 'none');
+
+                    var editor = $(this).closest('.editor-panel');
+                    make_medicine(editor);
                 });
                 $("#prescription_body_editor").on('click', ".med-dose-unit ul.dropdown-menu li", function(){
                     var unit = $(this).closest('.med-dose-unit');
                     unit.attr('data-unit', $(this).attr('value'));
                     unit.find('.dropdown-toggle').html("Unit ("+unit.attr('data-unit')+') <span class="caret"></span>');
+
+                    var editor = $(this).closest('.editor-panel');
+                    make_medicine(editor);
                 });
-                // $("#prescription_body_editor").on('click', ".med-when-context ul.dropdown-menu li", function(){
-                //     console.log(this);
-                //     var ctx = $(this).closest('.med-when-context');
-                //     ctx.attr('data-context', $(this).attr('value'));
-                //     ctx.find('.dropdown-toggle').html("Event ("+ctx.attr('data-context')+') <span class="caret"></span>');
-                // });
+                $("#prescription_body_editor").on('click', ".med-days ul.dropdown-menu li", function(){
+                    var unit = $(this).closest('.med-days');
+                    unit.attr('data-days', $(this).attr('value'));
+                    unit.find('.dropdown-toggle').html("Days ("+unit.attr('data-days')+') <span class="caret"></span>');
+
+                    var editor = $(this).closest('.editor-panel');
+                    make_medicine(editor);
+                });
+                $("#prescription_body_editor").on('change', '.medicine-editor-med-type .btn input', function(){
+                    var editor = $(this).closest('.editor-panel');
+                    make_medicine(editor);
+                });
+                $("#prescription_body_editor").on('change', '.med-when-ba .btn input', function(){
+                    var editor = $(this).closest('.editor-panel');
+                    make_medicine(editor);
+                });
+                $("#prescription_body_editor").on('change', '.med-when-context .btn input', function(){
+                    var editor = $(this).closest('.editor-panel');
+                    make_medicine(editor);
+                });
                 $('#prescription_body_editor').on('click', '.med-mode-timmed', function(){
                     var template = $($('.med-timmed-clock-template')[0]).html();
                     var form = $(this).parent().parent().parent();
@@ -442,20 +463,45 @@
                     $(this).parent().parent().css('display', 'none');
                     $(this).parent().parent().attr('data-mode', 'clock');
                     $('.clockpicker').clockpicker();
+
+                    var editor = $(this).closest('.editor-panel');
+                    make_medicine(editor);
                 });
                 $('#prescription_body_editor').on('click', '.med-mode-event', function(){
                     var med_event = $(this).closest('.form-inline').find('.med-event')[0];
                     med_event.style.setProperty('display', 'inline-table', 'important');
                     $(this).parent().parent().css('display', 'none');
                     $(this).parent().parent().attr('data-mode', 'event');
+
+                    var editor = $(this).closest('.editor-panel');
+                    make_medicine(editor);
                 });
                 $('#prescription_body_editor').on('click', '.medicine-editor-med-okay', function(){
                     var editor = $(this).closest('.editor-panel');
-                    console.log(make_medicine(editor));
+                    make_medicine(editor);
+                });
+                $('#prescription_body_editor').on('keyup', '.med-name', function(){
+                    var editor = $(this).closest('.editor-panel');
+                    make_medicine(editor);
+                });
+                $('#prescription_body_editor').on('keyup', '.med-dose', function(){
+                    var editor = $(this).closest('.editor-panel');
+                    make_medicine(editor);
+                });
+                $('#prescription_body_editor').on('propertychange change keyup paste input', 'div.med-timmed-clocks .med-clock', function(){
+                    var editor = $(this).closest('.editor-panel');
+                    make_medicine(editor);
                 });
             });
         </script>
         <script type="text/javascript">
+            String.prototype.format = function() {
+                var formatted = this;
+                for( var arg in arguments ) {
+                    formatted = formatted.replace("{" + arg + "}", arguments[arg]);
+                }
+                return formatted;
+            };
             function create_prescription(div, story_id, patient_id, patient_name){
                 var story_viewer = $(div).closest('.story-viewer');
                 console.log(story_viewer);
@@ -472,18 +518,79 @@
                 $('.story-refer').trigger("click");
             }
             function make_med_text(medicine){
-                var str = medicine.type+" "+medicine.name+" "+medicine.dose+medicine.unit+" "+medicine.interval.frequency+" daily ";
-                if(medicine.mode == 'clock'){
-                    $(medicine.interval.clocks).each(function(){
-                        str += this;
+                var error_text = "";
+                function sanity(value, key){
+                    if(value === undefined || (typeof value == 'string' && !value.length) || (typeof value == 'number' && isNaN(value))){
+                        if(error_text.length == 0)
+                            error_text = "<span class='error-input'>Invalid/No {0}</span>".format(key);
+                        return '';
+                    }
+                    console.log('okay', value, key);
+                    return value;
+                }
+                var str = " <span class='translatable'><span class='tag tag-en' data-order='1'>{0}</span></span> \
+                            <span class='translatable'><span class='tag tag-en' data-order='2'>{1}</span></span> \
+                            <span class='translatable'><span class='tag tag-en' data-order='3'>{2}</span></span> \
+                            <span class='translatable'><span class='tag tag-en' data-order='4'>{3}</span></span>"
+                            .format(
+                                sanity(medicine.type, "type"), 
+                                sanity(medicine.name, "name"), 
+                                sanity(medicine.dose, "dose"), 
+                                sanity(medicine.unit, "unit")
+                            );
+                var freq_text = "";
+                switch(sanity(medicine.interval.frequency, "frequency")){
+                    case 1: 
+                        freq_text = "<span class='translatable'><span class='tag tag-en' data-order='5'>{0}</span></span>".format("once");
+                        break;
+                    case 2: 
+                        freq_text = "<span class='translatable'><span class='tag tag-en' data-order='5'>{0}</span></span>".format("twice");
+                        break;
+                    case 3: 
+                        freq_text = "<span class='translatable'><span class='tag tag-en' data-order='5'>{0}</span></span>".format("thrice");
+                        break;
+                    default: 
+                        freq_text = "<span class='translatable'><span class='tag tag-en'  data-order='5'>{0}</span></span> <span class='translatable'><span class='tag tag-en' data-order='5.1'>{1}</span></span>"
+                        .format(sanity(medicine.interval.frequency, 'frequency'), "times");
+                }
+                str += freq_text+"<span class='translatable'><span class='tag tag-en' data-order='6'>{0}</span></span>".format("daily");
+                if(medicine.interval.mode == 'clock'){
+                    if(Array.from(new Set(medicine.interval.clocks)).length != medicine.interval.clocks.length){
+                        if(error_text.length == 0)
+                            error_text = "<span class='error-input'>Duplicate time in schedule</span>";
+                    }
+                    if(medicine.interval.clocks.length > 0){
+                        str += "<span class='translatable'><span class='tag tag-en' data-order='7'>{0}</span></span>".format("on");
+                    }
+                    $(medicine.interval.clocks).each(function(i, v){
+                        str += "<span class='translatable'><span class='tag tag-en' data-order='7.1'>{0}</span></span>".format(this);
+                        str += (i == medicine.interval.clocks.length-2) ? "<span class='translatable'><span class='tag tag-en' data-order='7.9'>{0}</span></span>".format("and") : ((i < medicine.interval.clocks.length-1) ? ", " : "");
+                    });
+                }else if(medicine.interval.mode == 'event'){
+                    if(medicine.interval.event.context.length != medicine.interval.frequency){
+                        if(error_text.length == 0)
+                            error_text = "<span class='error-input'>Expecting {0} doses, marked {1} doses {2}</span>".format(medicine.interval.event.context, medicine.interval.frequency, medicine.interval.event.context.join(' '));
+                    }
+                    str += "<span class='translatable'><span class='tag tag-en' data-order='7'>{0}</span></span>".format(sanity(medicine.interval.event.when, "when"));
+                    $(medicine.interval.event.context).each(function(){
+                        str += "<span class='translatable'><span class='tag tag-en' data-order='7.1'>{0}</span></span>".format(this);
                     });
                 }else{
-                    str += medicine.interval.event.when;
-                    $(medicine.interval.context).each(function(){
-                        str += this
-                    });
+                    if(error_text.length == 0)
+                        error_text = "<span class='error-input'>Invalid/No mode (clock | event)</span>";
                 }
-                return str;
+
+                if(medicine.termination <= 0){
+                    if(error_text.length == 0)
+                        error_text = "<span class='error-input'>Termination must be more than 0 days</span>";
+                }else{
+                    str += "<span class='translatable'><span class='tag tag-en' data-order='8'>{0}</span></span> \
+                            <span class='translatable'><span class='tag tag-en' data-order='9'>{1}</span></span> \
+                            <span class='translatable'><span class='tag tag-en' data-order='10'>{2}</span></span>"
+                            .format("for", medicine.termination, "days");
+                }
+                
+                return error_text+str;
             }
             function make_medicine(elem){
                 var medicine = {
@@ -491,8 +598,10 @@
                     name: '', // name of the medicine
                     dose: 0,  // dose
                     unit: '', // unit of dose
+                    termination: 0, // for how many days
                     interval: {
                         frequency: '', // numeric | 0 means as needed | -1 means custom
+                        days: 0, // days interval
                         mode: '',    // clock or event
                         clocks: [],
                         event: {
@@ -509,7 +618,8 @@
                 medicine.name = $(elem).find('.med-name').val();
                 medicine.dose = parseInt($(elem).find('.med-dose').val());
                 medicine.unit = $(elem).find('.med-dose-unit').attr('data-unit');
-                medicine.interval.frequency = $(elem).find('.medicine-editor-med-frequency').attr('data-freq');
+                medicine.termination = parseInt($(elem).find('.med-termination').val());
+                medicine.interval.frequency = parseInt($(elem).find('.medicine-editor-med-frequency').attr('data-freq'));
                 medicine.interval.mode = $(elem).find('.medication-mode').attr('data-mode');
 
                 medicine.interval.clocks = [];
@@ -574,20 +684,20 @@
                     <div class="panel-body">
                         <div class="well well-sm">
                             <div class="btn-group medicine-editor-med-type" data-toggle="buttons">
-                                <label class="btn btn-primary active">
-                                    <input type="radio" name="options" id="option1" autocomplete="off" value="tablet"> Tablet
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="options_type" id="option_type1" autocomplete="off" value="tablet"> Tablet
                                 </label>
                                 <label class="btn btn-primary">
-                                    <input type="radio" name="options" id="option2" autocomplete="off" value="capsule"> Capsule
+                                    <input type="radio" name="options_type" id="option_type2" autocomplete="off" value="capsule"> Capsule
                                 </label>
                                 <label class="btn btn-primary">
-                                    <input type="radio" name="options" id="option3" autocomplete="off" value="syrup"> Syrup
+                                    <input type="radio" name="options_type" id="option_type3" autocomplete="off" value="syrup"> Syrup
                                 </label>
                                 <label class="btn btn-primary">
-                                    <input type="radio" name="options" id="option3" autocomplete="off" value="ointment"> Ointment
+                                    <input type="radio" name="options_type" id="option_type3" autocomplete="off" value="ointment"> Ointment
                                 </label>
                                 <label class="btn btn-primary">
-                                    <input type="radio" name="options" id="option3" autocomplete="off" value="injection"> Injection
+                                    <input type="radio" name="options_type" id="option_type3" autocomplete="off" value="injection"> Injection
                                 </label>
                             </div>
                             <div class="medicine-editor-med-control">
@@ -617,8 +727,29 @@
                                     <li value="ml"><a href="#">ml</a></li>
                                 </ul>
                             </div>
+                            <span class="input-group-addon" id="basic-addon1">For</span>
+                            <input name="medtermination" type="text" class="form-control med-termination" placeholder="in days" aria-describedby="basic-addon1">
+                            <span class="input-group-addon" id="basic-addon1">Days</span>
                         </div>
                         <div class="input-group frequency-row">
+                            <div class="input-group-btn med-days">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Days Interval <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li data-interval="0" value="Everyday"><a href="#">Daily</a></li>
+                                    <li data-interval="1" value="Every other day"><a href="#">Alternate Day</a></li>
+                                    <li data-interval="2" value="3rd"><a href="#">Every 3rd Day</a></li>
+                                    <li data-interval="3" value="4th"><a href="#">Every 4th Day</a></li>
+                                    <li data-interval="4" value="5th"><a href="#">Every 5th Day</a></li>
+                                    <li data-interval="5" value="6th"><a href="#">Every 6th Day</a></li>
+                                    <li data-interval="6" value="7th"><a href="#">Every 7th Day</a></li>
+                                    <li data-interval="7" value="8th"><a href="#">Every 8th Day</a></li>
+                                    <li data-interval="8" value="9th"><a href="#">Every 9th Day</a></li>
+                                    <li data-interval="9" value="10th"><a href="#">Every 10th Day</a></li>
+                                    <li data-interval="10" value="11th"><a href="#">Every 11th Day</a></li>
+                                </ul>
+                            </div>
                             <div class="input-group-btn dropup">
                                 <button type="button" class="btn btn-default dropdown-toggle medicine-editor-med-frequency" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Frequency <span class="caret"></span>
@@ -657,33 +788,33 @@
                                 <div id="" class="med-event input-group form-inline">
                                     <div class="btn-group med-when-ba" data-toggle="buttons">
                                         <label class="btn btn-info active">
-                                            <input type="radio" name="options" id="option2" autocomplete="off" value="n/a"> Not Applicable
+                                            <input type="radio" name="options_ab" id="option_ab2" autocomplete="off" value="n/a"> Not Applicable
                                         </label>
                                         <label class="btn btn-info">
-                                            <input type="radio" name="options" id="option1" autocomplete="off" value="before"> Before
+                                            <input type="radio" name="options_ab" id="option_ab1" autocomplete="off" value="before"> Before
                                         </label>
                                         <label class="btn btn-info">
-                                            <input type="radio" name="options" id="option2" autocomplete="off" value="after"> After
+                                            <input type="radio" name="options_ab" id="option_ab3" autocomplete="off" value="after"> After
                                         </label>
                                     </div>
                                     <div class="btn-group med-when-context" data-toggle="buttons">
                                         <label class="btn btn-info">
-                                            <input type="checkbox" name="options" id="option2" autocomplete="off" value="anytime"> Anytime
+                                            <input type="checkbox" name="options_ctx" id="option_ctx2" autocomplete="off" value="anytime"> Anytime
                                         </label>
                                         <label class="btn btn-info">
-                                            <input type="checkbox" name="options" id="option1" autocomplete="off" value="breakfast"> Breakfast
+                                            <input type="checkbox" name="options_ctx" id="option_ctx1" autocomplete="off" value="breakfast"> Breakfast
                                         </label>
                                         <label class="btn btn-info">
-                                            <input type="checkbox" name="options" id="option2" autocomplete="off" value="lunch"> Lunch
+                                            <input type="checkbox" name="options_ctx" id="option_ctx3" autocomplete="off" value="lunch"> Lunch
                                         </label>
                                         <label class="btn btn-info">
-                                            <input type="checkbox" name="options" id="option2" autocomplete="off" value="dinner"> Dinner
+                                            <input type="checkbox" name="options_ctx" id="option_ctx4" autocomplete="off" value="dinner"> Dinner
                                         </label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="medicine-text alert alert-success">Text</div>
+                        <div class="medicine-text alert alert-success"></div>
                     </div>
                 </div>
             </div>
