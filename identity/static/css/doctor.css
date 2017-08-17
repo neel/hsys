@@ -20,6 +20,9 @@
 .med-event{
     display: none !important;
 }
+.med-asneeded{
+    display: none !important;
+}
 .editor-panel .panel-body{
 
 }

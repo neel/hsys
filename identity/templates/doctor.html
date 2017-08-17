@@ -258,86 +258,86 @@
                     $('#prescription_body_editor').append($($('#snippet_medication_periodic').html()));
                     $('#prescription_body_editor').css('display', 'block');
                 });
-                $("#periodic_medication1").click(function(){
-                  var form = $('<form> \
-                    <div class="input-group"> \
-                      <span class="input-group-addon" id="basic-addon1">Medicine Name</span> \
-                      <input name="medname" type="text" class="form-control" placeholder="Medicine Name" aria-describedby="basic-addon1"> \
-                      <span class="input-group-addon" id="basic-addon1">Dose</span> \
-                      <input name="meddose" type="text" class="form-control" placeholder="in mg" aria-describedby="basic-addon1"> \
-                    </div> \
-                    <div class="input-group form-group"> \
-                      <div class="input-group-btn"> \
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Interval <span class="caret"></span></button> \
-                        <ul class="dropdown-menu"> \
-                            <li><a href="#" class="interval-helper" data-interval="24">Once Daily</a></li> \
-                            <li><a href="#" class="interval-helper" data-interval="12">Twice Daily</a></li> \
-                            <li><a href="#" class="interval-helper" data-interval="8">Thrice Daily</a></li> \
-                            <li><a href="#" class="interval-helper" data-interval="6">4 times Daily</a></li> \
-                            <li role="separator" class="divider"></li> \
-                            <li><a href="#" class="interval-helper" data-interval="48">Alternate Days</a></li> \
-                            <li role="separator" class="divider"></li> \
-                            <li><a href="#" class="interval-helper" data-interval="168">Once in a Week</a></li> \
-                        </ul> \
-                      </div> \
-                      <input type="text" name="medinterval" class="form-control" placeholder="in hours (12 for twice daily)" aria-describedby="basic-addon1"> \
-                      <div class="input-group-btn"> \
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Termination <span class="caret"></span></button> \
-                        <ul class="dropdown-menu"> \
-                            <li><a href="#" class="termination-helper" data-termination="7">After 1 Week</a></li> \
-                            <li><a href="#" class="termination-helper" data-termination="14">After 2 Weeks</a></li> \
-                            <li><a href="#" class="termination-helper" data-termination="21">After 3 Weeks</a></li> \
-                            <li><a href="#" class="termination-helper" data-termination="28">After 4 Weeks</a></li> \
-                            <li role="separator" class="divider"></li> \
-                            <li><a href="#" class="termination-helper" data-termination="30">After 1 month</a></li> \
-                            <li><a href="#" class="termination-helper" data-termination="60">After 2 months</a></li> \
-                            <li><a href="#" class="termination-helper" data-termination="90">After 3 month</a></li> \
-                            <li><a href="#" class="termination-helper" data-termination="120">After 4 months</a></li> \
-                            <li role="separator" class="divider"></li> \
-                            <li><a href="#" class="termination-helper" data-termination="-1">Until adviced</a></li> \
-                        </ul> \
-                      </div> \
-                      <input type="text" name="medterm" class="form-control" placeholder="in days" aria-describedby="basic-addon1"> \
-                        <select class="selectpicker"> \
-                          <option value="anytime">Anytime</option> \
-                          <option value="before meal">Before Meal</option> \
-                          <option value="after meal">After Meal</option> \
-                        </select> \
-                    </div> \
-                    <div class="input-group"> \
-                      <span class="input-group-addon" id="basic-addon1">Note</span> \
-                      <input name="mednote" type="text" class="form-control" placeholder="Note" aria-describedby="basic-addon1"> \
-                    </div> \
-                  </form>');
-                  $(form).on("click", ".interval-helper", function(){
-                      var helper = $(this);
-                      var control = helper.closest('.input-group-btn').next('.form-control');
-                      control.val(helper.data("interval"))
-                  });
-                  $(form).on("click", ".termination-helper", function(){
-                      var helper = $(this);
-                      var control = helper.closest('.input-group-btn').next('.form-control');
-                      control.val(helper.data("termination"))
-                  });
-                  bootbox.confirm(form, function(result){
-                      if(!result) return false;
-                      var name = form.find('input[name=medname]').val();
-                      var dose = form.find('input[name=meddose]').val();
-                      var interval = form.find('input[name=medinterval]').val();
-                      var termination = form.find('input[name=medterm]').val();
-                      var note = form.find('input[name=mednote]').val();
-                      var when = form.find(".selectpicker").find("option:selected").val();
-                      var data = {"id": (+new Date)+Math.random(), "type": "periodic", "name": name, "dose": dose, "interval": interval, "termination": termination, "when": when, "note": note};
-                      var prescription = $("#prescription");
-                      var pdata = prescription.data("prescription");
-                      pdata["medicines"].push(data);
-                      prescription.data("prescription", pdata);
-                      render_prescription();
-                  });
-                  $('.selectpicker').selectpicker({
-                    size: 4
-                  });
-                });
+                // $("#periodic_medication1").click(function(){
+                //   var form = $('<form> \
+                //     <div class="input-group"> \
+                //       <span class="input-group-addon" id="basic-addon1">Medicine Name</span> \
+                //       <input name="medname" type="text" class="form-control" placeholder="Medicine Name" aria-describedby="basic-addon1"> \
+                //       <span class="input-group-addon" id="basic-addon1">Dose</span> \
+                //       <input name="meddose" type="text" class="form-control" placeholder="in mg" aria-describedby="basic-addon1"> \
+                //     </div> \
+                //     <div class="input-group form-group"> \
+                //       <div class="input-group-btn"> \
+                //         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Interval <span class="caret"></span></button> \
+                //         <ul class="dropdown-menu"> \
+                //             <li><a href="#" class="interval-helper" data-interval="24">Once Daily</a></li> \
+                //             <li><a href="#" class="interval-helper" data-interval="12">Twice Daily</a></li> \
+                //             <li><a href="#" class="interval-helper" data-interval="8">Thrice Daily</a></li> \
+                //             <li><a href="#" class="interval-helper" data-interval="6">4 times Daily</a></li> \
+                //             <li role="separator" class="divider"></li> \
+                //             <li><a href="#" class="interval-helper" data-interval="48">Alternate Days</a></li> \
+                //             <li role="separator" class="divider"></li> \
+                //             <li><a href="#" class="interval-helper" data-interval="168">Once in a Week</a></li> \
+                //         </ul> \
+                //       </div> \
+                //       <input type="text" name="medinterval" class="form-control" placeholder="in hours (12 for twice daily)" aria-describedby="basic-addon1"> \
+                //       <div class="input-group-btn"> \
+                //         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Termination <span class="caret"></span></button> \
+                //         <ul class="dropdown-menu"> \
+                //             <li><a href="#" class="termination-helper" data-termination="7">After 1 Week</a></li> \
+                //             <li><a href="#" class="termination-helper" data-termination="14">After 2 Weeks</a></li> \
+                //             <li><a href="#" class="termination-helper" data-termination="21">After 3 Weeks</a></li> \
+                //             <li><a href="#" class="termination-helper" data-termination="28">After 4 Weeks</a></li> \
+                //             <li role="separator" class="divider"></li> \
+                //             <li><a href="#" class="termination-helper" data-termination="30">After 1 month</a></li> \
+                //             <li><a href="#" class="termination-helper" data-termination="60">After 2 months</a></li> \
+                //             <li><a href="#" class="termination-helper" data-termination="90">After 3 month</a></li> \
+                //             <li><a href="#" class="termination-helper" data-termination="120">After 4 months</a></li> \
+                //             <li role="separator" class="divider"></li> \
+                //             <li><a href="#" class="termination-helper" data-termination="-1">Until adviced</a></li> \
+                //         </ul> \
+                //       </div> \
+                //       <input type="text" name="medterm" class="form-control" placeholder="in days" aria-describedby="basic-addon1"> \
+                //         <select class="selectpicker"> \
+                //           <option value="anytime">Anytime</option> \
+                //           <option value="before meal">Before Meal</option> \
+                //           <option value="after meal">After Meal</option> \
+                //         </select> \
+                //     </div> \
+                //     <div class="input-group"> \
+                //       <span class="input-group-addon" id="basic-addon1">Note</span> \
+                //       <input name="mednote" type="text" class="form-control" placeholder="Note" aria-describedby="basic-addon1"> \
+                //     </div> \
+                //   </form>');
+                //   $(form).on("click", ".interval-helper", function(){
+                //       var helper = $(this);
+                //       var control = helper.closest('.input-group-btn').next('.form-control');
+                //       control.val(helper.data("interval"))
+                //   });
+                //   $(form).on("click", ".termination-helper", function(){
+                //       var helper = $(this);
+                //       var control = helper.closest('.input-group-btn').next('.form-control');
+                //       control.val(helper.data("termination"))
+                //   });
+                //   bootbox.confirm(form, function(result){
+                //       if(!result) return false;
+                //       var name = form.find('input[name=medname]').val();
+                //       var dose = form.find('input[name=meddose]').val();
+                //       var interval = form.find('input[name=medinterval]').val();
+                //       var termination = form.find('input[name=medterm]').val();
+                //       var note = form.find('input[name=mednote]').val();
+                //       var when = form.find(".selectpicker").find("option:selected").val();
+                //       var data = {"id": (+new Date)+Math.random(), "type": "periodic", "name": name, "dose": dose, "interval": interval, "termination": termination, "when": when, "note": note};
+                //       var prescription = $("#prescription");
+                //       var pdata = prescription.data("prescription");
+                //       pdata["medicines"].push(data);
+                //       prescription.data("prescription", pdata);
+                //       render_prescription();
+                //   });
+                //   $('.selectpicker').selectpicker({
+                //     size: 4
+                //   });
+                // });
                 $("#asrequired_medication").click(function(){
                   var form = $('<form> \
                       <div class="input-group"> \
@@ -415,11 +415,22 @@
                     $(freq_row).find(".medication-mode").attr('data-mode', '');
                     $(freq_row).find('.medicine-editor-med-frequency').attr('data-freq', freq);
                     $(freq_row).find('.medicine-editor-med-frequency').html('Frequency ('+freq+') <span class="caret"></span>');
-                    $(freq_row).find(".medication-mode").css('display', 'block');
+
                     $(freq_row).find('.med-timmed-clocks').html('');
                     $(freq_row).find('.med-timmed-clocks').css('display', 'none');
                     $(freq_row).find('.med-event').css('display', 'none');
-
+                    $(freq_row).find('.med-asneeded')[0].style.setProperty('display', 'none', 'important');
+                    $(freq_row).find(".medication-mode").css('display', 'none');
+                    console.log(freq);
+                    if(freq > 0){
+                        $(freq_row).find(".medication-mode").css('display', 'block');
+                        $(freq_row).parent().find(".med-termination").removeAttr('disabled');
+                        $(freq_row).find('.med-days').find('.dropdown-toggle').removeClass('disabled');
+                    }else if(freq == 0){
+                        $(freq_row).find('.med-asneeded')[0].style.setProperty('display', 'inline-table', 'important');
+                        $(freq_row).parent().find(".med-termination").attr('disabled', 'disabled');
+                        $(freq_row).find('.med-days').find('.dropdown-toggle').addClass('disabled');
+                    }
                     var editor = $(this).closest('.editor-panel');
                     make_medicine(editor);
                 });
@@ -536,6 +547,10 @@
                     });
                     container.html('');
                     container.append(tokens);
+                });
+                $('#prescription_body_editor').on('click', '.medicine-editor-med-cancel', function(){
+                    $('#prescription_body_editor').html('');
+                    $('#prescription_body_editor').css('display', 'none');
                 });
             });
         </script>
@@ -690,11 +705,16 @@
                                 "days", tr("days")
                             );
                 }
+
+                var valid = (error_text.length == 0);
                 
-                return "<div class='translatable-compound'> \
-                            <div class='translatable-tokens'>{0}</div> \
-                            <div class='translation-actions'><div class='translation-action translate-bn'>bn</div><div class='translation-action translate-en'>en</div></div> \
-                        </div>".format(error_text+str);
+                return {
+                    'valid': valid, 
+                    'text': "<div class='translatable-compound'> \
+                                <div class='translatable-tokens'>{0}</div> \
+                                <div class='translation-actions'><div class='translation-action translate-bn'>bn</div><div class='translation-action translate-en'>en</div></div> \
+                            </div>".format(error_text+str)
+                    };
             }
             function make_medicine(elem){
                 var medicine = {
@@ -742,8 +762,10 @@
                 });
                 medicine.interval.event.when = $(elem).find('.med-when-ba').find('input:radio:checked').val();
                 medicine.interval.event.context = ctxs;
-                
-                $(elem).find('.medicine-text').html(make_med_text(medicine));
+
+                var summary = make_med_text(medicine);
+                $(elem).find('.medicine-editor-med-okay').prop("disabled", !summary.valid);
+                $(elem).find('.medicine-text').html(summary.text);
 
                 console.log(medicine);
             }
@@ -879,6 +901,10 @@
                                     <div class="btn-group" role="group">
                                         <button id="" type="button" class="btn btn-success med-mode-event">Event</button>
                                     </div>
+                                </div>
+                                <div class="input-group form-inline col-md-12 med-asneeded">
+                                    <span class="input-group-addon" id="basic-addon1" style="width: 80px;">Use Case</span>
+                                    <input name="med-usecase" type="text" class="form-control med-usecase" placeholder="Case" aria-describedby="basic-addon1">
                                 </div>
                                 <div class="med-timmed-clock-template">
                                     <div class="input-group clockpicker med-clock" data-placement="left" data-align="top" data-autoclose="true">
