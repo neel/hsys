@@ -258,86 +258,6 @@
                     $('#prescription_body_editor').append($($('#snippet_medication_periodic').html()));
                     $('#prescription_body_editor').css('display', 'block');
                 });
-                // $("#periodic_medication1").click(function(){
-                //   var form = $('<form> \
-                //     <div class="input-group"> \
-                //       <span class="input-group-addon" id="basic-addon1">Medicine Name</span> \
-                //       <input name="medname" type="text" class="form-control" placeholder="Medicine Name" aria-describedby="basic-addon1"> \
-                //       <span class="input-group-addon" id="basic-addon1">Dose</span> \
-                //       <input name="meddose" type="text" class="form-control" placeholder="in mg" aria-describedby="basic-addon1"> \
-                //     </div> \
-                //     <div class="input-group form-group"> \
-                //       <div class="input-group-btn"> \
-                //         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Interval <span class="caret"></span></button> \
-                //         <ul class="dropdown-menu"> \
-                //             <li><a href="#" class="interval-helper" data-interval="24">Once Daily</a></li> \
-                //             <li><a href="#" class="interval-helper" data-interval="12">Twice Daily</a></li> \
-                //             <li><a href="#" class="interval-helper" data-interval="8">Thrice Daily</a></li> \
-                //             <li><a href="#" class="interval-helper" data-interval="6">4 times Daily</a></li> \
-                //             <li role="separator" class="divider"></li> \
-                //             <li><a href="#" class="interval-helper" data-interval="48">Alternate Days</a></li> \
-                //             <li role="separator" class="divider"></li> \
-                //             <li><a href="#" class="interval-helper" data-interval="168">Once in a Week</a></li> \
-                //         </ul> \
-                //       </div> \
-                //       <input type="text" name="medinterval" class="form-control" placeholder="in hours (12 for twice daily)" aria-describedby="basic-addon1"> \
-                //       <div class="input-group-btn"> \
-                //         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Termination <span class="caret"></span></button> \
-                //         <ul class="dropdown-menu"> \
-                //             <li><a href="#" class="termination-helper" data-termination="7">After 1 Week</a></li> \
-                //             <li><a href="#" class="termination-helper" data-termination="14">After 2 Weeks</a></li> \
-                //             <li><a href="#" class="termination-helper" data-termination="21">After 3 Weeks</a></li> \
-                //             <li><a href="#" class="termination-helper" data-termination="28">After 4 Weeks</a></li> \
-                //             <li role="separator" class="divider"></li> \
-                //             <li><a href="#" class="termination-helper" data-termination="30">After 1 month</a></li> \
-                //             <li><a href="#" class="termination-helper" data-termination="60">After 2 months</a></li> \
-                //             <li><a href="#" class="termination-helper" data-termination="90">After 3 month</a></li> \
-                //             <li><a href="#" class="termination-helper" data-termination="120">After 4 months</a></li> \
-                //             <li role="separator" class="divider"></li> \
-                //             <li><a href="#" class="termination-helper" data-termination="-1">Until adviced</a></li> \
-                //         </ul> \
-                //       </div> \
-                //       <input type="text" name="medterm" class="form-control" placeholder="in days" aria-describedby="basic-addon1"> \
-                //         <select class="selectpicker"> \
-                //           <option value="anytime">Anytime</option> \
-                //           <option value="before meal">Before Meal</option> \
-                //           <option value="after meal">After Meal</option> \
-                //         </select> \
-                //     </div> \
-                //     <div class="input-group"> \
-                //       <span class="input-group-addon" id="basic-addon1">Note</span> \
-                //       <input name="mednote" type="text" class="form-control" placeholder="Note" aria-describedby="basic-addon1"> \
-                //     </div> \
-                //   </form>');
-                //   $(form).on("click", ".interval-helper", function(){
-                //       var helper = $(this);
-                //       var control = helper.closest('.input-group-btn').next('.form-control');
-                //       control.val(helper.data("interval"))
-                //   });
-                //   $(form).on("click", ".termination-helper", function(){
-                //       var helper = $(this);
-                //       var control = helper.closest('.input-group-btn').next('.form-control');
-                //       control.val(helper.data("termination"))
-                //   });
-                //   bootbox.confirm(form, function(result){
-                //       if(!result) return false;
-                //       var name = form.find('input[name=medname]').val();
-                //       var dose = form.find('input[name=meddose]').val();
-                //       var interval = form.find('input[name=medinterval]').val();
-                //       var termination = form.find('input[name=medterm]').val();
-                //       var note = form.find('input[name=mednote]').val();
-                //       var when = form.find(".selectpicker").find("option:selected").val();
-                //       var data = {"id": (+new Date)+Math.random(), "type": "periodic", "name": name, "dose": dose, "interval": interval, "termination": termination, "when": when, "note": note};
-                //       var prescription = $("#prescription");
-                //       var pdata = prescription.data("prescription");
-                //       pdata["medicines"].push(data);
-                //       prescription.data("prescription", pdata);
-                //       render_prescription();
-                //   });
-                //   $('.selectpicker').selectpicker({
-                //     size: 4
-                //   });
-                // });
                 $("#asrequired_medication").click(function(){
                   var form = $('<form> \
                       <div class="input-group"> \
@@ -504,6 +424,10 @@
                     var editor = $(this).closest('.editor-panel');
                     make_medicine(editor);
                 });
+                $('#prescription_body_editor').on('keyup', '.med-usecase', function(){
+                    var editor = $(this).closest('.editor-panel');
+                    make_medicine(editor);
+                });
                 $('#prescription_body_editor').on('propertychange change keyup paste input', 'div.med-timmed-clocks .med-clock', function(){
                     var editor = $(this).closest('.editor-panel');
                     make_medicine(editor);
@@ -628,84 +552,88 @@
                                 sanity(medicine.dose, "dose"), tr(sanity(medicine.dose, "dose")),
                                 sanity(medicine.unit, "unit"), tr(sanity(medicine.unit, "unit"))
                             );
-                var freq_text = "";
-                switch(sanity(medicine.interval.frequency, "frequency")){
-                    case 1: 
-                        freq_text = "<span class='translatable'><span class='tag tag-en tag-active' data-order='5'>{0}</span><span class='tag tag-bn' data-order='6'>{1}</span></span>".format("once", tr("once"));
-                        break;
-                    case 2: 
-                        freq_text = "<span class='translatable'><span class='tag tag-en tag-active' data-order='5'>{0}</span><span class='tag tag-bn' data-order='6'>{1}</span></span>".format("twice", tr("twice"));
-                        break;
-                    case 3: 
-                        freq_text = "<span class='translatable'><span class='tag tag-en tag-active' data-order='5'>{0}</span><span class='tag tag-bn' data-order='6'>{1}</span></span>".format("thrice", tr("thrice"));
-                        break;
-                    default: 
-                        freq_text = "<span class='translatable'><span class='tag tag-en tag-active' data-order='5'  >{0}</span><span class='tag tag-bn' data-order='6'  >{1}</span></span> \
-                                     <span class='translatable'><span class='tag tag-en tag-active' data-order='5.1'>{2}</span><span class='tag tag-bn' data-order='6.1'>{3}</span></span>"
-                        .format(
-                            sanity(medicine.interval.frequency, 'frequency'), tr(sanity(medicine.interval.frequency, 'frequency')), 
-                            "times", tr("times")
-                        );
-                }
-                str += freq_text+"<span class='translatable'><span class='tag tag-en tag-active' data-order='6'>{0}</span><span class='tag tag-bn' data-order='5'>{1}</span></span>".format("daily", tr("daily"));
-                if(typeof sanity(medicine.interval.days, "days interval") == 'number'){
-                    var days_interval_text = "";
-                    switch(medicine.interval.days){
-                        case 0:
-                            days_interval_text = "<span class='translatable'><span class='tag tag-en tag-active' data-order='7'>{0}</span><span class='tag tag-bn' data-order='7'>{1}</span></span>".format("everyday", tr("everyday"));
+                if(sanity(medicine.interval.frequency, "frequency") > 0){
+                    var freq_text = "";
+                    switch(sanity(medicine.interval.frequency, "frequency")){
+                        case 1: 
+                            freq_text = "<span class='translatable'><span class='tag tag-en tag-active' data-order='5'>{0}</span><span class='tag tag-bn' data-order='6'>{1}</span></span>".format("once", tr("once"));
                             break;
-                        case 1:
-                            days_interval_text = "<span class='translatable'><span class='tag tag-en tag-active' data-order='7'>{0}</span><span class='tag tag-bn' data-order='7'>{1}</span></span>".format("every alternate day", "এক দিন অন্তর");
+                        case 2: 
+                            freq_text = "<span class='translatable'><span class='tag tag-en tag-active' data-order='5'>{0}</span><span class='tag tag-bn' data-order='6'>{1}</span></span>".format("twice", tr("twice"));
                             break;
-                        case 2:
-                            days_interval_text = "<span class='translatable'><span class='tag tag-en tag-active' data-order='7'>{0}</span><span class='tag tag-bn' data-order='7'>{1}</span></span>".format("every third day", "২ দিন অন্তর");
+                        case 3: 
+                            freq_text = "<span class='translatable'><span class='tag tag-en tag-active' data-order='5'>{0}</span><span class='tag tag-bn' data-order='6'>{1}</span></span>".format("thrice", tr("thrice"));
                             break;
-                        default:
-                            days_interval_text = "<span class='translatable'><span class='tag tag-en tag-active' data-order='7'>{0}</span><span class='tag tag-bn' data-order='7'>{1}</span></span>".format("every {0}th day".format(medicine.interval.days), "{0} দিন অন্তর".format(tr(medicine.interval.days-1)));
-                    }
-                    str += days_interval_text;
-                }
-
-                if(medicine.interval.mode == 'clock'){
-                    if(Array.from(new Set(medicine.interval.clocks)).length != medicine.interval.clocks.length){
-                        if(error_text.length == 0)
-                            error_text = "<span class='error-input'>Duplicate time in schedule</span>";
-                    }
-                    if(medicine.interval.clocks.length > 0){
-                        str += "<span class='translatable'><span class='tag tag-en tag-active' data-order='8'>{0}</span><span class='tag tag-bn' data-order='8.1'>{1}</span></span>".format("on", "এ");
-                    }
-                    $(medicine.interval.clocks).each(function(i, v){
-                        str += "<span class='translatable'><span class='tag tag-en tag-active' data-order='8.1'>{0}</span><span class='tag tag-bn' data-order='8'>{1}</span></span>".format(this, tr(this));
-                        str += (i == medicine.interval.clocks.length-2) ? "<span class='translatable'><span class='tag tag-en tag-active' data-order='8.1'>{0}</span><span class='tag tag-bn' data-order='8'>{1}</span></span>".format("and", tr("and")) : ((i < medicine.interval.clocks.length-1) ? "<span class='translatable'><span class='tag tag-en tag-active' data-order='8.1'>,</span><span class='tag tag-bn' data-order='8'>,</span></span>" : "");
-                    });
-                }else if(medicine.interval.mode == 'event'){
-                    if(medicine.interval.event.context.length != medicine.interval.frequency){
-                        if(error_text.length == 0)
-                            error_text = "<span class='error-input'>Expecting {0} doses, marked {1} doses {2}</span>".format(medicine.interval.event.context, medicine.interval.frequency, medicine.interval.event.context.join(' '));
-                    }
-                    str += "<span class='translatable'><span class='tag tag-en tag-active' data-order='8'>{0}</span><span class='tag tag-bn' data-order='8.1'>{1}</span></span>".format(sanity(medicine.interval.event.when, "when"), tr(sanity(medicine.interval.event.when, "when")));
-                    $(medicine.interval.event.context).each(function(){
-                        str += "<span class='translatable'><span class='tag tag-en tag-active' data-order='8'>{0}</span><span class='tag tag-bn' data-order='8.1'>{1}</span></span>".format(this, tr(this));
-                    });
-                }else{
-                    if(error_text.length == 0)
-                        error_text = "<span class='error-input'>Invalid/No mode (clock | event)</span>";
-                }
-
-                if(sanity(medicine.termination, "termination") <= 0){
-                    if(error_text.length == 0)
-                        error_text = "<span class='error-input'>Termination must be more than 0 days</span>";
-                }else{
-                    str += "<span class='translatable'><span class='tag tag-en tag-active' data-order='9' >{0}</span><span class='tag tag-bn' data-order='11'>{1}</span></span> \
-                            <span class='translatable'><span class='tag tag-en tag-active' data-order='10'>{2}</span><span class='tag tag-bn' data-order='9' >{3}</span></span> \
-                            <span class='translatable'><span class='tag tag-en tag-active' data-order='11'>{4}</span><span class='tag tag-bn' data-order='10'>{5}</span></span>"
+                        default: 
+                            freq_text = "<span class='translatable'><span class='tag tag-en tag-active' data-order='5'  >{0}</span><span class='tag tag-bn' data-order='6'  >{1}</span></span> \
+                                        <span class='translatable'><span class='tag tag-en tag-active' data-order='5.1'>{2}</span><span class='tag tag-bn' data-order='6.1'>{3}</span></span>"
                             .format(
-                                "for", "পর্যন্ত", 
-                                medicine.termination, tr(medicine.termination),
-                                "days", tr("days")
+                                sanity(medicine.interval.frequency, 'frequency'), tr(sanity(medicine.interval.frequency, 'frequency')), 
+                                "times", tr("times")
                             );
-                }
+                    }
+                    str += freq_text+"<span class='translatable'><span class='tag tag-en tag-active' data-order='6'>{0}</span><span class='tag tag-bn' data-order='5'>{1}</span></span>".format("daily", tr("daily"));
+                    if(typeof sanity(medicine.interval.days, "days interval") == 'number'){
+                        var days_interval_text = "";
+                        switch(medicine.interval.days){
+                            case 0:
+                                days_interval_text = "<span class='translatable'><span class='tag tag-en tag-active' data-order='7'>{0}</span><span class='tag tag-bn' data-order='7'>{1}</span></span>".format("everyday", tr("everyday"));
+                                break;
+                            case 1:
+                                days_interval_text = "<span class='translatable'><span class='tag tag-en tag-active' data-order='7'>{0}</span><span class='tag tag-bn' data-order='7'>{1}</span></span>".format("every alternate day", "এক দিন অন্তর");
+                                break;
+                            case 2:
+                                days_interval_text = "<span class='translatable'><span class='tag tag-en tag-active' data-order='7'>{0}</span><span class='tag tag-bn' data-order='7'>{1}</span></span>".format("every third day", "২ দিন অন্তর");
+                                break;
+                            default:
+                                days_interval_text = "<span class='translatable'><span class='tag tag-en tag-active' data-order='7'>{0}</span><span class='tag tag-bn' data-order='7'>{1}</span></span>".format("every {0}th day".format(medicine.interval.days), "{0} দিন অন্তর".format(tr(medicine.interval.days-1)));
+                        }
+                        str += days_interval_text;
+                    }
 
+                    if(medicine.interval.mode == 'clock'){
+                        if(Array.from(new Set(medicine.interval.clocks)).length != medicine.interval.clocks.length){
+                            if(error_text.length == 0)
+                                error_text = "<span class='error-input'>Duplicate time in schedule</span>";
+                        }
+                        if(medicine.interval.clocks.length > 0){
+                            str += "<span class='translatable'><span class='tag tag-en tag-active' data-order='8'>{0}</span><span class='tag tag-bn' data-order='8.1'>{1}</span></span>".format("on", "এ");
+                        }
+                        $(medicine.interval.clocks).each(function(i, v){
+                            str += "<span class='translatable'><span class='tag tag-en tag-active' data-order='8.1'>{0}</span><span class='tag tag-bn' data-order='8'>{1}</span></span>".format(this, tr(this));
+                            str += (i == medicine.interval.clocks.length-2) ? "<span class='translatable'><span class='tag tag-en tag-active' data-order='8.1'>{0}</span><span class='tag tag-bn' data-order='8'>{1}</span></span>".format("and", tr("and")) : ((i < medicine.interval.clocks.length-1) ? "<span class='translatable'><span class='tag tag-en tag-active' data-order='8.1'>,</span><span class='tag tag-bn' data-order='8'>,</span></span>" : "");
+                        });
+                    }else if(medicine.interval.mode == 'event'){
+                        if(medicine.interval.event.context.length != medicine.interval.frequency){
+                            if(error_text.length == 0)
+                                error_text = "<span class='error-input'>Expecting {0} doses, marked {1} doses {2}</span>".format(medicine.interval.event.context, medicine.interval.frequency, medicine.interval.event.context.join(' '));
+                        }
+                        str += "<span class='translatable'><span class='tag tag-en tag-active' data-order='8'>{0}</span><span class='tag tag-bn' data-order='8.1'>{1}</span></span>".format(sanity(medicine.interval.event.when, "when"), tr(sanity(medicine.interval.event.when, "when")));
+                        $(medicine.interval.event.context).each(function(){
+                            str += "<span class='translatable'><span class='tag tag-en tag-active' data-order='8'>{0}</span><span class='tag tag-bn' data-order='8.1'>{1}</span></span>".format(this, tr(this));
+                        });
+                    }else{
+                        if(error_text.length == 0)
+                            error_text = "<span class='error-input'>Invalid/No mode (clock | event)</span>";
+                    }
+
+                    if(sanity(medicine.termination, "termination") <= 0){
+                        if(error_text.length == 0)
+                            error_text = "<span class='error-input'>Termination must be more than 0 days</span>";
+                    }else{
+                        str += "<span class='translatable'><span class='tag tag-en tag-active' data-order='9' >{0}</span><span class='tag tag-bn' data-order='11'>{1}</span></span> \
+                                <span class='translatable'><span class='tag tag-en tag-active' data-order='10'>{2}</span><span class='tag tag-bn' data-order='9' >{3}</span></span> \
+                                <span class='translatable'><span class='tag tag-en tag-active' data-order='11'>{4}</span><span class='tag tag-bn' data-order='10'>{5}</span></span>"
+                                .format(
+                                    "for", "পর্যন্ত", 
+                                    medicine.termination, tr(medicine.termination),
+                                    "days", tr("days")
+                                );
+                    }
+                }else{
+                    str += "<span class='translatable'><span class='tag tag-en tag-active' data-order='4'>({0})</span><span class='tag tag-bn' data-order='4'>({1})</span></span></span>"
+                            .format(medicine.interval.custom, medicine.interval.custom);
+                }
                 var valid = (error_text.length == 0);
                 
                 return {
@@ -745,6 +673,7 @@
                 medicine.interval.frequency = parseInt($(elem).find('.medicine-editor-med-frequency').attr('data-freq'));
                 medicine.interval.days      = parseInt($(elem).find('.med-days').attr('data-interval'));
                 medicine.interval.mode      = $(elem).find('.medication-mode').attr('data-mode');
+                medicine.interval.custom    = $(elem).find('.med-usecase').val();
 
                 medicine.interval.clocks    = [];
                 var clocksv = $(elem).find('.med-timmed-clocks')[0];
