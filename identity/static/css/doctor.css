@@ -32,6 +32,10 @@
 .medicine-text{
     margin-top: 8px;
     padding: 5px;
+    display: block;
+    position: relative;
+    width: 100%;
+    float: left;
 }
 .medicine-editor-med-control{
     float: right;
@@ -60,5 +64,54 @@
     color: red;
 }
 .med-termination{
+
+}
+.translatable .tag{
+    display: none;
+}
+.translatable .tag-active{
+    display: inline;
+}
+
+.translatable-compound{
+    display: block;
+    position: relative;
+    float: left;
+}
+.translatable-tokens{
+    display: block;
+    float: left;
+    position: relative;
+}
+.translation-actions{
+    display: none;
+    float: left;
+    width: 20px;
+    position: absolute;
+    right: -20px;
+    top: -2px;
+    cursor: pointer;
+}
+.translatable-compound:hover .translation-actions{
+    display: block;
+}
+.translation-action:hover{
+    background-color: yellow;
+}
+.translation-action{
+    display: block;
+    float: left;
+    width: 100%;
+    background-color: white;
+    color: black;
+    padding-left: 2px;
+    margin-bottom: 2px;
+    line-height: 12px;
+    font-size: 12px;
+}
+.translate-bn{
+
+}
+.translate-en{
 
 }
