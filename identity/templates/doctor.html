@@ -186,59 +186,88 @@
                    this.length = 0; //clear original array
                    this.push.apply(this, array); //push all elements except the one we want to delete
                 }
+                var make_envelop = function(type, data){
+                    return {id: (+new Date)+Math.random(), type: type, content: data};
+                }
+                var save_envelop = function(envelop){
+                    var prescription = $("#prescription");
+                    var pdata = prescription.data("prescription");
+                    pdata["envelops"].push(envelop);
+                    prescription.data("prescription", pdata);
+                }
                 var render_prescription = function(){
                   var prescription = $("#prescription");
                   var json = prescription.data("prescription");
                   var body = $("#prescription_body");
                   body.html('');
-                  $(json.medicines).each(function(){
-                    if(this.type == 'periodic'){
-                        var interval_text = '';
-                        if(this.interval <= 24 && 24 % this.interval == 0){
-                            interval_text = 24/this.interval + " times daily";
-                        }else if(this.interval % 24 == 0){
-                            var di = this.interval/24;
-                            var dit = '';
-                            if(di%10 == 1) dit = "st";
-                            else if(di%10 == 2) dit = "nd";
-                            else if(di%10 == 3) dit = "rd";
-                            else dit = "th";
-                            interval_text = "Every "+di+dit+" day";
-                        }else{
-                            interval_text = "Every "+this.interval + " hours";
-                        }
-                        var termination_text = (this.termination == -1) ? "untill prescribed to stop" : "For "+ this.termination+ " days";
-                        var when_text = this.when;
-                        var note_text = this.note.length ? ("("+this.note+")") : "";
-
-                        body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
-                                        <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                                    \
-                                        <div class="medicine-name">'+this.name+'</div>                                                              \
-                                        <div class="medicine-dose">'+this.dose+'mg</div>                                                            \
-                                        <div class="medicine-interval">'+interval_text+'</div>                                                      \
-                                        <div class="medicine-termination">'+termination_text+'</div>                                                \
-                                        <div class="medicine-when">'+when_text+'</div>                                                              \
-                                        <div class="medicine-note">'+note_text+'</div>                                                              \
-                                        </div>'));
-                    }else if(this.type == 'asrequired'){
-                        body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
-                                        <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                                    \
-                                        <div class="medicine-name">'+this.name+'</div>                                                              \
-                                        <div class="medicine-dose">'+this.dose+'mg</div>                                                            \
-                                        <div class="medicine-situation">'+this.situation+'</div>                                                    \                                   \
-                                        </div>'));
-                    }else if(this.type == 'investigation'){
-                        body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
-                                        <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                                    \
-                                        <div class="medicine-name">'+this.name+'</div>                                                              \
-                                        <div class="medicine-note">'+this.note+'</div>                                                            \                                   \
-                                        </div>'));
+                  $(json.envelops).each(function(){
+                    var container = $('<div data-id="{0}" data-key="{1}" class="prescription-entry medication-{1} well well-sm">    \
+                                        <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                  \
+                                        <div class="prescription-entry-content">                                                  \
+                                        </div>                                                                                    \
+                                    </div>'.format(this.id, this.type));
+                    if(this.type == 'medicine'){
+                        var elem = $(make_med_text(this.content).text);
+                        container.find('.prescription-entry-content').append(elem);
                     }else if(this.type == 'advice'){
-                        body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
-                                        <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                                                         \
-                                        <div class="medicine-note">'+this.note+'</div>                                                            \                                   \
-                                        </div>'));
+                        
+                    }else if(this.type == 'investigation'){
+                        console.log(this.content);
+                        var elem = make_investigation_text(this.content);
+                        console.log(elem);
+                        container.find('.prescription-entry-content').append(elem);
+                    }else if(this.type == 'remark'){
+
                     }
+                    body.append(container);
+
+                    // if(this.type == 'periodic'){
+                    //     var interval_text = '';
+                    //     if(this.interval <= 24 && 24 % this.interval == 0){
+                    //         interval_text = 24/this.interval + " times daily";
+                    //     }else if(this.interval % 24 == 0){
+                    //         var di = this.interval/24;
+                    //         var dit = '';
+                    //         if(di%10 == 1) dit = "st";
+                    //         else if(di%10 == 2) dit = "nd";
+                    //         else if(di%10 == 3) dit = "rd";
+                    //         else dit = "th";
+                    //         interval_text = "Every "+di+dit+" day";
+                    //     }else{
+                    //         interval_text = "Every "+this.interval + " hours";
+                    //     }
+                    //     var termination_text = (this.termination == -1) ? "untill prescribed to stop" : "For "+ this.termination+ " days";
+                    //     var when_text = this.when;
+                    //     var note_text = this.note.length ? ("("+this.note+")") : "";
+
+                    //     body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
+                    //                     <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                                    \
+                    //                     <div class="medicine-name">'+this.name+'</div>                                                              \
+                    //                     <div class="medicine-dose">'+this.dose+'mg</div>                                                            \
+                    //                     <div class="medicine-interval">'+interval_text+'</div>                                                      \
+                    //                     <div class="medicine-termination">'+termination_text+'</div>                                                \
+                    //                     <div class="medicine-when">'+when_text+'</div>                                                              \
+                    //                     <div class="medicine-note">'+note_text+'</div>                                                              \
+                    //                     </div>'));
+                    // }else if(this.type == 'asrequired'){
+                    //     body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
+                    //                     <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                                    \
+                    //                     <div class="medicine-name">'+this.name+'</div>                                                              \
+                    //                     <div class="medicine-dose">'+this.dose+'mg</div>                                                            \
+                    //                     <div class="medicine-situation">'+this.situation+'</div>                                                    \                                   \
+                    //                     </div>'));
+                    // }else if(this.type == 'investigation'){
+                    //     body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
+                    //                     <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                                    \
+                    //                     <div class="medicine-name">'+this.name+'</div>                                                              \
+                    //                     <div class="medicine-note">'+this.note+'</div>                                                            \                                   \
+                    //                     </div>'));
+                    // }else if(this.type == 'advice'){
+                    //     body.append($('<div data-id="'+this.id+'" data-key="medicines" class="prescription-entry medication-periodic well well-sm"> \
+                    //                     <div class="prescription-entry-remove glyphicon glyphicon-remove"></div>                                                         \
+                    //                     <div class="medicine-note">'+this.note+'</div>                                                            \                                   \
+                    //                     </div>'));
+                    // }
                   });
                   $("#id_body").val(JSON.stringify(json));
                 }
@@ -393,19 +422,59 @@
                         return decoration;
                     }
                     var decoration = travarse(investigation_data, function(node){
-                        // var ancestors = [];
-                        // var pointer = node;
-                        // while(pointer){
-                        //     ancestors.push(node.category);
-                        //     pointer = node.parent;
-                        //     console.log(pointer);
-                        // }
-                        // console.log(ancestors);
-
                         node.children.css('display', 'block');
                         if(node.leaf){
-                            bootbox.prompt("Additional Details", function(result){
-                                console.log(result);
+                            var ancestors = [];
+                            var pointer = node;
+                            while(pointer !== undefined){
+                                ancestors.push(pointer);
+                                pointer = pointer.parent;
+                            }
+                            ancestors.reverse();
+                            ancestors.shift();
+                            var messagebox = $('<div class="message-box"></div>');
+                            var bread = $('<ol class="breadcrumb"></ol>');
+                            $(ancestors).each(function(){
+                                bread.append($('<li><a href="#">{0}</a></li>'.format(this.category)));
+                            });
+                            messagebox.append(bread);
+                            messagebox.append('<div class="input-group">                                                        \
+                                <span class="input-group-addon" id="sizing-addon1">Note</span>                                  \
+                                <input type="text" class="form-control message-box-note" placeholder="note" aria-describedby="sizing-addon1">    \
+                            </div>');
+                            
+                            var dialog = bootbox.dialog({
+                                title: 'Additional details (if necessary)',
+                                message: messagebox,
+                                buttons: {
+                                    cancel: {
+                                        label: "Discard",
+                                        className: 'btn-danger',
+                                        callback: function(){
+                                            
+                                        }
+                                    },ok: {
+                                        label: "Save",
+                                        className: 'btn-success',
+                                        callback: function(){
+                                            var note = dialog.find('.bootbox-body').find('.message-box-note').val();
+                                            var categories = [];
+                                            $(ancestors).each(function(){
+                                                categories.push({category: this.category});
+                                            })
+                                            var investigation = {
+                                                hierarchy: categories,
+                                                note: note
+                                            }
+                                            var envelop = make_envelop('investigation', investigation);
+                                            save_envelop(envelop);
+                                            console.log(envelop);
+                                            $('#prescription_body_editor').html('');
+                                            $('#prescription_body_editor').css('display', 'none');
+                                            render_prescription();
+                                        }
+                                    }
+                                }
                             });
                         }else{
                             $('#prescription_body_editor').find('.investigation-container').append(node.children);
@@ -413,32 +482,6 @@
                     });
                     $('#prescription_body_editor').find('.investigation-container').append(decoration);
                 });
-                // $("#asrequired_medication").click(function(){
-                //   var form = $('<form> \
-                //       <div class="input-group"> \
-                //         <span class="input-group-addon" id="basic-addon1">Medicine Name</span> \
-                //         <input name="medname" type="text" class="form-control" placeholder="Medicine Name" aria-describedby="basic-addon1"> \
-                //         <span class="input-group-addon" id="basic-addon1">Dose</span> \
-                //         <input name="meddose" type="text" class="form-control" placeholder="in mg" aria-describedby="basic-addon1"> \
-                //       </div> \
-                //       <div class="input-group"> \
-                //         <span class="input-group-addon" id="basic-addon1">Situation</span> \
-                //         <input name="medcase" type="text" class="form-control" placeholder="situation" aria-describedby="basic-addon1"> \
-                //       </div> \
-                //     </form>');
-                //   bootbox.confirm(form, function(result){
-                //       if(!result) return false;
-                //       var name = form.find('input[name=medname]').val();
-                //       var dose = form.find('input[name=meddose]').val();
-                //       var situation = form.find('input[name=medcase]').val();
-                //       var data = {"id": (+new Date)+Math.random(), "type": "asrequired", "name": name, "dose": dose, "situation": situation};
-                //       var prescription = $("#prescription");
-                //       var pdata = prescription.data("prescription");
-                //       pdata["medicines"].push(data);
-                //       prescription.data("prescription", pdata);
-                //       render_prescription();
-                //   });
-                // });
                 $("#advice_medication").click(function(){
                     bootbox.prompt({
                         title: "Advice to Patient",
@@ -453,36 +496,22 @@
                         }
                     });
                 });
-                // $("#test_medication").click(function(){
-                //   var form = $('<form> \
-                //       <div class="input-group"> \
-                //         <select name="medtest" class="selectpicker"> \
-                //           <option value="xray">X-Ray</option> \
-                //           <option value="test1">Test #1</option> \
-                //           <option value="test2">Test#2</option> \
-                //         </select> \
-                //         <input name="mednote" type="text" class="form-control" placeholder="note" aria-describedby="basic-addon1"> \
-                //       </div> \
-                //     </form>');
-                //   bootbox.confirm(form, function(result){
-                //       if(!result) return false;
-                //       var name = form.find(".selectpicker").find("option:selected").val();
-                //       var note = form.find('input[name=mednote]').val();
-                //       var data = {"id": (+new Date)+Math.random(), "type": "investigation", "name": name, "note": note};
-                //       var prescription = $("#prescription");
-                //       var pdata = prescription.data("prescription");
-                //       pdata["medicines"].push(data);
-                //       prescription.data("prescription", pdata);
-                //       render_prescription();
-                //   });
-                //   $('.selectpicker').selectpicker({
-                //     size: 4
-                //   });
-                // });
                 $("#remark_medication").click(function(){
-                  alert(3);
+                    bootbox.prompt({
+                        title: "Remark(s)/Note(s)",
+                        inputType: 'textarea',
+                        callback: function (result){
+                            var data = {"id": (+new Date)+Math.random(), "type": "remark", "note": result};
+                            var prescription = $("#prescription");
+                            var pdata = prescription.data("prescription");
+                            pdata["medicines"].push(data);
+                            prescription.data("prescription", pdata);
+                            render_prescription();
+                        }
+                    });
                 });
 
+                /* medicine { */
                 $("#prescription_body_editor").on('click', "ul.med-freq-selector li", function(){
                     var freq = parseInt($(this).attr('data-freq'));
                     var freq_row = $(this).closest('.frequency-row');
@@ -563,10 +592,6 @@
                     var editor = $(this).closest('.editor-panel');
                     make_medicine(editor);
                 });
-                $('#prescription_body_editor').on('click', '.medicine-editor-med-okay', function(){
-                    var editor = $(this).closest('.editor-panel');
-                    make_medicine(editor);
-                });
                 $('#prescription_body_editor').on('keyup', '.med-name', function(){
                     var editor = $(this).closest('.editor-panel');
                     make_medicine(editor);
@@ -587,7 +612,7 @@
                     var editor = $(this).closest('.editor-panel');
                     make_medicine(editor);
                 });
-                $('#prescription_body_editor').on('click', '.translate-bn', function(){
+                $('#prescription_body_editor, #prescription_body').on('click', '.translate-bn', function(){
                     var container = $(this).closest('.translatable-compound').find('.translatable-tokens');
                     $(container).find('.translatable > .tag-active').removeClass('tag-active');
                     $(container).find('.translatable > .tag-bn').addClass('tag-active');
@@ -607,7 +632,7 @@
                     container.html('');
                     container.append(tokens);
                 });
-                $('#prescription_body_editor').on('click', '.translate-en', function(){
+                $('#prescription_body_editor, #prescription_body').on('click', '.translate-en', function(){
                     var container = $(this).closest('.translatable-compound').find('.translatable-tokens');
                     $(container).find('.translatable > .tag-active').removeClass('tag-active');
                     $(container).find('.translatable > .tag-en').addClass('tag-active');
@@ -627,10 +652,20 @@
                     container.html('');
                     container.append(tokens);
                 });
+                $('#prescription_body_editor').on('click', '.medicine-editor-med-okay', function(){
+                    var editor = $(this).closest('.editor-panel');
+                    var medicine = make_medicine(editor);
+                    var envelop = make_envelop('medicine', medicine);
+                    save_envelop(envelop);
+                    $('#prescription_body_editor').html('');
+                    $('#prescription_body_editor').css('display', 'none');
+                    render_prescription();
+                });
                 $('#prescription_body_editor').on('click', '.medicine-editor-med-cancel', function(){
                     $('#prescription_body_editor').html('');
                     $('#prescription_body_editor').css('display', 'none');
                 });
+                /* } medicine */
             });
         </script>
         <script type="text/javascript">
@@ -687,6 +722,9 @@
                 $('#id_story_referer').val(story_id);
                 $('.story-refer').trigger("click");
             }
+            /**
+             * generates a translatable medicine text for the given medicine object
+             */
             function make_med_text(medicine){
                 var error_text = "";
                 function sanity(value, key){
@@ -799,6 +837,9 @@
                             </div>".format(error_text+str)
                     };
             }
+            /**
+             * creates a medicine object from the input field inside elem
+             */
             function make_medicine(elem){
                 var medicine = {
                     type: '', // tablet | capsule | ointment | injection 
@@ -851,7 +892,19 @@
                 $(elem).find('.medicine-editor-med-okay').prop("disabled", !summary.valid);
                 $(elem).find('.medicine-text').html(summary.text);
 
-                console.log(medicine);
+                return medicine;
+            }
+
+            function make_investigation_text(investigation){
+                var bread = $('<ol class="breadcrumb"></ol>');
+                $(investigation.hierarchy).each(function(){
+                    bread.append($('<li><a href="#">{0}</a></li>'.format(this.category)));
+                });
+                var note = $('<div class="note">{0}</div>'.format(investigation.note));
+                var container = $('<div class="investigation-container"></div>');
+                container.append(bread);
+                container.append(note);
+                return container;
             }
         </script>
     </head>
