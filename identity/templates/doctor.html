@@ -86,6 +86,7 @@
         </style>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.fancybox-1.3.4.css" />
         <script type="text/javascript" src="{% static 'js/jquery.3.2.1.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/arboreal.js' %}"></script>
         <script src="{% static 'js/jquery.fancybox-1.3.4_patch.js' %}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.easing-1.3.pack.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.mousewheel-3.0.4.pack.js"></script>
@@ -258,32 +259,149 @@
                     $('#prescription_body_editor').append($($('#snippet_medication_periodic').html()));
                     $('#prescription_body_editor').css('display', 'block');
                 });
-                $("#asrequired_medication").click(function(){
-                  var form = $('<form> \
-                      <div class="input-group"> \
-                        <span class="input-group-addon" id="basic-addon1">Medicine Name</span> \
-                        <input name="medname" type="text" class="form-control" placeholder="Medicine Name" aria-describedby="basic-addon1"> \
-                        <span class="input-group-addon" id="basic-addon1">Dose</span> \
-                        <input name="meddose" type="text" class="form-control" placeholder="in mg" aria-describedby="basic-addon1"> \
-                      </div> \
-                      <div class="input-group"> \
-                        <span class="input-group-addon" id="basic-addon1">Situation</span> \
-                        <input name="medcase" type="text" class="form-control" placeholder="situation" aria-describedby="basic-addon1"> \
-                      </div> \
-                    </form>');
-                  bootbox.confirm(form, function(result){
-                      if(!result) return false;
-                      var name = form.find('input[name=medname]').val();
-                      var dose = form.find('input[name=meddose]').val();
-                      var situation = form.find('input[name=medcase]').val();
-                      var data = {"id": (+new Date)+Math.random(), "type": "asrequired", "name": name, "dose": dose, "situation": situation};
-                      var prescription = $("#prescription");
-                      var pdata = prescription.data("prescription");
-                      pdata["medicines"].push(data);
-                      prescription.data("prescription", pdata);
-                      render_prescription();
-                  });
+                $("#test_medication").click(function(){
+                    $('#prescription_body_editor').html('');
+                    $('#prescription_body_editor').append($($('#snippet_investigation').html()));
+                    $('#prescription_body_editor').css('display', 'block');
+
+                    var investigation_data = {
+                        category: 'investigation',
+                        subcategories: [{
+                                category: 'Pathology',
+                                subcategories: [{
+                                    category: 'Blood',
+                                    subcategories: [{
+                                        category: 'CBC'
+                                    },{
+                                        category: 'Suger'
+                                    },{
+                                        category: 'LFT'
+                                    },{
+                                        category: 'Lipid Profile'
+                                    },{
+                                        category: 'TSH'
+                                    }]
+                                },{
+                                    category: 'Urine',
+                                    subcategories: [{
+                                        category: 'RE'
+                                    },{
+                                        category: 'ME'
+                                    },{
+                                        category: 'C/S'
+                                    }]
+                                },{
+                                    category: 'Stool',
+                                    subcategories: [{
+                                        category: 'RE'
+                                    },{
+                                        category: 'ME'
+                                    },{
+                                        category: 'OBT'
+                                    }]
+                                }]
+                            },{
+                                category: 'Radiology',
+                                subcategories: [{
+                                    category: 'X-Ray'
+                                },{
+                                    category: 'USG'
+                                },{
+                                    category: 'CT'
+                                },{
+                                    category: 'MR'
+                                },{
+                                    category: 'Other'
+                                }]
+                            },{
+                                category: 'Cardiology',
+                                subcategories: [{
+                                    category: 'ECG'
+                                }]
+                            },{
+                                category: 'Nemology'
+                            },{
+                                category: 'Gastro'
+                            }
+                    ]};
+                    var decorate = function(node){
+                        node.elem = $('<a class="list-group-item list-group-item investigation-item" data-id="{0}">{1}</a>'.format(node.id, node.category));
+                        return node.elem;
+                    }
+                    var decorate_list = function(nodes){
+                        var elem = $('<div class="list-group investigation-list">');
+                        for(i in nodes){
+                            var node = nodes[i];
+                            elem.append(decorate(node));
+                        }
+                        return elem;
+                    }
+                    var collapse = function(node){
+                        var children = node.children;
+                        children.css('display', 'none');
+                        if(node.subcategories !== undefined && node.subcategories.length > 0){
+                            for(i in node.subcategories){
+                                collapse(node.subcategories[i]);
+                            }
+                        }
+                    }
+                    var c = 0;
+                    var travarse = function(node, visitor){
+                        node.id = c++;
+                        if(node.subcategories === undefined){
+                            node.subcategories = [];
+                        }
+                        var decoration = decorate_list(node.subcategories);
+                        node.children = decoration;
+                        if(node.elem){
+                            $(node.elem).click(function(){
+                                for(i in node.siblings){
+                                    var sibling  = node.siblings[i];
+                                    collapse(sibling);
+                                }
+                                visitor(node);
+                            });
+                        }
+                        if(node.subcategories !== undefined && node.subcategories.length > 0){
+                            for(i in node.subcategories){
+                                node.subcategories[i].siblings = node.subcategories;
+                                travarse(node.subcategories[i], visitor);
+                            }
+                        }
+                        return decoration;
+                    }
+                    var decoration = travarse(investigation_data, function(node){
+                        node.children.css('display', 'block');
+                        $('#prescription_body_editor').find('.investigation-container').append(node.children);
+                    });
+                    $('#prescription_body_editor').find('.investigation-container').append(decoration);
                 });
+                // $("#asrequired_medication").click(function(){
+                //   var form = $('<form> \
+                //       <div class="input-group"> \
+                //         <span class="input-group-addon" id="basic-addon1">Medicine Name</span> \
+                //         <input name="medname" type="text" class="form-control" placeholder="Medicine Name" aria-describedby="basic-addon1"> \
+                //         <span class="input-group-addon" id="basic-addon1">Dose</span> \
+                //         <input name="meddose" type="text" class="form-control" placeholder="in mg" aria-describedby="basic-addon1"> \
+                //       </div> \
+                //       <div class="input-group"> \
+                //         <span class="input-group-addon" id="basic-addon1">Situation</span> \
+                //         <input name="medcase" type="text" class="form-control" placeholder="situation" aria-describedby="basic-addon1"> \
+                //       </div> \
+                //     </form>');
+                //   bootbox.confirm(form, function(result){
+                //       if(!result) return false;
+                //       var name = form.find('input[name=medname]').val();
+                //       var dose = form.find('input[name=meddose]').val();
+                //       var situation = form.find('input[name=medcase]').val();
+                //       var data = {"id": (+new Date)+Math.random(), "type": "asrequired", "name": name, "dose": dose, "situation": situation};
+                //       var prescription = $("#prescription");
+                //       var pdata = prescription.data("prescription");
+                //       pdata["medicines"].push(data);
+                //       prescription.data("prescription", pdata);
+                //       render_prescription();
+                //   });
+                // });
                 $("#advice_medication").click(function(){
                     bootbox.prompt({
                         title: "Advice to Patient",
@@ -298,32 +416,32 @@
                         }
                     });
                 });
-                $("#test_medication").click(function(){
-                  var form = $('<form> \
-                      <div class="input-group"> \
-                        <select name="medtest" class="selectpicker"> \
-                          <option value="xray">X-Ray</option> \
-                          <option value="test1">Test #1</option> \
-                          <option value="test2">Test#2</option> \
-                        </select> \
-                        <input name="mednote" type="text" class="form-control" placeholder="note" aria-describedby="basic-addon1"> \
-                      </div> \
-                    </form>');
-                  bootbox.confirm(form, function(result){
-                      if(!result) return false;
-                      var name = form.find(".selectpicker").find("option:selected").val();
-                      var note = form.find('input[name=mednote]').val();
-                      var data = {"id": (+new Date)+Math.random(), "type": "investigation", "name": name, "note": note};
-                      var prescription = $("#prescription");
-                      var pdata = prescription.data("prescription");
-                      pdata["medicines"].push(data);
-                      prescription.data("prescription", pdata);
-                      render_prescription();
-                  });
-                  $('.selectpicker').selectpicker({
-                    size: 4
-                  });
-                });
+                // $("#test_medication").click(function(){
+                //   var form = $('<form> \
+                //       <div class="input-group"> \
+                //         <select name="medtest" class="selectpicker"> \
+                //           <option value="xray">X-Ray</option> \
+                //           <option value="test1">Test #1</option> \
+                //           <option value="test2">Test#2</option> \
+                //         </select> \
+                //         <input name="mednote" type="text" class="form-control" placeholder="note" aria-describedby="basic-addon1"> \
+                //       </div> \
+                //     </form>');
+                //   bootbox.confirm(form, function(result){
+                //       if(!result) return false;
+                //       var name = form.find(".selectpicker").find("option:selected").val();
+                //       var note = form.find('input[name=mednote]').val();
+                //       var data = {"id": (+new Date)+Math.random(), "type": "investigation", "name": name, "note": note};
+                //       var prescription = $("#prescription");
+                //       var pdata = prescription.data("prescription");
+                //       pdata["medicines"].push(data);
+                //       prescription.data("prescription", pdata);
+                //       render_prescription();
+                //   });
+                //   $('.selectpicker').selectpicker({
+                //     size: 4
+                //   });
+                // });
                 $("#remark_medication").click(function(){
                   alert(3);
                 });
@@ -875,6 +993,11 @@
                         </div>
                         <div class="medicine-text alert alert-success"></div>
                     </div>
+                </div>
+            </div>
+            <div id="snippet_investigation" class="snippet">
+                <div class="investigation-container">
+
                 </div>
             </div>
         </div>
