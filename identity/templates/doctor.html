@@ -325,7 +325,11 @@
                             }
                     ]};
                     var decorate = function(node){
-                        node.elem = $('<a class="list-group-item list-group-item investigation-item" data-id="{0}">{1}</a>'.format(node.id, node.category));
+                        nchildren = (node.subcategories) ? node.subcategories.length : 0;
+                        node.elem = $('<a class="list-group-item list-group-item investigation-item">{0}{1}</a>'.format(node.category, nchildren > 0 ? '<span class="badge">{0}</span>'.format(nchildren) : ''));
+                        if(!nchildren){
+                            node.elem.addClass('investigation-item-leaf');
+                        }
                         return node.elem;
                     }
                     var decorate_list = function(nodes){
@@ -338,6 +342,7 @@
                         return elem;
                     }
                     var collapse = function(node){
+                        node.elem.removeClass('active');
                         var children = node.children;
                         children.css('display', 'none');
                         if(node.subcategories.length > 0){
@@ -363,22 +368,48 @@
                                         collapse(node.siblings[i]);
                                     }
                                 }
+                                node.elem.addClass('active');
                                 visitor(node);
                             });
                         }
+                        var counter = 0;
                         if(node.subcategories.length > 0){
                             for(i in node.subcategories){
                                 if(node.subcategories.hasOwnProperty(i)){
+                                    node.subcategories[i].parent = node;
                                     node.subcategories[i].siblings = node.subcategories;
+                                    counter++;
                                     travarse(node.subcategories[i], visitor);
                                 }
                             }
                         }
+                        node.leaf = (counter == 0);
+                        node.nchildren = counter;
+                        if(node.elem){
+                            node.elem.attr('data-id', node.id);
+                            node.elem.attr('data-leaf', node.leaf);
+                            node.elem.attr('data-nchildren', node.nchildren);
+                        }
                         return decoration;
                     }
                     var decoration = travarse(investigation_data, function(node){
+                        // var ancestors = [];
+                        // var pointer = node;
+                        // while(pointer){
+                        //     ancestors.push(node.category);
+                        //     pointer = node.parent;
+                        //     console.log(pointer);
+                        // }
+                        // console.log(ancestors);
+
                         node.children.css('display', 'block');
-                        $('#prescription_body_editor').find('.investigation-container').append(node.children);
+                        if(node.leaf){
+                            bootbox.prompt("Additional Details", function(result){
+                                console.log(result);
+                            });
+                        }else{
+                            $('#prescription_body_editor').find('.investigation-container').append(node.children);
+                        }
                     });
                     $('#prescription_body_editor').find('.investigation-container').append(decoration);
                 });
