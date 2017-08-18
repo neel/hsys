@@ -331,17 +331,20 @@
                     var decorate_list = function(nodes){
                         var elem = $('<div class="list-group investigation-list">');
                         for(i in nodes){
-                            var node = nodes[i];
-                            elem.append(decorate(node));
+                            if(nodes.hasOwnProperty(i)){
+                                elem.append(decorate(nodes[i]));
+                            }
                         }
                         return elem;
                     }
                     var collapse = function(node){
                         var children = node.children;
                         children.css('display', 'none');
-                        if(node.subcategories !== undefined && node.subcategories.length > 0){
+                        if(node.subcategories.length > 0){
                             for(i in node.subcategories){
-                                collapse(node.subcategories[i]);
+                                if(node.subcategories.hasOwnProperty(i)){
+                                    collapse(node.subcategories[i]);
+                                }
                             }
                         }
                     }
@@ -356,16 +359,19 @@
                         if(node.elem){
                             $(node.elem).click(function(){
                                 for(i in node.siblings){
-                                    var sibling  = node.siblings[i];
-                                    collapse(sibling);
+                                    if(node.siblings.hasOwnProperty(i)){
+                                        collapse(node.siblings[i]);
+                                    }
                                 }
                                 visitor(node);
                             });
                         }
-                        if(node.subcategories !== undefined && node.subcategories.length > 0){
+                        if(node.subcategories.length > 0){
                             for(i in node.subcategories){
-                                node.subcategories[i].siblings = node.subcategories;
-                                travarse(node.subcategories[i], visitor);
+                                if(node.subcategories.hasOwnProperty(i)){
+                                    node.subcategories[i].siblings = node.subcategories;
+                                    travarse(node.subcategories[i], visitor);
+                                }
                             }
                         }
                         return decoration;
