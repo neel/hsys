@@ -100,7 +100,7 @@
                                 <div class="prescription-prescription">
                                     <div class="prescription-prescription-medicines">
                                         <ol class="prescription-prescription-medicines-list">
-                                            {% for medicine in prescription.body.medicines %}
+                                            {% for medicine in prescription.body.envelops %}
                                                 <li class="prescription-prescription-medicines-list-item">
                                                     {{medicine|medadvice|safe}}
                                                 </li>

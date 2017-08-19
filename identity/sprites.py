@@ -105,7 +105,7 @@ def _ActivitiesSprite(request, activities):
     })
 
 def StoryViewerSprite(request, story):
-    story.body = json.loads(story.body)
+    # story.body = json.loads(story.body)
     print(story.media)
     if(story.media and len(story.media) > 0):
         story.media = json.loads(story.media)

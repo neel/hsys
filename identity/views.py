@@ -748,15 +748,15 @@ def _prescription(request, story_id):
         prescriptions = []
         complaints    = []
         if story.is_prescription:
-            story.body = json.loads(story.body)
+            # story.body = json.loads(story.body)
             prescriptions.append(story)
             for complaint in story.refers_to.all():
-                complaint.body = json.loads(complaint.body)
+                # complaint.body = json.loads(complaint.body)
                 complaints.append(complaint)
         else:
             complaints.append(story)
             for s in story.refered_by.all():
-                s.body = json.loads(s.body)
+                # s.body = json.loads(s.body)
                 prescriptions.append(s)
         
         return PrescriptionViewerSprite(request, story, complaints, prescriptions)

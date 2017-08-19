@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 import re
 import warnings
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.db.models.manager import EmptyManager
 from django.db.models import Count
@@ -277,7 +278,7 @@ class Story(models.Model):
     patient = models.ForeignKey(Patient, related_name="stories")
     doctor  = models.ForeignKey(Doctor, related_name="stories")
     subject = models.CharField(max_length=1500)
-    body    = models.TextField()
+    body    = JSONField()
     refers_to = models.ManyToManyField('Story', related_name="refered_by", blank=True)
     is_prescription = models.BooleanField("is_prescription", default=False)
     media = models.TextField(null=True, blank=True)
@@ -289,11 +290,13 @@ class Story(models.Model):
         print("HERE HERE HERE HERE")
         if self.is_prescription:
             try:
-                prescription = json.loads(self.body)
-                for m in prescription['medicines']:
+                # prescription = json.loads(self.body)
+                prescription = self.body
+                for m in prescription['envelops']:
                     if hasattr(m, 'id'):
                         del m['id']
-                self.body = json.dumps(prescription)
+                # self.body = json.dumps(prescription)
+                self.body = prescription
             except ValueError:
                 raise ValidationError('Malformed prescription data')
         if self.media and len(self.media) > 0:

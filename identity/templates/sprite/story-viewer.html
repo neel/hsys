@@ -71,9 +71,8 @@
         </div>
         <div class="story-viewer-body">
             {% if story.is_prescription %}
-                {% for m in story.body.medicines %}
-                    {{ m|medadvice|safe }}
-                {% endfor %}
+                <div id="envelops" class="prescription-envelops">
+                </div>
             {% else %}
                 <div class="complaint-section complaint-section-symptom">
                     <div class="complaint-section-heading complaint-section-heading-symptom"></div>
@@ -141,3 +140,9 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    (function() {
+        var data = {{story.body|jsonify|safe}};
+        render_prescription_data(data, $('#envelops'));
+    })();
+</script>

@@ -16,7 +16,12 @@ import base64
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from django.contrib.auth.hashers import make_password
+from tastypie import fields
  
+class JSONField(fields.ApiField):
+    """ Wrapper over fields.apiField to make what we're doing here clear """
+    pass
+
 class UserResource(ModelResource):
     class Meta:
         queryset = HmsUser.objects.all()
@@ -83,7 +88,8 @@ class StoryResource(ModelResource):
     patient = fields.ToOneField('identity.api.PatientShallowResource', 'patient', full=True)
     refers_to  = fields.ToManyField('identity.api.StoryResource', 'refers_to', blank=True, null=True)
     refered_by = fields.ToManyField('identity.api.StoryResource', 'refered_by', blank=True, null=True)
-    
+    body = JSONField('body')
+
     class Meta:
         queryset = Story.objects.all()
         filtering = {
