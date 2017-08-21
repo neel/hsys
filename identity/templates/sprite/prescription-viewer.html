@@ -7,15 +7,21 @@
             @import url("{% static 'css/common.css' %}");
             @import url("{% static 'css/heading.css' %}");
             @import url("{% static 'css/sprite/prescription-viewer.css' %}");
+            @import url("{% static 'css/doctor.css' %}");
         </style>
         <script type="text/javascript" src="{% static 'js/jquery.1.9.0.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/jquery.sticky-kit.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/d3.v3.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/jquery.qrcode.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/panel/prescription-creator.js' %}"></script>
         <script type="text/javascript">
             $(document).ready(function(){
                 $('#qr').qrcode({text: '{"p":{{story.patient.id}},"d":{{story.doctor.id}},"s":{{story.id}}}', width: 128, height: 128, ecLevel: 'L'});
+                {% for prescription in prescriptions %}
+                    var data = {{prescription.body|jsonify|safe}};
+                    render_prescription_data(data, $('#envelops'));
+                {% endfor %}
             })
         </script>
     </head>
@@ -99,13 +105,13 @@
                             {% for prescription in prescriptions %}
                                 <div class="prescription-prescription">
                                     <div class="prescription-prescription-medicines">
-                                        <ol class="prescription-prescription-medicines-list">
+                                        <div id="envelops" class="prescription-prescription-medicines-list">
                                             {% for medicine in prescription.body.envelops %}
                                                 <li class="prescription-prescription-medicines-list-item">
-                                                    {{medicine|medadvice|safe}}
+                                                    
                                                 </li>
                                             {% endfor %}
-                                        </ol>
+                                        </div>
                                     </div>
                                 </div>
                             {% endfor %}
