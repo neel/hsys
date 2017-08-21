@@ -17,7 +17,8 @@
         <script type="text/javascript" src="{% static 'js/panel/prescription-creator.js' %}"></script>
         <script type="text/javascript">
             $(document).ready(function(){
-                $('#qr').qrcode({text: '{"p":{{story.patient.id}},"d":{{story.doctor.id}},"s":{{story.id}}}', width: 128, height: 128, ecLevel: 'L'});
+                //$('#qr').qrcode({text: '{"p":{{story.patient.id}},"d":{{story.doctor.id}},"s":{{story.id}}}', width: 128, height: 128, ecLevel: 'L'});
+                $('#qr').qrcode({text: "{{story.label}}", width: 128, height: 128, ecLevel: 'L'});
                 {% for prescription in prescriptions %}
                     var data = {{prescription.body|jsonify|safe}};
                     render_prescription_data(data, $('#envelops'));

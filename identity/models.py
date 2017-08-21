@@ -25,11 +25,14 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models
 from datetime import datetime
+from tastypie import fields, utils
 import os
 import json
+import hashlib
 import uuid
 import base64
 import mimetypes
+import crc16
 
 mimetypes.init()
 
@@ -244,6 +247,16 @@ class Doctor(Person):
         stories = scheduled_visits
         
         return stories;
+    
+    def story_counter(self, story):
+        subset = self.stories.filter(patient=story.patient, is_prescription=story.is_prescription)
+        counter = 0
+        for elem in subset:
+            counter = counter +1
+            if(elem == story):
+                break
+        return (counter if counter <= len(subset) else -1)
+
       
     def patients(self):
         id_list = self.stories.values_list('patient', flat=True).distinct()
@@ -282,6 +295,16 @@ class Story(models.Model):
     refers_to = models.ManyToManyField('Story', related_name="refered_by", blank=True)
     is_prescription = models.BooleanField("is_prescription", default=False)
     media = models.TextField(null=True, blank=True)
+
+    def counter(self):
+        return self.doctor.story_counter(self)
+
+    def label(self):
+        crc = crc16.crc16xmodem('%s-%s/%s.%s' % (self.patient.id, self.doctor.id, self.counter(), self.id))
+        return "%07d-%04d/%02d/%s.%s|%s/%s" % (self.patient.id, self.doctor.id, self.counter(), self.id, crc, self.when.date(), self.checksum())
+
+    def checksum(self):
+        return hashlib.md5(json.dumps(self.body, sort_keys=True)).hexdigest()
 
     def __unicode__(self):
         return "%s" % (self.subject)

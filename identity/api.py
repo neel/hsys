@@ -88,6 +88,8 @@ class StoryResource(ModelResource):
     patient = fields.ToOneField('identity.api.PatientShallowResource', 'patient', full=True)
     refers_to  = fields.ToManyField('identity.api.StoryResource', 'refers_to', blank=True, null=True)
     refered_by = fields.ToManyField('identity.api.StoryResource', 'refered_by', blank=True, null=True)
+    checksum = fields.CharField(attribute='checksum', readonly=True)
+    label = fields.CharField(attribute='label', readonly=True)
     body = JSONField('body')
 
     class Meta:
@@ -104,7 +106,9 @@ class StoryResource(ModelResource):
 class StoryShallowResource(ModelResource):
     when = fields.DateTimeField(attribute='when', readonly=True, null=True, blank=True)
     doctor = fields.ToOneField('identity.api.DoctorShallowResource', 'doctor', full=True)
-    patient = fields.ToOneField('identity.api.PatientShallowResource', 'patient', full=True)   
+    patient = fields.ToOneField('identity.api.PatientShallowResource', 'patient', full=True)
+    checksum = fields.CharField(attribute='checksum', readonly=True)
+    label = fields.CharField(attribute='label', readonly=True)
     
     class Meta:
         queryset = Story.objects.all()
