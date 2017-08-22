@@ -147,6 +147,8 @@ class OrganizationResource(ModelResource):
 
 class DoctorResource(ModelResource):
     organizations = fields.ToManyField('identity.api.OrganizationResource', 'organizations', null=True)
+    seen_before   = fields.FloatField(attribute='seen_before', readonly=True)
+    online        = fields.BooleanField(attribute='online', readonly=True)
     #visits        = fields.DictField(attribute='visits', readonly=True)
     
     class Meta:
@@ -176,6 +178,8 @@ class DoctorShallowResource(ModelResource):
 # http://michalcodes4life.wordpress.com/2013/11/26/custom-tastypie-resource-from-multiple-django-models/    
 class DoctorCatalogResource(ModelResource):
     organizations = fields.ToManyField('identity.api.OrganizationResource', 'organizations', null=True)
+    seen_before   = fields.FloatField(attribute='seen_before', readonly=True)
+    online        = fields.BooleanField(attribute='online', readonly=True)
     #visits        = fields.DictField(attribute='visits', readonly=True)
     
     def build_filters(self, filters=None):
@@ -293,6 +297,8 @@ class PatientResource(MultiPartResource, ModelResource):
     appointments = fields.ToManyField('identity.api.AppointmentResource', 'appointments', full=True, use_in='detail', readonly=True)
     visits = fields.ToManyField('identity.api.StoryShallowResource', 'stories', full=True, use_in='detail', readonly=True)
     admissions = fields.ToManyField('identity.api.AdmissionResource', 'admissions', null=True, use_in='detail', readonly=True)
+    seen_before   = fields.FloatField(attribute='seen_before', readonly=True)
+    online        = fields.BooleanField(attribute='online', readonly=True)
 
     def obj_create(self, bundle, request=None, **kwargs):
         bundle = super(PatientResource, self).obj_create(bundle, request=request, **kwargs)
@@ -329,6 +335,8 @@ class PatientResource(MultiPartResource, ModelResource):
         
 class OperatorResource(ModelResource):
     org = fields.ToOneField('identity.api.OrganizationResource', 'org', null=True)
+    seen_before   = fields.FloatField(attribute='seen_before', readonly=True)
+    online        = fields.BooleanField(attribute='online', readonly=True)
 
     def render(self, request, data):
         dbundle = self.build_bundle(obj=data,request=request)
@@ -343,6 +351,8 @@ class OperatorResource(ModelResource):
         }
         
 class PatientCatalogResource(ModelResource):
+    seen_before   = fields.FloatField(attribute='seen_before', readonly=True)
+    online        = fields.BooleanField(attribute='online', readonly=True)
     #organizations = fields.ToManyField('identity.api.OrganizationResource', 'organizations', null=True)
     #visits        = fields.DictField(attribute='visits', readonly=True)
     

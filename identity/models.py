@@ -50,6 +50,7 @@ class HmsUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(_('active'), default=True,
         help_text=_('Designates whether this user should be treated as '
                     'active. Unselect this instead of deleting accounts.'))
+    last_seen = models.DateTimeField(_('last seen'), default=timezone.now)
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     objects = UserManager()
@@ -155,6 +156,15 @@ class Person(HmsUser):
     address    = models.CharField(max_length=300, blank=True)
     image      = models.ImageField(upload_to=rename_image, null=True, blank=True)
     
+    def seen_before(self):
+        then  = self.last_seen
+        now   = timezone.now()
+        delta = now - then
+        return delta.total_seconds()
+        
+    def online(self):
+        return self.seen_before() <= 10
+
     def get_full_name(self):
         full_name = '%s %s' % (self.first_name, self.last_name)
         return full_name.strip()

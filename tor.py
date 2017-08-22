@@ -14,6 +14,8 @@ from importlib import import_module
 from django.conf.urls import url
 from tornado import template 
 from tornado.locks import Condition
+import datetime
+from django.utils import timezone
 import time
 import re
 import StringIO
@@ -296,6 +298,8 @@ class ChatPulseHandler(PulseHandler):
             self.write('')
             self.finish()
         def poll(request, viewer, counter=10):
+            viewer.last_seen = timezone.now()
+            viewer.save()
             if counter:
                 messages = MessageAccess().all(viewer, last_id)
                 if len(messages) > 0: push(messages, request, viewer)
