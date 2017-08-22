@@ -93,3 +93,8 @@ def ChatPanel(request):
         'request': request,
         'latest': latest_id
     })
+
+def PrescriptionCreationPanel(request):
+    return render(request, 'panel/prescription-creator.html', {
+        'request': request
+    })

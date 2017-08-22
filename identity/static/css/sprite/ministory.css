@@ -79,3 +79,13 @@
 .ministory-sprite-unsolved{
     background-color: rgb(249, 228, 152);
 }
+.ministory-link-patient{
+    position: absolute;
+    z-index: 2;
+    top: 8px;
+    right: 147px;
+    display: none;
+}
+.ministory:hover .ministory-link-patient{
+    display: block;
+}

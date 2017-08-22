@@ -23,7 +23,16 @@
     <ul class="ministories-list">
     {% for story in stories %}
         <li class="ministory-list-item">
-            <div class="ministory">
+            <div class="ministory" data-patient="{{story.patient.id}}" data-doctor="{{story.doctor.id}}">
+                {% with user|usertype as user_class %}
+                {% if user_class == 'Doctor' %}
+                <div class="ministory-link-patient">
+                    <a type="button" class="btn btn-default btn-xs" href="{% url 'patient' story.patient.id %}">
+                        <span class="glyphicon glyphicon-star" aria-hidden="true"></span> Patient History
+                    </a>
+                </div>
+                {% endif %}
+                {% endwith %}
                 {% view 'identity.sprites.MiniStorySprite' story %}
             </div>
         </li>
@@ -32,6 +41,18 @@
 </div>
 
 <!-- begin commet connector -->
+<script type="text/javascript">
+var popup = function(){
+    var unsolved = $('ul.ministories-list .ministory-sprite-unsolved');
+    if(unsolved.length > 0){
+        if(!$(unsolved[0]).data('triggered')){
+            unsolved[0].click();
+            $(unsolved[0]).attr('data-triggered', true);
+            console.log(unsolved[0]);
+        }
+    }
+}
+</script>
 <script type="text/javascript">
 (function($){
     var update = function(){
@@ -61,7 +82,10 @@
 $(document).ready(function(){
     $('ul.ministories-list').on('click', '.ministory-sprite', function(){
         $('.story-viewer').remove();
+        $(this).closest(".ministories").append("<div class='ministore-loading-wrapper'></div>");
+        console.log('covered');
         var id = $(this).attr('data-id');
+        var self = $(this);
         $.ajax({
             url: '/_story/'+id
         }).done(function(content, status, xhr){
@@ -70,8 +94,13 @@ $(document).ready(function(){
                 var story_board = $($.trim(content.replace(/\s+/g, " ")));
                 $('#main').append(story_board);
             }
+            console.log(self);
+            self.closest(".ministories").find(".ministore-loading-wrapper").remove();
         });
     });
+    if(location.pathname.startsWith("/patient")){
+        popup();
+    }
 });
 </script>
 <!-- end ministories panel -->
