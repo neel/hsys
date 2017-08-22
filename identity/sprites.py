@@ -81,9 +81,11 @@ def NoticeSprite(request, notice):
     })
 
 def MiniStorySprite(request, story):
+    unsolved = (story.is_complaint() and story.refered_by.count() == 0)
     return render(request, 'sprite/story-mini.html', {
         'request': request,
-        'story': story
+        'story': story,
+        'unsolved': unsolved
     })
 
 def StoryCardSprite(request, story):

@@ -134,15 +134,21 @@ def patient(request, patient_id):
         admissions      = AdmissionAccess().all(request.user, patient)
         appointments    = AppointmentAccess().all(request.user, patient)
 
-    return render(request, 'patient.html', {
-        'request': request,
-        'patient': patient,
-        'stories': stories,
-        'nstories': nstories,
-        'notices': notices,
-        'admissions': admissions,
-        'appointments': appointments
-    })
+        ctx = {
+            'request': request,
+            'patient': patient,
+            'stories': stories,
+            'nstories': nstories,
+            'notices': notices,
+            'admissions': admissions,
+            'appointments': appointments
+        }
+        if(request.user.is_doctor()):
+            ctx['story_form'] = RandomVisitCreationForm()
+
+        return render(request, 'patient.html', ctx)
+    else:
+        return HttpResponseRedirect(reverse('login'))
 
 def doctor(request, doctor_id):
     # pdb.set_trace()

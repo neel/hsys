@@ -90,6 +90,7 @@ class StoryResource(ModelResource):
     refered_by = fields.ToManyField('identity.api.StoryResource', 'refered_by', blank=True, null=True)
     checksum = fields.CharField(attribute='checksum', readonly=True)
     label = fields.CharField(attribute='label', readonly=True)
+    is_complaint = fields.BooleanField(attribute='is_complaint', readonly=True)
     body = JSONField('body')
 
     class Meta:
@@ -109,6 +110,7 @@ class StoryShallowResource(ModelResource):
     patient = fields.ToOneField('identity.api.PatientShallowResource', 'patient', full=True)
     checksum = fields.CharField(attribute='checksum', readonly=True)
     label = fields.CharField(attribute='label', readonly=True)
+    is_complaint = fields.BooleanField(attribute='is_complaint', readonly=True)
     
     class Meta:
         queryset = Story.objects.all()

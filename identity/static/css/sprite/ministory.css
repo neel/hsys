@@ -50,9 +50,20 @@
 .ministory-patient{
     float: left;
     font-size: 13px;
-    font-weight: lighter;
-    margin-left: 14px;
 }
+.ministory-sprite-complaint .ministory-patient{
+    margin-right: 10px;
+}
+.ministory-sprite-complaint .ministory-patient:after{
+    content: "➤";
+}
+.ministory-sprite-prescription .ministory-doctor{
+    margin-right: 10px;
+}
+.ministory-sprite-prescription .ministory-doctor:after{
+    content: "➤";
+}
+
 .ministory-when{
     float: right;
 }
@@ -64,4 +75,7 @@
 }
 .ministory-sprite:hover{
     background-color: #e8e8e8;
+}
+.ministory-sprite-unsolved{
+    background-color: rgb(249, 228, 152);
 }

@@ -1,4 +1,4 @@
-<div class="ministory-sprite {% if story.mode == Story.ScheduledMode %}ministory-sprite-scheduled{% else %}ministory-sprite-random{% endif %} {% if story.is_prescription %}ministory-sprite-prescription{% else %}ministory-sprite-complaint{% endif %}" data-id="{{story.id}}">
+<div class="ministory-sprite {% if story.mode == Story.ScheduledMode %}ministory-sprite-scheduled{% else %}ministory-sprite-random{% endif %} {% if story.is_prescription %}ministory-sprite-prescription{% else %}ministory-sprite-complaint{% endif %} ministory-sprite-{% if unsolved %}unsolved{% else %}solved{% endif %}" data-id="{{story.id}}">
     <input type="hidden" name="id" value="{{story.id}}" />
     <div class="ministory-heading">
         {% if story.is_prescription %}

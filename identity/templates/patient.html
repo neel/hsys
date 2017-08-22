@@ -30,9 +30,11 @@
             @import url('{% static 'css/sprite/complaint.css' %}');
             @import url('{% static 'css/sprite/prescription.css' %}');
             @import url('{% static 'css/panel/chat.css' %}');
+            @import url('{% static 'css/panel/story-creation.css' %}');
+            @import url('{% static 'css/panel/prescription-creator.css' %}');
         </style>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.fancybox-1.3.4.css" />
-        <script type="text/javascript" src="{% static 'js/jquery.1.9.0.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.3.2.1.min.js' %}"></script>
         <script src="{% static 'js/jquery.fancybox-1.3.4_patch.js' %}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.easing-1.3.pack.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.mousewheel-3.0.4.pack.js"></script>
@@ -48,7 +50,15 @@
         <script type="text/javascript" src="{% static 'js/panel/admissions.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/sprite/story-viewer.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/nunjucks.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/typeahead.bundle.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/panel/chat.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/handlebars-v1.3.0.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/panel/prescription-creator.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/panel/story-creation.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/bootstrap-clockpicker.js' %}"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
                 $("#heading").stick_in_parent();
@@ -91,10 +101,163 @@
                     {% view 'identity.sprites.NoticeSprite' notice %}
                 {% endfor %}
                 {% view 'identity.panels.AppointmentsPanel' appointments %}
-                {% view 'identity.panels.MiniStoriesPanel' stories patient %}
+                {% view 'identity.panels.MiniStoriesPanel' stories nstories patient %}
                 {% view 'identity.panels.AdmissionsPanel' admissions %}
             </div>
+            {% if request.user.is_doctor %}
+            {% view 'identity.panels.RandomStoryCreationPanel' story_form %}
+            {% endif %}
             {% view 'identity.panels.ChatPanel' %}
+        </div>
+        <div id="snippet_store">
+            <div id="snippet_medication_periodic" class="snippet">
+                <div class="panel panel-default editor-panel">
+                    <div class="panel-body">
+                        <div class="well well-sm">
+                            <div class="btn-group medicine-editor-med-type" data-toggle="buttons">
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="options_type" id="option_type1" autocomplete="off" value="tablet"> Tablet
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="options_type" id="option_type2" autocomplete="off" value="capsule"> Capsule
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="options_type" id="option_type3" autocomplete="off" value="syrup"> Syrup
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="options_type" id="option_type3" autocomplete="off" value="ointment"> Ointment
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="options_type" id="option_type3" autocomplete="off" value="injection"> Injection
+                                </label>
+                            </div>
+                            <div class="medicine-editor-med-control">
+                                <button type="button" class="btn btn-success medicine-editor-med-okay" aria-label="Left Align">
+                                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn btn-danger medicine-editor-med-cancel" aria-label="Left Align">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">Name</span>
+                            <input name="medname" type="text" class="form-control med-name" placeholder="Medicine Name" aria-describedby="basic-addon1">
+                            <span class="input-group-addon" id="basic-addon1">Dose</span>
+                            <input name="meddose" type="text" class="form-control med-dose" placeholder="in mg" aria-describedby="basic-addon1">
+                            <div class="input-group-btn med-dose-unit">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Unit <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li value="mg"><a href="#">mg</a></li>
+                                    <li value="Mg"><a href="#">Mg</a></li>
+                                    <li value="g"><a href="#">g</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li value="ml"><a href="#">ml</a></li>
+                                </ul>
+                            </div>
+                            <span class="input-group-addon" id="basic-addon1">For</span>
+                            <input name="medtermination" type="text" class="form-control med-termination" placeholder="in days" aria-describedby="basic-addon1">
+                            <span class="input-group-addon" id="basic-addon1">Days</span>
+                        </div>
+                        <div class="input-group frequency-row">
+                            <div class="input-group-btn med-days">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Days Interval <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li data-interval="0" value="Everyday"><a href="#">Daily</a></li>
+                                    <li data-interval="1" value="Every other day"><a href="#">Alternate Day</a></li>
+                                    <li data-interval="2" value="3rd"><a href="#">Every 3rd Day</a></li>
+                                    <li data-interval="3" value="4th"><a href="#">Every 4th Day</a></li>
+                                    <li data-interval="4" value="5th"><a href="#">Every 5th Day</a></li>
+                                    <li data-interval="5" value="6th"><a href="#">Every 6th Day</a></li>
+                                    <li data-interval="6" value="7th"><a href="#">Every 7th Day</a></li>
+                                    <li data-interval="7" value="8th"><a href="#">Every 8th Day</a></li>
+                                    <li data-interval="8" value="9th"><a href="#">Every 9th Day</a></li>
+                                    <li data-interval="9" value="10th"><a href="#">Every 10th Day</a></li>
+                                    <li data-interval="10" value="11th"><a href="#">Every 11th Day</a></li>
+                                </ul>
+                            </div>
+                            <div class="input-group-btn dropup">
+                                <button type="button" class="btn btn-default dropdown-toggle medicine-editor-med-frequency" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Frequency <span class="caret"></span>
+                                </button>
+                                <ul class="med-freq-selector dropdown-menu">
+                                    <li data-freq="1"><a href="#">Once (1)</a></li>
+                                    <li data-freq="2"><a href="#">Twice (2)</a></li>
+                                    <li data-freq="3"><a href="#">Thrice (3)</a></li>
+                                    <li data-freq="4"><a href="#">4 Times</a></li>
+                                    <li data-freq="5"><a href="#">5 Times</a></li>
+                                    <li data-freq="6"><a href="#">6 Times</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li data-freq="0"><a href="#">As Needed</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li data-freq="-1"><a href="#">Others</a></li>
+                                </ul>
+                            </div>
+                            <div class="form-inline">
+                                <div class="btn-group btn-group-justified medication-mode" role="group" aria-label="..." data-freq="" data-mode="">
+                                    <div class="btn-group" role="group">
+                                        <button id="" type="button" class="btn btn-success med-mode-timmed">Clock</button>
+                                    </div>
+                                    <div class="btn-group" role="group">
+                                        <button id="" type="button" class="btn btn-success med-mode-event">Event</button>
+                                    </div>
+                                </div>
+                                <div class="input-group form-inline col-md-12 med-asneeded">
+                                    <span class="input-group-addon" id="basic-addon1" style="width: 80px;">Use Case</span>
+                                    <input name="med-usecase" type="text" class="form-control med-usecase" placeholder="Case" aria-describedby="basic-addon1">
+                                </div>
+                                <div class="med-timmed-clock-template">
+                                    <div class="input-group clockpicker med-clock" data-placement="left" data-align="top" data-autoclose="true">
+                                        <input type="text" class="form-control" value="00:00">
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-time"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div id="" class="med-timmed-clocks"></div>
+                                <div id="" class="med-event input-group form-inline">
+                                    <div class="btn-group med-when-ba" data-toggle="buttons">
+                                        <label class="btn btn-info active">
+                                            <input type="radio" name="options_ab" id="option_ab2" autocomplete="off" value="n/a"> Not Applicable
+                                        </label>
+                                        <label class="btn btn-info">
+                                            <input type="radio" name="options_ab" id="option_ab1" autocomplete="off" value="before"> Before
+                                        </label>
+                                        <label class="btn btn-info">
+                                            <input type="radio" name="options_ab" id="option_ab3" autocomplete="off" value="after"> After
+                                        </label>
+                                    </div>
+                                    <div class="btn-group med-when-context" data-toggle="buttons">
+                                        <label class="btn btn-info">
+                                            <input type="checkbox" name="options_ctx" id="option_ctx2" autocomplete="off" value="anytime"> Anytime
+                                        </label>
+                                        <label class="btn btn-info">
+                                            <input type="checkbox" name="options_ctx" id="option_ctx1" autocomplete="off" value="breakfast"> Breakfast
+                                        </label>
+                                        <label class="btn btn-info">
+                                            <input type="checkbox" name="options_ctx" id="option_ctx3" autocomplete="off" value="lunch"> Lunch
+                                        </label>
+                                        <label class="btn btn-info">
+                                            <input type="checkbox" name="options_ctx" id="option_ctx4" autocomplete="off" value="dinner"> Dinner
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="medicine-text alert alert-success"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="snippet_investigation" class="snippet">
+                <div class="investigation-container">
+
+                </div>
+            </div>
         </div>
     </body>
 </html>

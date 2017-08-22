@@ -296,6 +296,9 @@ class Story(models.Model):
     is_prescription = models.BooleanField("is_prescription", default=False)
     media = models.TextField(null=True, blank=True)
 
+    def is_complaint(self):
+        return not self.is_prescription
+
     def counter(self):
         return self.doctor.story_counter(self)
 
