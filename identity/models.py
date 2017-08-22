@@ -234,6 +234,7 @@ class Doctor(Person):
     paramedic     = models.BooleanField()
     specialization = models.CharField(_('Specialization'), max_length=64, blank=True)
     organizations = models.ManyToManyField(Organization, through='Membership', blank=True)
+    busy     = models.BooleanField(default=False)
     
     def get_full_name(self):
         return '%s. %s' % ('Dr', super(Doctor, self).get_full_name())
@@ -323,7 +324,6 @@ class Story(models.Model):
         return "%s" % (self.subject)
 
     def clean(self):
-        print("HERE HERE HERE HERE")
         if self.is_prescription:
             try:
                 # prescription = json.loads(self.body)
@@ -360,6 +360,9 @@ class Story(models.Model):
                 self.media = json.dumps(media)
             except ValueError:
                 raise ValidationError('Malformed media data')
+        if self.is_complaint():
+            self.doctor.busy = True
+            self.doctor.save()
 
     def save(self, **kwargs):
         self.clean()
