@@ -163,7 +163,7 @@ class Person(HmsUser):
         return delta.total_seconds()
         
     def online(self):
-        return self.seen_before() <= 10
+        return self.seen_before() <= 5
 
     def get_full_name(self):
         full_name = '%s %s' % (self.first_name, self.last_name)
