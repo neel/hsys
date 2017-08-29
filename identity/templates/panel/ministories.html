@@ -80,17 +80,6 @@ var popup = function(){
 <!-- end commet connector -->
 <script type="text/javascript">
 $(document).ready(function(){
-    $('#ministory_filter').click(function(){
-        var range = $(this).parent().parent().find('.filter-range');
-        var from  = range.find('.filter-range-from > input');
-        var to    = range.find('.filter-range-to > input');
-        var url   = location.pathname;
-        if(url.search('/stories') < 0){
-            url += "stories";
-        }
-        url += "?range="+[$(from).val(), $(to).val()].join(':');
-        location.href = url;
-    })
     $('ul.ministories-list').on('click', '.ministory-sprite', function(){
         $('.story-viewer').remove();
         $(this).closest(".ministories").append("<div class='ministore-loading-wrapper'></div>");

@@ -10,6 +10,17 @@
                 from.val(s1);
                 to.val(s2);
             }
-        })
+        });
+        $('#ministory_filter').click(function(){
+            var range = $(this).parent().parent().find('.filter-range');
+            var from  = range.find('.filter-range-from > input');
+            var to    = range.find('.filter-range-to > input');
+            var url   = location.pathname;
+            if(url.search('/stories') < 0){
+                url += "stories";
+            }
+            url += "?range="+[$(from).val(), $(to).val()].join(':');
+            location.href = url;
+        });
     })
 })(jQuery)

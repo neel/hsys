@@ -101,16 +101,7 @@ Handlebars.registerHelper('age', function(dob){
                 var refered_stories = self.parent().parent().find('ul.ministories-list');
                 console.log(refered_stories);
                 refered_stories.append(story_elem);
-/*
-                var current_value = $('#id_refers_to').val();
-                var currently_refered = current_value.split(',');
-                currently_refered.push(story.id);
-                console.log(currently_refered.join(','));
-                var refered_string = currently_refered.join(',');
-                if(refered_string.length > 0 && refered_string[0] == ',')
-                    refered_string = refered_string.substring(1);
-                $('#id_refers_to').val(refered_string);
-*/
+
                 var option_elem = $('<option value="'+ story.id +'" selected>'+story.subject+'</option>');
                 $('#id_refers_to').append(option_elem);
                 console.log($('#id_refers_to'), option_elem);
