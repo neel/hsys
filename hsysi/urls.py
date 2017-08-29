@@ -60,6 +60,7 @@ urlpatterns = [
     url(r'^scan/$', views.scan, name='scan'),
     url(r'^doctors/$', views.doctors, name='doctors'),
     url(r'^doctor/(?P<doctor_id>\d+)/$', views.doctor, name='doctor'),
+    url(r'^doctor/(?P<doctor_id>\d+)/stories$', views.doctor_stories, name='doctor_stories'),
     url(r'^patients/$', views.patients, name='patients'),
     url(r'^patient/(?P<patient_id>\d+)/$', views.patient, name='patient'),
     url(r'^operator/(?P<operator_id>\d+)/$', views.operator, name='operator'),

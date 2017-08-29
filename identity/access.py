@@ -31,6 +31,27 @@ class StoryAccess:
         else:
             return []
 
+    def between(self, user, owner, date_from, date_to):
+        viewer = user
+        if not viewer.is_authenticated():
+            return []
+        if(viewer.id == owner.id):
+            return owner.stories.filter(when__range=(date_from, date_to)).order_by('-when')
+        elif(viewer.is_doctor() and owner.is_patient()):
+            doctor  = viewer.real()
+            patient = owner.real()
+            return patient.stories.filter(when__range=(date_from, date_to), doctor=doctor).order_by('-when')
+        elif(viewer.is_patient() and owner.is_doctor()):
+            patient = viewer.real()
+            doctor  = owner.real()
+            return doctor.stories.filter(when__range=(date_from, date_to), patient=patient).order_by('-when')
+        elif(viewer.is_doctor() and owner.is_doctor()):
+            return []
+        elif(viewer.is_patient() and owner.is_patient()):
+            return []
+        else:
+            return []
+
     def count(self, user, owner, id=0):
         viewer = user
         if not viewer.is_authenticated():

@@ -11,7 +11,7 @@
                     <div class="filter-range-from ministories-heading-filter-from"><input type="text" name="from" class="ministories-filter-input" /></div>
                     <div class="filter-range-to ministories-heading-filter-to"><input type="text" name="from" class="ministories-filter-input" /></div>
                 </div>
-                <div class="ministories-heading-filter-search"><input type="submit" value="Filter" class="identity-action identity-action-button ministories-heading-filter-search-button" /></div>
+                <div class="ministories-heading-filter-search"><input id="ministory_filter" type="submit" value="Filter" class="identity-action identity-action-button ministories-heading-filter-search-button" /></div>
             </div>
         </div>
         {% with user|usertype as user_class %}
@@ -80,6 +80,17 @@ var popup = function(){
 <!-- end commet connector -->
 <script type="text/javascript">
 $(document).ready(function(){
+    $('#ministory_filter').click(function(){
+        var range = $(this).parent().parent().find('.filter-range');
+        var from  = range.find('.filter-range-from > input');
+        var to    = range.find('.filter-range-to > input');
+        var url   = location.pathname;
+        if(url.search('/stories') < 0){
+            url += "stories";
+        }
+        url += "?range="+[$(from).val(), $(to).val()].join(':');
+        location.href = url;
+    })
     $('ul.ministories-list').on('click', '.ministory-sprite', function(){
         $('.story-viewer').remove();
         $(this).closest(".ministories").append("<div class='ministore-loading-wrapper'></div>");

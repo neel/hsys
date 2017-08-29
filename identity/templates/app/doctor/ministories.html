@@ -145,8 +145,6 @@
                 {% for notice in notices %}
                     {% view 'identity.sprites.NoticeSprite' notice %}
                 {% endfor %}
-                {% view 'identity.panels.AdmissionsPanel' admissions %}
-                {% view 'identity.panels.AppointmentsPanel' appointments %}
                 {% view 'identity.panels.MiniStoriesPanel' stories nstories doctor %}
                 {% view 'identity.panels.PatientsPanel' patients %}
             </div>

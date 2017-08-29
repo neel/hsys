@@ -118,17 +118,7 @@ def patient(request, patient_id):
                          (admission.org.get_full_name(),
                           admission.admitted,
                           doctor and ("by %s" % doctor.get_full_name()) or "[Emergency]")) )
-            
-        # if(request.user.is_patient() and request.user.id == patient.id):
-        #     stories = patient.stories.all()
-        #     admissions = patient.admissions.all()
-        #     appointments = patient.appointments.all()
-        # elif (request.user.is_doctor()):
-        #     doctor = request.user.real()
-        #     stories = patient.stories.filter(doctor=doctor)
-        #     admissions = patient.admissions.all()
-        #     appointments = patient.appointments.filter(doctor=doctor)
-        
+               
         stories         = StoryAccess().all(request.user, patient, 0, 10)
         nstories        = StoryAccess().count(request.user, patient)
         admissions      = AdmissionAccess().all(request.user, patient)
@@ -151,29 +141,12 @@ def patient(request, patient_id):
         return HttpResponseRedirect(reverse('login'))
 
 def doctor(request, doctor_id):
-    # pdb.set_trace()
-    
     stories = []
     patients = []
     admissions = []
     appointments = []
     
     doctor = Doctor.objects.get(id=doctor_id)
-    # if request.user.is_authenticated():    
-    #     # if a doctor visits his/her own profile
-    #     if(request.user.is_doctor() and request.user.id == doctor.id):
-    #         stories = doctor.stories.all()
-    #         patients = doctor.patients()
-    #         admissions =  [a for a in [p.admission() for p in patients] if a is not None]
-    #         appointments = doctor.appointments.all()
-    #     else:
-    #         # if a patient visits doctor's profile
-    #         if request.user.is_patient():
-    #             patient = request.user.real()
-    #             stories = doctor.stories.filter(patient=patient)
-    #             patients = [patient]
-    #             admissions = [a for a in [p.admission() for p in patients] if (a is not None and a.doctor() == doctor)]
-    #             appointments = doctor.appointments.filter(patient=patient)
     
     stories         = StoryAccess().all(request.user, doctor, 0, 10)
     nstories        = StoryAccess().count(request.user, doctor)
@@ -192,9 +165,34 @@ def doctor(request, doctor_id):
         'story_form':   RandomVisitCreationForm()
     })
 
-def operator(request, operator_id):
-    # pdb.set_trace()
+def doctor_stories(request, doctor_id):
+    stories = []
+    patients = []
     
+    doctor = Doctor.objects.get(id=doctor_id)
+
+    date_range = request.GET.get('range', '')
+    if(date_range == ''):    
+        stories   = StoryAccess().all(request.user, doctor)
+        nstories  = StoryAccess().count(request.user, doctor)
+    else:
+        date_from = date_range.split(":")[0]
+        date_to   = date_range.split(":")[1]
+        stories   = StoryAccess().between(request.user, doctor, date_from, date_to)
+        nstories  = len(stories)
+
+    patients      = list(set([story.patient for story in stories]))
+        
+    return render(request, 'app/doctor/ministories.html', {
+        'request':      request,
+        'doctor':       doctor,
+        'stories':      stories,
+        'nstories':     nstories,
+        'patients':     patients,
+        'story_form':   RandomVisitCreationForm()
+    })
+
+def operator(request, operator_id):
     stories = []
     patients = []
     admissions = []
@@ -346,7 +344,6 @@ def patient_stories(request, patient_id):
         
     stories = StoryAccess().all(request.user, patient)
 
-    # pdb.set_trace()
     return render(request, 'app/patient/ministories.html', {
         'request': request,
         'patient': patient,
@@ -387,7 +384,6 @@ def patient_sensors(request, patient_id):
                       admission.admitted,
                       doctor and ("by %s" % doctor.get_full_name()) or "[Emergency]")) )
  
-    # pdb.set_trace()
     return render(request, 'app/patient/sensors.html', {
         'request': request,
         'patient': patient,
@@ -479,7 +475,6 @@ class appointment_creation(View):
             raise PermissionDenied()
         
         form = AppointmentCreationForm(request.POST)
-        # form.org = Organization.objects.all()[0]
         if form.is_valid():
             patient = None
             try:
@@ -754,15 +749,12 @@ def _prescription(request, story_id):
         prescriptions = []
         complaints    = []
         if story.is_prescription:
-            # story.body = json.loads(story.body)
             prescriptions.append(story)
             for complaint in story.refers_to.all():
-                # complaint.body = json.loads(complaint.body)
                 complaints.append(complaint)
         else:
             complaints.append(story)
             for s in story.refered_by.all():
-                # s.body = json.loads(s.body)
                 prescriptions.append(s)
         
         return PrescriptionViewerSprite(request, story, complaints, prescriptions)
