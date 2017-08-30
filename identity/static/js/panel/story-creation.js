@@ -106,7 +106,64 @@ Handlebars.registerHelper('age', function(dob){
                 $('#id_refers_to').append(option_elem);
                 console.log($('#id_refers_to'), option_elem);
             });
-
+        });
+        $('#story_creation_form').submit(function(e){
+            e.preventDefault();
+            var overlay = $('#story_creation_panel .story-creation-form-overlay');
+            $('.form-field-error ul').html('');
+            overlay.addClass('story-creation-form-overlay-loading');
+            $.ajax({
+                url:  $(this).attr('action'),
+                data: $(this).serializeArray(),
+                type: 'POST',
+                success: function(data){
+                    overlay.removeClass('story-creation-form-overlay-loading');
+                    overlay.html('');
+                    if(data.success){
+                        overlay.addClass('story-creation-form-overlay-success');
+                        overlay.html('Successfully Created Appointment');
+                        overlay.show();
+                        setTimeout(function(){
+                            overlay.removeClass('story-creation-form-overlay-success');
+                            overlay.html('');
+                            overlay.hide();
+                            $('#story_creation_button').trigger('click');
+                        }, 1500)
+                    }else{
+                        $.each(data.errors, function(key, errors){
+                            var elem = $('#id_'+key);
+                            var error_div = $(elem.siblings('.form-field-error')[0]);
+                            var error_ul = error_div.find('ul');
+                            error_ul.html('')
+                            $.each(errors, function(i, error){
+                                var li = $("<li>"+error+"</li>");
+                                error_ul.append(li);
+                            })
+                        })
+                    }
+                    console.log(data);
+                },
+                error: function(xhr){
+                    overlay.removeClass('story-creation-form-overlay-loading');
+                    overlay.html('');
+                    if(xhr.status == 403){
+                        var error_panel =  $('#story_creation_panel .form-error');
+                        error_panel.html('You are Not Authorized to Create an Appointment');
+                    }
+                }
+            });
+            return false;
+        });
+        $('#story_creation_reset').click(function(){
+            $('#id_refers_to').html('');
+            $('#story_creation_panel ul.refered-ministories-list').html('')
+            $('#story_creation_button').trigger('click');
+            $('#id_story_referer').val('');
+            $('#id_body').val('{"envelops": []}');
+            $('#prescription').attr('data-prescription', '{"envelops": []}');
+            $('#prescription_body').html('');
+            var panel = $('#story_creation_panel');
+            panel.hide();
         });
     });
 })(jQuery);

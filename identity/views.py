@@ -503,26 +503,24 @@ class random_story_creation(View):
         if request.user.is_anonymous():
             raise PermissionDenied()
         
-        form = RandomVisitCreationForm(request.POST)
+        form = RandomVisitCreationForm(request.POST.copy())
+        doctor = None
+        try:
+            doctor = request.user.doctor
+            form.data['doctor'] = doctor
+        except Patient.DoesNotExist:
+            raise PermissionDenied()
+
         if form.is_valid():
-            doctor = None
-            try:
-                doctor = request.user.doctor
-            except Patient.DoesNotExist:
-                doctor = None
-                
             story = form.save(commit=False)
-            if doctor:
-                story.doctor = doctor
-                story.when = datetime.now()
-                status = story.save()
-                form.save_m2m()
-                return HttpResponse(json.dumps({
-                    'success': True,
-                    'errors':  []
-                }), content_type='application/json; charset=UTF-8')
-            else:
-                raise PermissionDenied()
+            story.when = datetime.now()
+            status = story.save()
+            form.save_m2m()
+            return HttpResponse(json.dumps({
+                'success': True,
+                'errors':  []
+            }), content_type='application/json; charset=UTF-8')
+
         else:
             return HttpResponse(json.dumps({
                 'success' : False,

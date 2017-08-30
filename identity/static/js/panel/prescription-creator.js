@@ -1,4 +1,5 @@
 function create_prescription(div, story_id, patient_id, patient_name){
+    $('#story_creation_reset').trigger('click');
     var story_viewer = $(div).closest('.story-viewer');
     console.log(story_viewer);
     story_viewer.css('left', '0px');
@@ -285,13 +286,13 @@ $(document).ready(function(){
     }
     var save_envelop = function(envelop){
         var prescription = $("#prescription");
-        var pdata = prescription.data("prescription");
+        var pdata = JSON.parse(prescription.attr("data-prescription"));
         pdata["envelops"].push(envelop);
-        prescription.data("prescription", pdata);
+        prescription.attr("data-prescription", JSON.stringify(pdata));
     }
     var render_prescription = function(){
         var prescription = $("#prescription");
-        var json = prescription.data("prescription");
+        var json = JSON.parse(prescription.attr("data-prescription"));
         var body = $("#prescription_body");
         body.html('');
         $(json.envelops).each(function(){

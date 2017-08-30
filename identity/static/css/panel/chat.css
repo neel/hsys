@@ -134,6 +134,7 @@
     border-right: 1px solid #afadad;
     background-color: #e0e0e0;
     border-left: 1px solid #fafafa;
+    pointer-events: auto;
 }
 .chat-box-title{
     width: 100%;
