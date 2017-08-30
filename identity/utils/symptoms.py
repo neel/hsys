@@ -126,18 +126,19 @@ class builder(object):
 class decorator(object):
 	def question(self, node, lang):
 		def concat(q, a, orientation):
+			class DataDict(dict):
+				placeholders = 'q', 'a'
+				default_value = ''
+				def __init__(self, *args, **kwargs):
+					self.update(dict.fromkeys(self.placeholders, self.default_value))
+					dict.__init__(self, *args, **kwargs)
+
 			q_r = '<div class="symptom-token symptom-question-tag">%s</div>' % q
 			a_r = '<div class="symptom-token symptom-answer">%s</div>' % a
-			if(orientation == "ab"):
-				return q_r+a_r
-			elif(orientation == "ba"):
-				return a_r+q_r
-			elif(orientation == "a"):
-				return q_r
-			elif(orientation == "b"):
-				return a_r
-			else:
-				return ""
+			return orientation.format(**DataDict(
+				q = q_r,
+				a = a_r
+			))
 
 		rule = node.rule
 		_ = rule['_'][lang]
@@ -147,13 +148,13 @@ class decorator(object):
 		if answer in rule:
 			special = rule[answer]
 			# there is no language specific rule, so assumes to be translated to constant in special
-			if type(special) == str:
+			if type(special) in [str, unicode]:
 				return special
 			else:
 				special = special[lang]
 				orientation = special.orientation
 
-		return '<div class="symptom-token symptom-leaf" data-order="%s">%s</div>' % (node.order, concat(node.tags[lang], answer, orientation))
+		return '<div class="symptom-token symptom-leaf" data-order="%s" data-question-id="%s">%s</div>' % (node.order, node.name, concat(node.tags[lang], answer, orientation))
 
 
 	def subcategory(self, node, lang):
@@ -183,7 +184,19 @@ class decorator(object):
 	def category(self, node, lang):
 		elems = []
 		for child in node.children:
-			elem = '<div class="symptom-block">%s</div>' % self.subcategory(child, lang)
+			table = []
+			for question_node in child.children:
+				question = question_node.labels[lang]
+				answer   = question_node.answer
+				table.append({
+					'q': '<div class="symptom-table-question">%s</div>' % question,
+					'a': '<div class="symptom-table-answer">%s</div>' % answer,
+					'i': question_node.name
+				})
+			table_str = ''
+			for pair in table:
+				table_str += '<div class="symptom-table-row" data-name="%s">%s %s</div>' % (pair['i'], pair['q'], pair['a'])
+			elem = '<div class="symptom-block"><div class="symptom-block-table-toggle"><button type="button" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>table</button></div><div class="symptom-tokens">%s</div><div class="symptoms-table">%s</div></div>' % (self.subcategory(child, lang), table_str)
 			elems.append(elem)
 		return ''.join(elems)
 

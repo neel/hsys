@@ -139,3 +139,23 @@
     width: 100%;
     float: left;
 }
+
+.appointment-container{
+    width: 450px;
+    margin: auto;
+    height: 186px;
+    margin-top: 55px;
+}
+.medicine-editor-appointment-actions{
+    float: right;
+    margin-right: 10px;
+}
+.medicine-editor-appointment-timming{
+    margin-bottom: 5px;
+}
+.medicine-editor-appointment-notes{
+
+}
+.appointment-note{
+    width: 351px !important;
+}

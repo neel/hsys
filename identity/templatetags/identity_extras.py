@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core import urlresolvers
 from django.core.serializers import serialize
 from django.db.models.query import QuerySet
+from identity.utils.symptoms import builder, decorator
 try:
     from django.utils import simplejson as sjson
 except:
@@ -130,58 +131,6 @@ def jsonify(object):
         return serialize('json', object)
     return sjson.dumps(object)
 
-# @register.filter(name='medadvice')
-# def medadvice(obj):
-#     if obj['type'] == "periodic":
-#         obj['interval'] = int(obj['interval'])
-#         obj['termination'] = int(obj['termination'])
-#         interval_text = ''
-#         if ((obj['interval'] <= 24) and (24 % obj['interval'] == 0)):
-#             interval_text = "{} times daily".format(24/obj['interval'])
-#         elif (obj['interval'] % 24 == 0):
-#             di = obj['interval']/24;
-#             dit = '';
-#             if (di%10 == 1):
-#                 dit = "st"
-#             elif(di%10 == 2):
-#                 dit = "nd"
-#             elif(di%10 == 3):
-#                 dit = "rd"
-#             else:
-#                 dit = "th"
-#             interval_text = "Every {}{} day".format(di,dit)
-#         else:
-#             interval_text = "Every {} hours".format(obj['interval'])
-            
-#         termination_text = "untill prescribed to stop" if (obj['termination'] == -1) else "For {} days".format(obj['termination'])
-#         when_text = obj['when']
-#         note_text = "({})".format(obj['note']) if len(obj['note']) else ""
-#         return """<div class="prescription-entry prescription-entry-inline medication-periodic well well-sm"> 
-#                     <div class="medicine-name">{}</div>
-#                     <div class="medicine-dose">{}mg</div>
-#                     <div class="medicine-interval">{}</div>
-#                     <div class="medicine-termination">{}</div>
-#                     <div class="medicine-when">{}</div>
-#                     <div class="medicine-note">{}</div>
-#                 </div>""".format(obj['name'], obj['dose'], interval_text, termination_text, when_text, note_text)
-#     elif obj['type'] == 'asrequired':
-#         return """<div class="prescription-entry prescription-entry-inline medication-asrequired well well-sm"> 
-#                         <div class="medicine-name">{}</div> 
-#                         <div class="medicine-dose">{}mg</div> 
-#                         <div class="medicine-situation">{}</div> 
-#                     </div>""".format(obj['name'], obj['dose'], obj['situation'])
-#     elif obj['type'] == 'investigation':
-#         return """<div class="prescription-entry prescription-entry-inline medication-investigation well well-sm">
-#                     <div class="medicine-name">{}</div>
-#                     <div class="medicine-note">{}</div>
-#                 </div>""".format(obj['name'], obj['note'])
-#     elif obj['type'] == 'advice':
-#         return """<div class="prescription-entry prescription-entry-inline medication-advice well well-sm">
-#                         <div class="medicine-note">{}</div>
-#                     </div>""".format(obj['note'])
-#     else:
-#         return '<div class="prescription-entry prescription-entry-inline medication-malformed well well-sm"> Error </div>'
-
 def show_value_na(value):
     if value.lower().strip() == "n/a":
         return "<span class='value-na'>"+value+"</span>"
@@ -189,23 +138,9 @@ def show_value_na(value):
 
 @register.filter(name='complaint_symptoms')
 def complaint_symptoms(obj):
-    html = "<div class='symptoms-container'>"
-    for v in obj:
-        for k1 in v:
-            v1 = v[k1]
-            html += "<div class='symptom'>"
-            html += "<h3 class='complaint-category symptom-category'>"+k1+"</h3>"
-            for k2 in v1:
-                v2 = v1[k2]
-                html += "<div class='symptom-type'>"+k2+"</div>"
-                html += "<div class='complaint-questionnaires symption-questionnaires'>"
-                for k3 in v2:
-                    v3 = v2[k3]
-                    html += "<div class='complaint-qa symptom-qa'><span class='complaint-question symptom-question'>"+k3 +"</span><span class='complaint-answer symptom-answer'>"+ show_value_na(v3) +"</span></div>"
-                html += "</div>"
-            html += "</div>"
-    html += "</div>"
-    return html
+    b = builder()
+    sub = b.subtree(obj)
+    return decorator().decorate(sub, "en")
 
 @register.filter(name='complaint_vitals')
 def complaint_vitals(obj):

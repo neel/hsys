@@ -708,4 +708,11 @@ $(document).ready(function(){
         $('#prescription_body_editor').css('display', 'none');
     });
     /* } medicine */
+    $("#appointment_medication").click(function(){
+        $('#prescription_body_editor').html('');
+        $('#prescription_body_editor').append($($('#snippet_appointment').html()));
+        $('#prescription_body_editor').css('display', 'block');
+
+        $('#prescription_body_editor .appointment-when').datetimepicker({});
+    });
 });

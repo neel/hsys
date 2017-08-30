@@ -83,4 +83,18 @@ $(document).ready(function(){
         //     });            
         // });
     });
+    $(document).on('click', 'div.symptom-block-table-toggle', function(){
+        var table = $(this).parent().find('.symptoms-table');
+        table.toggle();
+    });
+    $(document).on('mouseover', 'div.symptom-table-row', function(){
+        var question_id = $(this).attr('data-name');
+        var tokens = $(this).parent().parent().find('.symptom-tokens .symptom-token');
+        tokens.removeClass("token-highlighted");
+        tokens.each(function(){
+            if($(this).attr('data-question-id') == question_id){
+                $(this).addClass('token-highlighted');
+            }
+        });
+    });
 });
