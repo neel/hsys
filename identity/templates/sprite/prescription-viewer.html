@@ -7,7 +7,9 @@
             @import url("{% static 'css/common.css' %}");
             @import url("{% static 'css/heading.css' %}");
             @import url("{% static 'css/sprite/prescription-viewer.css' %}");
+            @import url("{% static 'css/panel/prescription-creator.css' %}");
             @import url("{% static 'css/doctor.css' %}");
+            @import url("{% static 'css/sprite/story-viewer.css' %}");
         </style>
         <script type="text/javascript" src="{% static 'js/jquery.1.9.0.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/jquery.sticky-kit.min.js' %}"></script>
@@ -15,6 +17,7 @@
         <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/jquery.qrcode.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/panel/prescription-creator.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/sprite/story-viewer.js' %}"></script>
         <script type="text/javascript">
             $(document).ready(function(){
                 //$('#qr').qrcode({text: '{"p":{{story.patient.id}},"d":{{story.doctor.id}},"s":{{story.id}}}', width: 128, height: 128, ecLevel: 'L'});
@@ -48,6 +51,14 @@
                         </div>
                     </div>
                     <div class="prescription-content">
+                        {% for complaint in complaints %}
+                        <div class="complaint-section complaint-section-vitals">
+                            <div class="complaint-section-heading complaint-section-heading-vitals"></div>
+                            <div class="complaint-section-body">
+                                {{ complaint.body.sensorData|complaint_vitals|safe }}
+                            </div>
+                        </div>
+                        {% endfor %}
                         <div class="prescription-complaints">
                             <div class="prescription-complaints-label">
                                 complaint{% if prescriptions|length > 1 %}s{% endif %}
@@ -58,12 +69,6 @@
                                         <div class="complaint-section-heading complaint-section-heading-symptom"></div>
                                         <div class="complaint-section-body">
                                             {{ complaint.body.symptoms|complaint_symptoms_summarized|safe }}
-                                        </div>
-                                    </div>
-                                    <div class="complaint-section complaint-section-vitals">
-                                        <div class="complaint-section-heading complaint-section-heading-vitals"></div>
-                                        <div class="complaint-section-body">
-                                            {{ complaint.body.sensorData|complaint_vitals|safe }}
                                         </div>
                                     </div>
                                     <div class="complaint-section complaint-section-observation">

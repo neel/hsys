@@ -140,9 +140,11 @@
         </div>
     </div>
 </div>
+{% if story.is_prescription %}
 <script type="text/javascript">
     (function() {
         var data = {{story.body|jsonify|safe}};
         render_prescription_data(data, $('#envelops'));
     })();
 </script>
+{% endif %}

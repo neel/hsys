@@ -88,8 +88,8 @@ body{
     float: left;
     display: block;
     position: relative;
-    width: 100%;
-    margin-top: 10px;
+    width: 38%;
+    margin-left: 15px;
 }
 .prescription-prescription-medicines{
     float: left;
@@ -128,7 +128,6 @@ body{
     display: block;
     position: relative;
     width: 100%;
-    margin-top: -10px;
 }
 .prescription-prescription-medicines-list{
     float: left;
@@ -176,7 +175,7 @@ body{
 .prescription-complaints{
     display: block;
     position: relative;
-    width: 100%;
+    width: 60%;
     float: left;
 }
 
@@ -334,11 +333,20 @@ body{
     height: 87px;
     background-color: #383838;
 }
-.family-category{
+.family-container{
+    display: table;
+    width: 100%;
     border-top: 4px solid #383838;
 }
-.family-question{
-    padding-left: 6px;
+.family{
+    display: table-row;
+}
+.family-category{
+    display: table-cell;
+}
+.family-questionnaires{
+    list-style-type: none;
+    display: table-cell;
 }
 
 .complaint-section-symptom{

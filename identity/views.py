@@ -508,6 +508,7 @@ class random_story_creation(View):
         try:
             doctor = request.user.doctor
             form.data['doctor'] = doctor
+            form.data['is_prescription'] = True
         except Patient.DoesNotExist:
             raise PermissionDenied()
 
@@ -516,6 +517,13 @@ class random_story_creation(View):
             story.when = datetime.now()
             status = story.save()
             form.save_m2m()
+            if story.is_prescription:
+                for envelop in story.body['envelops']:
+                    if envelop['type'] == 'appointment':
+                        appointment = Appointment(patient=story.patient, doctor=story.doctor, schedule=envelop['content']['when'], created=timezone.now(), note=envelop['content']['note'])
+                        appointment.save()
+                        negotiation = Negotiation(appointment=appointment, status='F', when=timezone.now(), note="implicitly fixed", who=doctor)
+                        negotiation.save()
             return HttpResponse(json.dumps({
                 'success': True,
                 'errors':  []

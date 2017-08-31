@@ -86,6 +86,10 @@ $(document).ready(function(){
     $(document).on('click', 'div.symptom-block-table-toggle', function(){
         var table = $(this).parent().find('.symptoms-table');
         table.toggle();
+        if(!table.is(':visible')){
+            var tokens = $(this).parent().parent().find('.symptom-tokens .symptom-token');
+            tokens.removeClass("token-highlighted");
+        }
     });
     $(document).on('mouseover', 'div.symptom-table-row', function(){
         var question_id = $(this).attr('data-name');

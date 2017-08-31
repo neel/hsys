@@ -36,6 +36,9 @@ var render_prescription_data = function(data, elem, store){
         }else if(this.type == 'remark'){
             var elem = $(make_remark_text(this.content));
             container.find('.prescription-entry-content').append(elem);
+        }else if(this.type == 'appointment'){
+            var elem = $(make_appointment_text(this.content));
+            container.find('.prescription-entry-content').append(elem);
         }
         body.append(container);
     });
@@ -269,9 +272,11 @@ function make_investigation_text(investigation){
 function make_advice_text(advice){
     return $('<div class="advice-container">{0}</div>'.format(advice.advice));
 }
-
 function make_remark_text(remark){
     return $('<div class="remark-container">{0}</div>'.format(remark.remark));
+}
+function make_appointment_text(appointment){
+    return $('<div class="appointment-block">Appointment fixed on {0} ({1})</div>'.format(appointment.when, appointment.note));
 }
 $(document).ready(function(){
     Array.prototype.removeValue = function(name, value){
@@ -313,6 +318,9 @@ $(document).ready(function(){
             }else if(this.type == 'remark'){
                 var elem = $(make_remark_text(this.content));
                 container.find('.prescription-entry-content').append(elem);
+            }else if(this.type == 'appointment'){
+                var elem = $(make_appointment_text(this.content));
+                container.find('.prescription-entry-content').append(elem);
             }
             body.append(container);
         });
@@ -322,9 +330,9 @@ $(document).ready(function(){
         var parent = $(this).parent();
         var id = parent.data('id');
         var prescription = $("#prescription");
-        var json = prescription.data("prescription");
+        var json = JSON.parse(prescription.attr("data-prescription"));
         json['envelops'].removeValue('id', id);
-        prescription.data("prescription", json);
+        prescription.attr("data-prescription", JSON.stringify(json));
         $("#id_body").val(JSON.stringify(json));
         render_prescription();
         console.log(json);
@@ -713,6 +721,25 @@ $(document).ready(function(){
         $('#prescription_body_editor').append($($('#snippet_appointment').html()));
         $('#prescription_body_editor').css('display', 'block');
 
-        $('#prescription_body_editor .appointment-when').datetimepicker({});
+        $('#prescription_body_editor .appointment-when').datetimepicker({
+            format:'Y-m-d H:i'
+        });
+    });
+    $('#prescription_body_editor').on("click", ".appointment-container .medicine-editor-appointment-cancel", function(){
+        $('#prescription_body_editor').html('');
+        $('#prescription_body_editor').css('display', 'none');
+    });
+    $('#prescription_body_editor').on("click", ".appointment-container .medicine-editor-appointment-okay", function(){
+        var container = $(this).closest('.appointment-container');
+        var when = container.find('.appointment-when').val();
+        var note = container.find('.appointment-note').val();
+        var envelop = make_envelop('appointment', {
+            when: when,
+            note: note
+        });
+        save_envelop(envelop);
+        $('#prescription_body_editor').html('');
+        $('#prescription_body_editor').css('display', 'none');
+        render_prescription();
     });
 });

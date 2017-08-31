@@ -162,24 +162,7 @@ def complaint_vitals(obj):
 
 @register.filter(name='complaint_symptoms_summarized')
 def complaint_symptoms_summarized(obj):
-    html = "<div class='symptoms-container'>"
-    for v in obj:
-        for k1 in v:
-            v1 = v[k1]
-            html += "<div class='symptom'>"
-            html += "<h3 class='complaint-category symptom-category'>"+k1+"</h3>"
-            for k2 in v1:
-                v2 = v1[k2]
-                html += "<div class='symptom-type'>"+k2+"</div>"
-                html += "<div class='complaint-questionnaires symption-questionnaires'>"
-                for k3 in v2:
-                    v3 = v2[k3]
-                    if v3.strip().lower() != "n/a":
-                        html += "<div class='complaint-qa symptom-qa'><span class='complaint-question symptom-question'>"+k3 +"</span><span class='complaint-answer symptom-answer'>"+ show_value_na(v3) +"</span></div>"
-                html += "</div>"
-            html += "</div>"
-    html += "</div>"
-    return html
+    return complaint_symptoms(obj)
 
 @register.filter(name='complaint_observations')
 def complaint_observations(obj):
@@ -267,11 +250,11 @@ def complaint_family_summarized(obj):
         value = obj[relation]
         if len(value['history']) > 0:
             html += "<div class='family'>"
-            html += "<h3 class='complaint-category family-category'>"+relation+"("+str(len(value['history']))+")"+"</h3>"
-            html += "<div class='complaint-questionnaires family-questionnaires'>"
+            html += "<div class='complaint-category family-category'>"+relation+"("+str(len(value['history']))+")"+"</div>"
+            html += "<ul class='complaint-questionnaires family-questionnaires'>"
             for history in value['history']:
-                html += "<div class='complaint-qa family-qa'><span class='complaint-question family-question'>"+history+"</span></div>"
-            html += "</div>"
+                html += "<li class='complaint-qa family-qa'><span class='complaint-question family-question'>"+history+"</span></li>"
+            html += "</ul>"
             html += "</div>"
     html += "</div>"
     return html
