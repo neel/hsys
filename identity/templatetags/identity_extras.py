@@ -250,11 +250,11 @@ def complaint_family_summarized(obj):
         value = obj[relation]
         if len(value['history']) > 0:
             html += "<div class='family'>"
-            html += "<div class='complaint-category family-category'>"+relation+"("+str(len(value['history']))+")"+"</div>"
-            html += "<ul class='complaint-questionnaires family-questionnaires'>"
+            html += "<div class='complaint-category family-category'>"+relation+"</div>"
+            html += "<div class='complaint-questionnaires family-questionnaires'>"
             for history in value['history']:
-                html += "<li class='complaint-qa family-qa'><span class='complaint-question family-question'>"+history+"</span></li>"
-            html += "</ul>"
+                html += "<span class='complaint-qa family-qa'><span class='complaint-question family-question'>"+history+"</span></span>"
+            html += "</div>"
             html += "</div>"
     html += "</div>"
     return html

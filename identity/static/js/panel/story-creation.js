@@ -128,6 +128,12 @@ Handlebars.registerHelper('age', function(dob){
                             overlay.html('');
                             overlay.hide();
                             $('#story_creation_button').trigger('click');
+                            $('#id_story_referer').val('');
+                            $('#id_body').val('{"envelops": []}');
+                            $('#prescription').attr('data-prescription', '{"envelops": []}');
+                            $('#prescription_body').html('');
+                            var panel = $('#story_creation_panel');
+                            panel.hide();
                         }, 1500)
                     }else{
                         $.each(data.errors, function(key, errors){
