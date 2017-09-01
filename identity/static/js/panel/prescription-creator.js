@@ -341,6 +341,8 @@ $(document).ready(function(){
         $('#prescription_body_editor').html('');
         $('#prescription_body_editor').append($($('#snippet_medication_periodic').html()));
         $('#prescription_body_editor').css('display', 'block');
+
+        medicine_autocomplete($('#prescription_body_editor .med-name'));
     });
     $("#test_medication").click(function(){
         $('#prescription_body_editor').html('');

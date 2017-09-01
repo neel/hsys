@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 import re
 import warnings
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django.db import models
 from django.db.models.manager import EmptyManager
 from django.db.models import Count
@@ -590,4 +590,9 @@ class Survey(models.Model):
     def __unicode__(self):
         return "Survey on Patient %s for campaign %s" %(self.patient, self.campaign)
 
+class Medicine(models.Model):
+    name = models.CharField('name', max_length=100)
+    doses = ArrayField(models.CharField(max_length=10, blank=True))
 
+    def __unicode__(self):
+        return self.name

@@ -23,6 +23,7 @@ Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
 Handlebars.registerHelper('age', function(dob){
     return moment(dob, 'YYYY-MM-DD').fromNow().replace('ago', 'old');
 });
+var medicine_autocomplete = null;
 (function($){
     var item_div  =  '<div class="patient-item">';
         item_div +=     '<div class="patient-item-pic">';
@@ -82,6 +83,32 @@ Handlebars.registerHelper('age', function(dob){
         }).on('typeahead:selected', function(e, suggestion, name){
             $('#id_patient').val(suggestion.id);
         });
+
+        medicine_autocomplete = function(elem){
+            var medicine_div = '<div class="med-suggestion-name">{{name}}</div>';
+            var medicine_engine = new Bloodhound({
+                name: 'patient',
+                remote: {
+                    url: '/api/v1/medicine/?format=json&query=%QUERY'
+                },
+                datumTokenizer: function(d){
+                    return Bloodhound.tokenizers.whitespace(d.val);
+                },
+                queryTokenizer: Bloodhound.tokenizers.whitespace
+            });
+            medicine_engine.initialize();
+            $(elem).typeahead({
+                highlight: true
+            },{
+                source: medicine_engine.ttAdapter(),
+                displayKey: 'name',
+                templates: {
+                    suggestion: Handlebars.compile(medicine_div)
+                }
+            }).on('typeahead:selected', function(e, suggestion, name){
+                $(elem).val(suggestion.name);
+            });
+        }
         
         $('.story-refer').click(function(){
             var self = $(this);

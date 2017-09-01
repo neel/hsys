@@ -1,5 +1,5 @@
 from tastypie.resources import ModelResource, Resource, ALL, ALL_WITH_RELATIONS
-from identity.models import HmsUser, Patient, Story, Doctor, Operator, Organization, Admission, Activity, Bed, Task, RandomVisit, Appointment, RegularAdmission, EmergencyAdmission, Campaign, Survey
+from identity.models import HmsUser, Patient, Story, Doctor, Operator, Organization, Admission, Activity, Bed, Task, RandomVisit, Appointment, RegularAdmission, EmergencyAdmission, Campaign, Survey, Medicine
 from tastypie import fields
 from django.db.models import Q
 from tastypie.paginator import Paginator
@@ -486,5 +486,39 @@ class SurveyResource(ModelResource):
     
     class Meta:
         queryset = Survey.objects.all()
+        authentication = Authentication()
+        authorization = Authorization()
+
+class MedicineResource(ModelResource):
+    doses = JSONField('doses')
+
+    def build_filters(self, filters=None):
+        if filters is None:
+            filters = {}
+        orm_filters = super(MedicineResource, self).build_filters(filters)
+        
+        if('query' in filters):
+            query = filters['query']
+            query_parts = query.split(' ')
+            
+            qset = Q(name__istartswith=query_parts[0])
+            for query_part in query_parts:
+                qset |= (Q(name__icontains=query_part) | Q(name__icontains=query_part))
+    
+            orm_filters.update({'custom': qset})
+            
+        return orm_filters
+    
+    def apply_filters(self, request, applicable_filters):
+        if 'custom' in applicable_filters:
+            custom = applicable_filters.pop('custom')
+        else:
+            custom = None
+            
+        semi_filtered = super(MedicineResource, self).apply_filters(request, applicable_filters)
+        return semi_filtered.filter(custom) if custom else semi_filtered
+    
+    class Meta:
+        queryset = Medicine.objects.all()
         authentication = Authentication()
         authorization = Authorization()
