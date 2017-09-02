@@ -591,6 +591,21 @@ class Survey(models.Model):
         return "Survey on Patient %s for campaign %s" %(self.patient, self.campaign)
 
 class Medicine(models.Model):
+    MEDICINE_KINDS = (
+        ('capsule', 'Capsule'),
+        ('tablet', 'Tablet'),
+        ('injection', 'Injection'),
+        ('syrup', 'Injection'),
+        ('ointment', 'Ointment')
+    )
+
+    MEDICINE_UNITS = (
+        ('mg', 'mg'),
+        ('g',  'g')
+    )
+
+    kind = models.CharField(max_length=20, choices=MEDICINE_KINDS, default='tablet')
+    unit = models.CharField(max_length=5,  choices=MEDICINE_UNITS, default='mg')
     name = models.CharField('name', max_length=100)
     doses = ArrayField(models.CharField(max_length=10, blank=True))
 

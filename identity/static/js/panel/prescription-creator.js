@@ -338,6 +338,58 @@ $(document).ready(function(){
         console.log(json);
     });
     $("#periodic_medication").click(function(){
+        medicine_autocomplete = function(elem){
+            var medicine_div = '<div class="autocomplete-suggestion med-suggestion-item" data-kind="{{kind}}" data-name="{{name}}" data-dose="{{dose}}" data-unit="{{unit}}"> \
+                                    <span class="med-suggestion-item-specs med-suggestion-kind">{{kind}}</span> \
+                                    <span class="med-suggestion-item-specs med-suggestion-name">{{name}}</span> \
+                                    <span class="med-suggestion-item-specs med-suggestion-dose">{{dose}}</span> \
+                                    <span class="med-suggestion-item-specs med-suggestion-unit">{{unit}}</span> \
+                                </div>';
+            new autoComplete({
+                selector: elem[0],
+                minChars: 1,
+                source: function(term, response){
+                    $.getJSON('/api/v1/medicine/', { query: term }, function(data){
+                        var medicines = [];
+                        $(data.objects).each(function(){
+                            var kind  = this.kind;
+                            var doses = this.doses;
+                            var name  = this.name;
+                            var unit  = this.unit;
+                            $(doses).each(function(){
+                                medicines.push({
+                                    kind: kind,
+                                    name: name,
+                                    dose: this,
+                                    unit: unit
+                                });
+                            });
+                        });
+                        response(medicines);
+                    });
+                },
+                renderItem: function (item, search){
+                    console.log(item, search);
+                    return Handlebars.compile(medicine_div)(item)
+                },
+                onSelect: function(e, term, item){
+                    elem.val(item.getAttribute('data-name'));
+                    elem.parent().find('.med-dose').val(item.getAttribute('data-dose'));
+                    elem.parent().find('.med-dose-unit').attr('data-unit', item.getAttribute('data-unit'));
+                    elem.parent().find('.med-dose-unit').find('.dropdown-toggle').html("Unit ("+item.getAttribute('data-unit')+') <span class="caret"></span>');
+                    var type_buttons = elem.parent().parent().find('.medicine-editor-med-type').find('input[type=radio]');
+                    type_buttons.each(function(){
+                        if($(this).val() == item.getAttribute('data-kind')){
+                            $(this).trigger('click');
+                        }
+                    })
+                    // alert('Item "'+item.getAttribute('data-name')+' ('+item.getAttribute('data-dose')+')" selected by '+(e.type == 'keydown' ? 'pressing enter' : 'mouse click')+'.');
+
+                    var editor = $(elem).closest('.editor-panel');
+                    make_medicine(editor);
+                }
+            });
+        }
         $('#prescription_body_editor').html('');
         $('#prescription_body_editor').append($($('#snippet_medication_periodic').html()));
         $('#prescription_body_editor').css('display', 'block');

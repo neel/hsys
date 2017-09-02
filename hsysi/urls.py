@@ -46,6 +46,7 @@ v1_api.register(ActivityResource())
 v1_api.register(AppointmentResource())
 v1_api.register(CampaignResource())
 v1_api.register(SurveyResource())
+v1_api.register(MedicineResource())
 
 urlpatterns = [
     url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
