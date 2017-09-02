@@ -163,7 +163,7 @@ function make_med_text(medicine){
                 if(error_text.length == 0)
                     error_text = "<span class='error-input'>Expecting {0} doses, marked {1} doses {2}</span>".format(medicine.interval.event.context, medicine.interval.frequency, medicine.interval.event.context.join(' '));
             }
-            str += "<span class='translatable'><span class='tag tag-en tag-active' data-order='8'>{0}</span><span class='tag tag-bn' data-order='8.1'>{1}</span></span>".format(sanity(medicine.interval.event.when, "when"), tr(sanity(medicine.interval.event.when, "when")));
+            str += "<span class='translatable'><span class='tag tag-en tag-active' data-order='8'>{0}</span><span class='tag tag-bn' data-order='8.2'>{1}</span></span>".format(sanity(medicine.interval.event.when, "when"), tr(sanity(medicine.interval.event.when, "when")));
             $(medicine.interval.event.context).each(function(){
                 str += "<span class='translatable'><span class='tag tag-en tag-active' data-order='8'>{0}</span><span class='tag tag-bn' data-order='8.1'>{1}</span></span>".format(this, tr(this));
             });
