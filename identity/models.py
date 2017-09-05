@@ -231,10 +231,11 @@ class Organization(HmsUser):
     
 
 class Doctor(Person):
-    paramedic     = models.BooleanField()
+    paramedic      = models.BooleanField()
     specialization = models.CharField(_('Specialization'), max_length=64, blank=True)
-    organizations = models.ManyToManyField(Organization, through='Membership', blank=True)
-    busy     = models.BooleanField(default=False)
+    organizations  = models.ManyToManyField(Organization, through='Membership', blank=True)
+    busy           = models.BooleanField(default=False)
+    signature      = models.ImageField(upload_to=rename_image, null=True, blank=True)
     
     def get_full_name(self):
         return '%s. %s' % ('Dr', super(Doctor, self).get_full_name())
