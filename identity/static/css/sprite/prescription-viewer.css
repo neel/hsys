@@ -498,11 +498,11 @@ body{
 }
 .doctor-signature{
     float: right;
-    width: 150px;
+    width: 200px;
 }
 .doctor-signature .doctor-signature-imagee{
     height: 50px;
-    width: 150px;
+    width: 200px;
     float: left;
 }
 .doctor-signature .doctor-name{
@@ -511,6 +511,7 @@ body{
     font-weight: bold;
     clear: both;
     text-align: center;
+    width: 100%;
 }
 .doctor-signature .doctor-name::before{
     content: "("
