@@ -3,6 +3,9 @@
 <html moznomarginboxes mozdisallowselectionprint>
     <head>
         <title>Prescription for {{story.patient.get_full_name}}</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
         <style type='text/css'>
             @import url("{% static 'css/common.css' %}");
             @import url("{% static 'css/heading.css' %}");
@@ -40,7 +43,6 @@
                             <div class="prescription-doctor">
                                 <div class="prescription-doctor-name">{{story.doctor.get_full_name}}</div>
                                 <div class="prescription-doctor-specialization">{{story.doctor.specialization}}</div>
-                                <div class="prescription-doctor-email">{{story.doctor.email}}</div>
                                 <div class="prescription-when">{{story.when}}</div>
                             </div>
                             <div class="prescription-patient">
@@ -125,6 +127,28 @@
                             {% endfor %}
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="footer">
+                {% for complaint in complaints %}
+                    {% if complaint.randomvisit %}
+                    <div class="caregiver-assistance">
+                        <div class="caregiver-name">
+                        {{ complaint.randomvisit.operator.get_full_name }}
+                        </div>
+                        <div class="caregiver-organization">
+                        {{ complaint.randomvisit.org }}
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                <div class="doctor-signature">
+                    {% for complaint in complaints %}
+                    <img class="doctor-signature-imagee" src="/media/{{complaint.doctor.signature}}">
+                    <div class="doctor-name">
+                        {{complaint.doctor.get_full_name}}
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>

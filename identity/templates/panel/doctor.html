@@ -9,6 +9,10 @@
             <div class="doctor-info-value">{{ doctor.get_full_name }}</div>
         </li>
         <li class="doctor-info">
+            <div class="doctor-info-class">Degree</div>
+            <div class="doctor-info-value">{{ doctor.specialization }}</div>
+        </li>
+        <li class="doctor-info">
             <div class="doctor-info-class">Age</div>
             <div class="doctor-info-value">{{ doctor.age|delta_string }}</div>
         </li>

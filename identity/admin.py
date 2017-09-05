@@ -16,7 +16,7 @@ class DoctorCreationForm(forms.ModelForm):
     
     class Meta:
         model = Doctor
-        fields = ('email', 'image', 'first_name', 'last_name', 'dob', 'sex', 'address', 'paramedic')
+        fields = ('email', 'image', 'first_name', 'last_name', 'specialization', 'dob', 'sex', 'address', 'paramedic', 'signature')
     
     def clean_password2(self):
         # Check that the two password entries match
@@ -56,7 +56,7 @@ class DoctorAdmin(UserAdmin):
     fieldsets = (
         (None,              {'fields': ('username', 'image', 'email', 'password',)}),
         ('Personal info',   {'fields': ('first_name', 'last_name', 'dob', 'sex', 'address',)}),
-        ('Medical info',    {'fields': ('paramedic',)}),
+        ('Medical info',    {'fields': ('paramedic', 'specialization', 'signature')}),
         ('Permissions',     {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login',)}),
     )
@@ -64,7 +64,7 @@ class DoctorAdmin(UserAdmin):
     add_fieldsets = (
         (None,              {'fields': ('username', 'image', 'email', 'password1', 'password2',)}),
         ('Personal info',   {'fields': ('first_name', 'last_name', 'dob', 'sex', 'address',)}),
-        ('Medical info',    {'fields': ('paramedic',)}),
+        ('Medical info',    {'fields': ('paramedic', 'specialization', 'signature')}),
         ('Permissions',     {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login',)}),
     )
