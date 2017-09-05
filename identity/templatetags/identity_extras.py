@@ -147,7 +147,7 @@ def complaint_vitals(obj):
     html = "<div class='vitals-container'>"
     for type in obj:
         value = obj[type]
-        html += "<div class='vital'>"
+        html += "<div class='vital vital-type-"+type+"'>"
         html += "<div class='complaint-category vital-category'>"+type+"</div>"
         html += "<div class='complaint-vital vital-value'>"
         try:

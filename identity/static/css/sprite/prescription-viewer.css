@@ -151,6 +151,9 @@ body{
   float: left;
   display: block;
   position: relative;
+  margin-bottom: 0px;
+  margin-top: 4px;
+  width: 100%;
 }
 .medicine-name{
   float: left;
@@ -400,9 +403,35 @@ body{
 }
 .vital-category{
     display: table-cell;
+    text-align: center;
 }
 .vital-value{
     display: table-cell;
+    text-align: center;
+    width: 100%;
+    float: left;
+}
+
+.vital-type-weight{
+    width: 80px;
+}
+.vital-type-height{
+    width: 98px;
+}
+.vital-type-bmi{
+    width: 100px;
+}
+.vital-type-spo2{
+    width: 80px;
+}
+.vital-type-pulse{
+    width: 80px;
+}
+.vital-type-temparature{
+    width: 120px;
+}
+.vital-type-bp{
+    width: 90px;
 }
 
 .prescription-print-columns{

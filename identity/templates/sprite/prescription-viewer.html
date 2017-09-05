@@ -29,6 +29,10 @@
                     var data = {{prescription.body|jsonify|safe}};
                     render_prescription_data(data, $('#envelops'));
                 {% endfor %}
+                $('#envelops').find('.medication-medicine').each(function(){
+                    var btn = $(this).find('.translate-bn');
+                    btn.trigger('click');
+                });
             })
         </script>
     </head>
@@ -137,6 +141,7 @@
                         {{ complaint.randomvisit.operator.get_full_name }}
                         </div>
                         <div class="caregiver-organization">
+                            at
                         {{ complaint.randomvisit.org }}
                         </div>
                     </div>

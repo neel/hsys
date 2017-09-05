@@ -71,10 +71,9 @@ var dict = {
 
     'and':          {'bn': 'এবং'},
 
-    1:            {'bn': 'একটি'},
+    '0':            {'bn': ''},
     '1':            {'bn': 'একটি'},
     '2':            {'bn': 'দুই টি'},
-    2:            {'bn': 'দুই টি'},
     '1/2':          {'bn': 'অর্ধেক'},
     '0.5':          {'bn': 'অর্ধেক'},
     '1/3':          {'bn': 'তিন ভাগের এক ভাগ'},
@@ -116,7 +115,7 @@ function make_med_text(medicine){
                     sanity(medicine.name, "name"), tr(sanity(medicine.name, "name")),
                     sanity(medicine.dose, "dose"), tr(sanity(medicine.dose, "dose")),
                     sanity(medicine.unit, "unit"), tr(sanity(medicine.unit, "unit")),
-                    sanity(medicine.count, "count"), tr(sanity(medicine.count, "count"))
+                    medicine.count != '0' ? sanity(medicine.count, "count") : "", medicine.count != '0' ? tr(sanity(medicine.count, "count")) : ""
                 );
     if(sanity(medicine.interval.frequency, "frequency") > 0){
         var freq_text = "";
@@ -604,6 +603,10 @@ $(document).ready(function(){
             }
         });
         $('#prescription_body_editor').find('.investigation-container').append(decoration);
+    });
+    $('#prescription_body_editor').on('click', 'div.investigation-back', function(){
+        $('#prescription_body_editor').html('');
+        $('#prescription_body_editor').css('display', 'none');
     });
     $("#advice_medication").click(function(){
         bootbox.prompt({

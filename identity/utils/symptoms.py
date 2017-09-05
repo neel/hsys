@@ -55,7 +55,7 @@ class builder(object):
 			except:
 				eanswers = []
 
-			erule = {"_": {"en": {"orientation": "ab"}, "order": 0}} if type(elem['rule']) in [unicode, str] else elem['rule']
+			erule = {"_": {"en": {"orientation": "{q}({a})"}}, "no": "", "none": ""} if type(elem['rule']) in [unicode, str] else elem['rule']
 
 			v = vertex(id, 
 					type=elem['type'], 
@@ -144,14 +144,19 @@ class decorator(object):
 		_ = rule['_'][lang]
 		orientation = _['orientation']
 
-		answer = node.answer
+		answer = node.answer.lower()
 		if answer in rule:
 			special = rule[answer]
 			# there is no language specific rule, so assumes to be translated to constant in special
 			if type(special) in [str, unicode]:
-				return special
+				if(len(special) == 0):
+					return special
+				answer = special
 			else:
 				special = special[lang]
+				if(len(special) == 0):
+					return special
+				answer = special
 				orientation = special.orientation
 
 		return '<div class="symptom-token symptom-leaf" data-order="%s" data-question-id="%s">%s</div>' % (node.order, node.name, concat(node.tags[lang], answer, orientation))

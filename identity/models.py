@@ -337,6 +337,7 @@ class Story(models.Model):
             except ValueError:
                 raise ValidationError('Malformed prescription data')
         if self.media and len(self.media) > 0:
+            self.media = json.loads(self.media)
             try:
                 media = self.media
                 for m in media:

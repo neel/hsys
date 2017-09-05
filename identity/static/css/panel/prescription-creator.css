@@ -126,12 +126,19 @@
 .investigation-item{
     cursor: pointer;
 }
+.investigation-back{
+    position: absolute;
+    display: block;
+    top: 0px;
+    right: 0px;
+}
 .prescription-envelops .prescription-entry-remove{
     display: none;
 }
 .prescription-envelops .prescription-entry{
     padding-right: 22px;
     margin-top: -5px;
+    margin-bottom: 5px;
 }
 .prescription-envelops{
     position: relative;
