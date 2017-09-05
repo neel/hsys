@@ -80,7 +80,7 @@ class AppointmentAccess:
         if not viewer.is_authenticated():
             return []
         if(viewer.id == owner.id):
-            return owner.real().appointments.filter(id__gt=id).order_by('-schedule')
+            return owner.appointments.filter(id__gt=id).order_by('-schedule')
         elif(viewer.is_doctor() and owner.is_patient()):
             doctor  = viewer.real()
             patient = owner.real()
