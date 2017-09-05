@@ -69,7 +69,16 @@ var dict = {
     'lunch':        {'bn': 'মধ্যাহ্নভোজ'},
     'dinner':       {'bn': 'সান্ধ্যভোজন'},
 
-    'and':          {'bn': 'এবং'}
+    'and':          {'bn': 'এবং'},
+
+    1:            {'bn': 'একটি'},
+    '1':            {'bn': 'একটি'},
+    '2':            {'bn': 'দুই টি'},
+    2:            {'bn': 'দুই টি'},
+    '1/2':          {'bn': 'অর্ধেক'},
+    '0.5':          {'bn': 'অর্ধেক'},
+    '1/3':          {'bn': 'তিন ভাগের এক ভাগ'},
+    '1/4':          {'bn': 'চার ভাগের এক ভাগ'}
 };
 function tr(phrase, lang){
     if(phrase in dict){
@@ -100,12 +109,14 @@ function make_med_text(medicine){
     var str = " <span class='translatable'><span class='tag tag-en tag-active' data-order='1'>{0}</span><span class='tag tag-bn' data-order='1'>{1}</span></span> \
                 <span class='translatable'><span class='tag tag-en tag-active' data-order='2'>{2}</span><span class='tag tag-bn' data-order='2'>{3}</span></span></span> \
                 <span class='translatable'><span class='tag tag-en tag-active' data-order='3'>{4}</span><span class='tag tag-bn' data-order='3'>{5}</span></span></span> \
-                <span class='translatable'><span class='tag tag-en tag-active' data-order='4'>{6}</span><span class='tag tag-bn' data-order='4'>{7}</span></span></span>"
+                <span class='translatable'><span class='tag tag-en tag-active' data-order='4'>{6}</span><span class='tag tag-bn' data-order='4'>{7}</span></span></span> \
+                <span class='translatable'><span class='tag tag-en tag-active' data-order='4.5'>{8}</span><span class='tag tag-bn' data-order='4.5'>{9}</span></span></span>"
                 .format(
                     sanity(medicine.type, "type"), tr(sanity(medicine.type, "type")),
                     sanity(medicine.name, "name"), tr(sanity(medicine.name, "name")),
                     sanity(medicine.dose, "dose"), tr(sanity(medicine.dose, "dose")),
-                    sanity(medicine.unit, "unit"), tr(sanity(medicine.unit, "unit"))
+                    sanity(medicine.unit, "unit"), tr(sanity(medicine.unit, "unit")),
+                    sanity(medicine.count, "count"), tr(sanity(medicine.count, "count"))
                 );
     if(sanity(medicine.interval.frequency, "frequency") > 0){
         var freq_text = "";
@@ -209,6 +220,7 @@ function make_medicine(elem){
         dose: 0,  // dose
         unit: '', // unit of dose
         termination: 0, // for how many days
+        count: 1, // how many
         interval: {
             frequency: '', // numeric | 0 means as needed | -1 means custom
             days: 0, // days interval
@@ -223,8 +235,11 @@ function make_medicine(elem){
         note: '' // some extra notes if required
     };
 
+    
+
     medicine.type               = $(elem).find('.medicine-editor-med-type').find('input:radio:checked').val();
     medicine.name               = $(elem).find('.med-name').val();
+    medicine.count              = $(elem).find('.med-count').val();
     medicine.dose               = parseInt($(elem).find('.med-dose').val());
     medicine.unit               = $(elem).find('.med-dose-unit').attr('data-unit');
     medicine.termination        = parseInt($(elem).find('.med-termination').val());
@@ -705,6 +720,10 @@ $(document).ready(function(){
         make_medicine(editor);
     });
     $('#prescription_body_editor').on('keyup', '.med-dose', function(){
+        var editor = $(this).closest('.editor-panel');
+        make_medicine(editor);
+    });
+    $('#prescription_body_editor').on('keyup', '.med-count', function(){
         var editor = $(this).closest('.editor-panel');
         make_medicine(editor);
     });
