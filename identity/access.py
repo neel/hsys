@@ -12,17 +12,17 @@ class StoryAccess:
         if not viewer.is_authenticated():
             return []
         if(viewer.id == owner.id):
-            l = owner.stories.filter(id__gt=id).order_by('-when')
+            l = owner.stories.filter(id__gt=id).order_by('-id')
             return l[:limit] if limit > 0 else l
         elif(viewer.is_doctor() and owner.is_patient()):
             doctor  = viewer.real()
             patient = owner.real()
-            l = patient.stories.filter(id__gt=id, doctor=doctor).order_by('-when')
+            l = patient.stories.filter(id__gt=id, doctor=doctor).order_by('-id')
             return l[:limit] if limit > 0 else l
         elif(viewer.is_patient() and owner.is_doctor()):
             patient = viewer.real()
             doctor  = owner.real()
-            l = doctor.stories.filter(id__gt=id, patient=patient).order_by('-when')
+            l = doctor.stories.filter(id__gt=id, patient=patient).order_by('-id')
             return l[:limit] if limit > 0 else l
         elif(viewer.is_doctor() and owner.is_doctor()):
             return []
@@ -36,15 +36,15 @@ class StoryAccess:
         if not viewer.is_authenticated():
             return []
         if(viewer.id == owner.id):
-            return owner.stories.filter(when__range=(date_from, date_to)).order_by('-when')
+            return owner.stories.filter(when__range=(date_from, date_to)).order_by('-id')
         elif(viewer.is_doctor() and owner.is_patient()):
             doctor  = viewer.real()
             patient = owner.real()
-            return patient.stories.filter(when__range=(date_from, date_to), doctor=doctor).order_by('-when')
+            return patient.stories.filter(when__range=(date_from, date_to), doctor=doctor).order_by('-id')
         elif(viewer.is_patient() and owner.is_doctor()):
             patient = viewer.real()
             doctor  = owner.real()
-            return doctor.stories.filter(when__range=(date_from, date_to), patient=patient).order_by('-when')
+            return doctor.stories.filter(when__range=(date_from, date_to), patient=patient).order_by('-id')
         elif(viewer.is_doctor() and owner.is_doctor()):
             return []
         elif(viewer.is_patient() and owner.is_patient()):
@@ -57,15 +57,15 @@ class StoryAccess:
         if not viewer.is_authenticated():
             return 0
         if(viewer.id == owner.id):
-            return owner.stories.filter(id__gt=id).order_by('-when').count()
+            return owner.stories.filter(id__gt=id).order_by('-id').count()
         elif(viewer.is_doctor() and owner.is_patient()):
             doctor  = viewer.real()
             patient = owner.real()
-            return patient.stories.filter(id__gt=id, doctor=doctor).order_by('-when').count()
+            return patient.stories.filter(id__gt=id, doctor=doctor).order_by('-id').count()
         elif(viewer.is_patient() and owner.is_doctor()):
             patient = viewer.real()
             doctor  = owner.real()
-            return doctor.stories.filter(id__gt=id, patient=patient).order_by('-when').count()
+            return doctor.stories.filter(id__gt=id, patient=patient).order_by('-id').count()
         elif(viewer.is_doctor() and owner.is_doctor()):
             return 0
         elif(viewer.is_patient() and owner.is_patient()):
