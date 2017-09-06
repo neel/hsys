@@ -16,6 +16,7 @@ from identity.sprites import *
 from identity.panels import *
 from identity.constructs import *
 from identity.access import *
+from identity.utils.symptoms import builder
 import pdb
 
 class DateTimeEncoder(json.JSONEncoder):
@@ -789,3 +790,10 @@ def live(request):
 
 def live_poll(request):
     return render(request, 'live.poll.html', {})
+
+def symptoms_tree(request):
+    b = builder()
+    return HttpResponse(json.dumps({
+        'root': json.loads(b.tree()),
+        'vertices': b.symptoms
+    }), content_type='application/json; charset=UTF-8')

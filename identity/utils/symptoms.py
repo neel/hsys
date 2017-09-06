@@ -75,6 +75,14 @@ class builder(object):
 		
 			self.root = self.vertices['0']
 
+	def tree(self):
+		class vertex_encoder(json.JSONEncoder):
+			def default(self, obj):
+				c = copy.copy(obj.__dict__)
+				c.pop('parent', None)
+				return c
+		return vertex_encoder().encode(self.root)
+
 	def write(self, path):
 		class vertex_encoder(json.JSONEncoder):
 			def default(self, obj):
