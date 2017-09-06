@@ -133,9 +133,9 @@ class decorator(object):
 					self.update(dict.fromkeys(self.placeholders, self.default_value))
 					dict.__init__(self, *args, **kwargs)
 
-			q_r = '<div class="symptom-token symptom-question-tag">%s</div>' % q
-			a_r = '<div class="symptom-token symptom-answer">%s</div>' % a
-			return orientation.format(**DataDict(
+			q_r = u'<div class="symptom-token symptom-question-tag">%s</div>' % q
+			a_r = u'<div class="symptom-token symptom-answer">%s</div>' % a
+			return unicode(orientation.strip()).format(**DataDict(
 				q = q_r,
 				a = a_r
 			))
