@@ -189,7 +189,7 @@ class decorator(object):
 
 
 		schunks = sorted(chunks, key=lambda k: float(k["order"]))
-		print(schunks)
+
 		elems  = [c['elem'] for c in schunks]
 	 	return ''.join(elems)
 
