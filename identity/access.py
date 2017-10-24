@@ -23,6 +23,10 @@ class StoryAccess:
             patient = viewer.real()
             doctor  = owner.real()
             l = doctor.stories.filter(id__gt=id, patient=patient).order_by('-id')
+        elif(viewer.is_operator() and owner.is_patient()):
+            operator = viewer.real()
+            patient  = owner.real()
+            l = operator.stories.filter(id__gt=id, patient=patient).order_by('-id')
             return l[:limit] if limit > 0 else l
         elif(viewer.is_doctor() and owner.is_doctor()):
             return []
@@ -45,6 +49,10 @@ class StoryAccess:
             patient = viewer.real()
             doctor  = owner.real()
             return doctor.stories.filter(when__range=(date_from, date_to), patient=patient).order_by('-id')
+        elif(viewer.is_operator() and owner.is_patient()):
+            operator = viewer.real()
+            patient  = owner.real()
+            return operator.stories.filter(id__gt=id, patient=patient).order_by('-id')
         elif(viewer.is_doctor() and owner.is_doctor()):
             return []
         elif(viewer.is_patient() and owner.is_patient()):
@@ -66,6 +74,10 @@ class StoryAccess:
             patient = viewer.real()
             doctor  = owner.real()
             return doctor.stories.filter(id__gt=id, patient=patient).order_by('-id').count()
+        elif(viewer.is_operator() and owner.is_patient()):
+            operator = viewer.real()
+            patient  = owner.real()
+            return operator.stories.filter(id__gt=id, patient=patient).order_by('-id').count()
         elif(viewer.is_doctor() and owner.is_doctor()):
             return 0
         elif(viewer.is_patient() and owner.is_patient()):
