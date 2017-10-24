@@ -138,7 +138,7 @@ class RandomVisitResource(ModelResource):
         filtering = {
             'doctor': ALL_WITH_RELATIONS,
             'patient': ALL_WITH_RELATIONS,
-            'operatoe': ALL_WITH_RELATIONS,
+            'operator': ALL_WITH_RELATIONS,
             'when':  ['range', 'gt', 'gte', 'lt', 'lte']
         }
 
