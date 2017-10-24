@@ -128,12 +128,19 @@ class RandomVisitResource(ModelResource):
     patient  = fields.ToOneField('identity.api.PatientResource', 'patient')  
     story    = fields.ToOneField('identity.api.StoryResource', 'story_ptr', readonly=True) 
     operator = fields.ToOneField('identity.api.OperatorResource', 'operator', null=True, blank=True)
+    org      = fields.ToOneField('identity.api.OrganizationResource', 'org', null=True, blank=True)
 
     class Meta:
         queryset = RandomVisit.objects.all()
         authentication = Authentication()
         authorization = Authorization()
         always_return_data = True
+        filtering = {
+            'doctor': ALL_WITH_RELATIONS,
+            'patient': ALL_WITH_RELATIONS,
+            'operatoe': ALL_WITH_RELATIONS,
+            'when':  ['range', 'gt', 'gte', 'lt', 'lte']
+        }
 
 class OrganizationResource(ModelResource):
     doctors = fields.ToManyField('identity.api.DoctorResource', 'doctors', null=True)
