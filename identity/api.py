@@ -353,6 +353,8 @@ class OperatorResource(ModelResource):
         queryset = Operator.objects.all()
         excludes = ['login', 'password', 'is_active', 'is_staff', 'is_superuser', 'last_login']
         authorization= Authorization()
+        authorization = Authorization()
+        always_return_data = True
         filtering = {
             'id': ALL_WITH_RELATIONS
         }
