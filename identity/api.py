@@ -141,7 +141,8 @@ class RandomVisitResource(ModelResource):
             'doctor': ALL_WITH_RELATIONS,
             'patient': ALL_WITH_RELATIONS,
             'operator': ALL_WITH_RELATIONS,
-            'when':  ['range', 'gt', 'gte', 'lt', 'lte']
+            'when':  ['range', 'gt', 'gte', 'lt', 'lte'],
+            'is_prescription': ['exact']
         }
 
 class OrganizationResource(ModelResource):
